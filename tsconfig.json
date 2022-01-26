@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "pretty": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "lib",
+    "rootDir": "src",
+    "baseUrl": "src",
+    "moduleResolution": "node",
+    "target": "ES6",
+    "module": "commonjs",
+    "lib": ["es6", "DOM"]
+  },
+  "include": ["src/**/*"],
+}
