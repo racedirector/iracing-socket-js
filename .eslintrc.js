@@ -59,14 +59,7 @@ module.exports = {
         "prefix": ["is", "should", "has", "can", "did", "will", "show", "hide"]
       },
     ],
-    // !!!: We can't _really_ ensure that everything is not `any` and doing it all
-    // one-off is a huge pain. Set all "unsafe" rules to warnings.
     "@typescript-eslint/no-unsafe-assignment": 1,
-    "@typescript-eslint/no-unsafe-call": 1,
-    "@typescript-eslint/no-unsafe-member-access": 1,
-    "@typescript-eslint/no-unsafe-return": 1,
-    "@typescript-eslint/restrict-template-expressions": 1,
-    "require-await": 0,
   },
 
   settings: {

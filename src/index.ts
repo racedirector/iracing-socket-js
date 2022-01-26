@@ -3,6 +3,10 @@ const MIN_FPS = 1;
 
 const noop = () => {};
 
+export interface iRacingData {
+  [key: string]: any;
+}
+
 export interface iRacingSocketOptions {
   requestParameters: string[];
   requestParametersOnce?: string[];
@@ -24,7 +28,7 @@ export class iRacingSocket {
 
   private firstConnection: boolean;
 
-  private reconnectTimeout: NodeJS.Timeout = null;
+  private reconnectTimeout: number = null;
 
   readonly requestParameters: string[];
 
@@ -34,9 +38,7 @@ export class iRacingSocket {
 
   readonly readIBT: boolean;
 
-  data: Record<string, any> = {
-    data: {},
-  };
+  data: iRacingData = {};
 
   reconnectTimeoutInterval: number;
 
@@ -72,7 +74,6 @@ export class iRacingSocket {
 
   open = () => {
     this.socket = new WebSocket(`ws://${this.server}/ws`);
-
     this.socket.addEventListener("open", this.onOpen);
     this.socket.addEventListener("message", this.onMessage);
     this.socket.addEventListener("close", this.onClose);
@@ -110,7 +111,8 @@ export class iRacingSocket {
 
   private onMessage = ({ data: eventData = "" }) => {
     // Normalize the JSON
-    const data = JSON.parse(eventData.replace(/\bNaN\b/g, "null"));
+    const normalizedEventData = eventData.replace(/\bNaN\b/g, "null");
+    const { data = {} } = JSON.parse(normalizedEventData);
     // TOOD: Lifecycle?
 
     // On first time connection...
@@ -121,9 +123,10 @@ export class iRacingSocket {
     }
 
     // Update data
-    if (data.data) {
+    if (data) {
       const keys: string[] = [];
-      Object.entries(data.data).forEach(([key, value]) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      Object.entries(data).forEach(([key, value]) => {
         keys.push(key);
         this.data[key] = value;
       });

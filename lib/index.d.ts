@@ -1,3 +1,6 @@
+export interface iRacingData {
+    [key: string]: any;
+}
 export interface iRacingSocketOptions {
     requestParameters: string[];
     requestParametersOnce?: string[];
@@ -20,7 +23,7 @@ export declare class iRacingSocket {
     readonly requestParametersOnce: string[];
     readonly fps: number;
     readonly readIBT: boolean;
-    data: Record<string, any>;
+    data: iRacingData;
     reconnectTimeoutInterval: number;
     connected: boolean;
     onSocketConnect: () => void;

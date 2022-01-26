@@ -13,7 +13,7 @@
     "moduleResolution": "node",
     "target": "ES6",
     "module": "commonjs",
-    "lib": ["es6", "DOM"]
+    "lib": ["es6", "ESNext", "DOM"]
   },
   "include": ["src/**/*"],
 }
