@@ -1,5 +1,14 @@
+/// <reference types="node" />
+import { EventEmitter } from "events";
 export interface iRacingData {
     [key: string]: any;
+}
+export declare enum iRacingSocketEvents {
+    SocketConnect = "socketConnect",
+    SocketDisconnect = "socketDisconnect",
+    Connect = "connect",
+    Disconnect = "disconnect",
+    Update = "update"
 }
 export interface iRacingSocketOptions {
     requestParameters: string[];
@@ -14,7 +23,7 @@ export interface iRacingSocketOptions {
     onDisconnect?: () => void;
     onUpdate?: (keys: string[]) => void;
 }
-export declare class iRacingSocket {
+export declare class iRacingSocket extends EventEmitter {
     private socket;
     private server;
     private firstConnection;
@@ -26,15 +35,10 @@ export declare class iRacingSocket {
     data: iRacingData;
     reconnectTimeoutInterval: number;
     connected: boolean;
-    onSocketConnect: () => void;
-    onSocketDisconnect: () => void;
-    onConnect: () => void;
-    onDisconnect: () => void;
-    onUpdate: (keys: string[]) => void;
     constructor(options?: iRacingSocketOptions);
     open: () => void;
     close: () => void;
-    sendCommand: (command: any, ...args: any[]) => void;
+    sendCommand: (command: string, ...args: any[]) => void;
     send: (payload: any) => void;
     private onOpen;
     private onMessage;

@@ -1,10 +1,18 @@
+import { EventEmitter } from "events";
+
 const MAX_FPS = 60;
 const MIN_FPS = 1;
 
-const noop = () => {};
-
 export interface iRacingData {
   [key: string]: any;
+}
+
+export enum iRacingSocketEvents {
+  SocketConnect = "socketConnect",
+  SocketDisconnect = "socketDisconnect",
+  Connect = "connect",
+  Disconnect = "disconnect",
+  Update = "update",
 }
 
 export interface iRacingSocketOptions {
@@ -21,14 +29,14 @@ export interface iRacingSocketOptions {
   onUpdate?: (keys: string[]) => void;
 }
 
-export class iRacingSocket {
+export class iRacingSocket extends EventEmitter {
   private socket: WebSocket;
 
   private server: string;
 
   private firstConnection: boolean;
 
-  private reconnectTimeout: number = null;
+  private reconnectTimeout: NodeJS.Timeout = null;
 
   readonly requestParameters: string[];
 
@@ -44,22 +52,9 @@ export class iRacingSocket {
 
   connected: boolean;
 
-  onSocketConnect: () => void;
-
-  onSocketDisconnect: () => void;
-
-  onConnect: () => void;
-
-  onDisconnect: () => void;
-
-  onUpdate: (keys: string[]) => void;
-
   constructor(options?: iRacingSocketOptions) {
-    this.onSocketConnect = options.onSocketConnect || noop;
-    this.onSocketDisconnect = options.onSocketDisconnect || noop;
-    this.onConnect = options.onConnect || noop;
-    this.onDisconnect = options.onDisconnect || noop;
-    this.onUpdate = options.onUpdate || noop;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    super();
 
     this.server = options.server;
     this.requestParameters = options.requestParameters;
@@ -83,19 +78,19 @@ export class iRacingSocket {
     this.socket.close();
   };
 
-  sendCommand = (command, ...args) => {
+  sendCommand = (command: string, ...args: any[]) => {
     this.send({
       command,
       args,
     });
   };
 
-  send = (payload) => {
+  send = (payload: any) => {
     this.socket.send(JSON.stringify(payload));
   };
 
   private onOpen = () => {
-    this.onSocketConnect();
+    this.emit(iRacingSocketEvents.SocketConnect);
 
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
@@ -112,6 +107,7 @@ export class iRacingSocket {
   private onMessage = ({ data: eventData = "" }) => {
     // Normalize the JSON
     const normalizedEventData = eventData.replace(/\bNaN\b/g, "null");
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const { data = {} } = JSON.parse(normalizedEventData);
     // TOOD: Lifecycle?
 
@@ -119,7 +115,7 @@ export class iRacingSocket {
     if (this.firstConnection && !this.connected) {
       this.firstConnection = false;
       this.connected = true;
-      this.onConnect();
+      this.emit(iRacingSocketEvents.Connect);
     }
 
     // Update data
@@ -130,12 +126,13 @@ export class iRacingSocket {
         keys.push(key);
         this.data[key] = value;
       });
-      this.onUpdate(keys);
+
+      this.emit(iRacingSocketEvents.Update, keys);
     }
   };
 
   private onClose = () => {
-    this.onSocketDisconnect();
+    this.emit(iRacingSocketEvents.SocketDisconnect);
 
     if (this.socket) {
       this.socket.removeEventListener("open", this.onOpen);
@@ -145,7 +142,7 @@ export class iRacingSocket {
 
     if (this.connected) {
       this.connected = false;
-      this.onDisconnect();
+      this.emit(iRacingSocketEvents.Disconnect);
     }
 
     this.reconnectTimeout = setTimeout(() => {

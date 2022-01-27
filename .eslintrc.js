@@ -27,7 +27,7 @@ module.exports = {
 
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: "./tsconfig.json"
+    project: "tsconfig.json"
   },
 
   rules: {
@@ -59,12 +59,5 @@ module.exports = {
         "prefix": ["is", "should", "has", "can", "did", "will", "show", "hide"]
       },
     ],
-    "@typescript-eslint/no-unsafe-assignment": 1,
   },
-
-  settings: {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
-    },
-  }
 };
