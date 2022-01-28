@@ -1,6 +1,6 @@
 {
   "name": "iracing-socket-js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "iRacingBrowserApps/Kapps socket adpater for iRacing",
   "repository": "git@github.com:racedirector/iracing-socket-js.git",
   "author": "Justin Makaila <justinmakaila@gmail.com>",
@@ -20,7 +20,7 @@
     "prettier": "prettier --write \"src/**/*.ts\""
   },
   "devDependencies": {
-    "@types/node":"^17.0.12",
+    "@types/node": "^17.0.12",
     "@typescript-eslint/eslint-plugin": "5.10.1",
     "@typescript-eslint/parser": "5.10.1",
     "eslint": "8.7.0",
