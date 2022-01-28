@@ -17,11 +17,6 @@ export interface iRacingSocketOptions {
     server: string;
     readIBT?: boolean;
     reconnectTimeoutInterval?: number;
-    onSocketConnect?: () => void;
-    onSocketDisconnect?: () => void;
-    onConnect?: () => void;
-    onDisconnect?: () => void;
-    onUpdate?: (keys: string[]) => void;
 }
 export declare class iRacingSocket extends EventEmitter {
     private socket;
