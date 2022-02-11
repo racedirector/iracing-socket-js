@@ -33,9 +33,9 @@ export class iRacingSocket extends EventEmitter {
 
   private reconnectTimeout: NodeJS.Timeout = null;
 
-  readonly requestParameters: string[];
+  readonly requestParameters: string[] = [];
 
-  readonly requestParametersOnce: string[];
+  readonly requestParametersOnce: string[] = [];
 
   readonly fps: number;
 
@@ -47,12 +47,13 @@ export class iRacingSocket extends EventEmitter {
 
   connected: boolean;
 
-  constructor(options?: iRacingSocketOptions) {
+  constructor(options: iRacingSocketOptions) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     super();
 
     this.server = options.server;
     this.requestParameters = options.requestParameters;
+    this.requestParametersOnce = options.requestParametersOnce;
     this.fps = Math.min(Math.max(options.fps || 1, MIN_FPS), MAX_FPS);
     this.readIBT = options.readIBT || false;
     this.reconnectTimeoutInterval = options.reconnectTimeoutInterval || 2000;
@@ -121,7 +122,6 @@ export class iRacingSocket extends EventEmitter {
         keys.push(key);
         this.data[key] = value;
       });
-
       this.emit(iRacingSocketEvents.Update, keys);
     }
   };

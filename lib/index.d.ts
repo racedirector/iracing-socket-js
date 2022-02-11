@@ -30,7 +30,7 @@ export declare class iRacingSocket extends EventEmitter {
     data: iRacingData;
     reconnectTimeoutInterval: number;
     connected: boolean;
-    constructor(options?: iRacingSocketOptions);
+    constructor(options: iRacingSocketOptions);
     open: () => void;
     close: () => void;
     sendCommand: (command: string, ...args: any[]) => void;
