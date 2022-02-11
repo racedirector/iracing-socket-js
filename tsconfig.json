@@ -7,13 +7,14 @@
     "noUnusedLocals": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
     "outDir": "lib",
     "rootDir": "src",
     "baseUrl": "src",
     "moduleResolution": "node",
     "target": "ES6",
     "module": "commonjs",
-    "lib": ["es6", "ESNext", "DOM"]
+    "lib": ["es6", "ESNext", "DOM"],
   },
   "include": ["src/**/*"],
 }
