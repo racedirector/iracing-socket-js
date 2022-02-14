@@ -22,6 +22,16 @@ export enum TrackLocation {
   OnTrack = 3,
 }
 
+export enum PitServiceFlags {
+  LFChange = 0x01,
+  RFChange = 0x02,
+  LRChange = 0x04,
+  RRChange = 0x08,
+  Fuel = 0x10,
+  WindshieldTearoff = 0x20,
+  FastRepair = 0x40,
+}
+
 export interface CarClass {
   id: string;
   className: string;

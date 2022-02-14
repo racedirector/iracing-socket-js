@@ -18,6 +18,15 @@ export declare enum TrackLocation {
     ApproachingPits = 2,
     OnTrack = 3
 }
+export declare enum PitServiceFlags {
+    LFChange = 1,
+    RFChange = 2,
+    LRChange = 4,
+    RRChange = 8,
+    Fuel = 16,
+    WindshieldTearoff = 32,
+    FastRepair = 64
+}
 export interface CarClass {
     id: string;
     className: string;
