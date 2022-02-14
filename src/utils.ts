@@ -4,9 +4,8 @@ import {
   TrackLocation,
   CarClassIDProvider,
   iRacingData,
+  PACE_CAR_CLASS_ID,
 } from "./types";
-
-export const PACE_CAR_CLASS_ID = 11;
 
 const getCurrentSession = ({
   SessionNum: currentSessionNumber = -1,
