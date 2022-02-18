@@ -5,7 +5,11 @@ import {
   CarClassIDProvider,
   iRacingData,
   PACE_CAR_CLASS_ID,
+  Flags,
 } from "./types";
+
+export const flagsHasFlag = (flags: Flags, hasFlags: Flags): boolean =>
+  (flags & hasFlags) === hasFlags;
 
 const getCurrentSession = ({
   SessionNum: currentSessionNumber = -1,
