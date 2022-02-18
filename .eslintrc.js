@@ -33,6 +33,7 @@ module.exports = {
   rules: {
     "no-console": 2,
     "no-void": [2, { "allowAsStatement": true }],
+    "new-cap": [2, {"newIsCapExceptions": ["iRacingSocket"]}],
     "@typescript-eslint/no-floating-promises": [2, { "ignoreVoid": true }],
     "@typescript-eslint/naming-convention": [
       2,
