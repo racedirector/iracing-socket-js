@@ -12,7 +12,7 @@
 import { Flags } from "./types";
 import { iRacingSocketConsumer } from "./socketConsumer";
 
-export const IRACING_REQUEST_PARAMS: string[] = ["SessionFlags", "SessionTime"];
+export const IRACING_REQUEST_PARAMS: string[] = ["SessionFlags", "SessionTime", "SessionTimeOfDay"];
 
 export enum FlagsObserverEvents {
   FlagChange = "flagChange",
