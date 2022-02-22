@@ -74,4 +74,8 @@ const flagObserver = new FlagObserver({
   requestParameters,
   requestParametersOnce,
 })
+
+flagObserver.on(FlagObserverEvents.FlagChange, (previousFlags, nextFlags, sessionTime, sessionTimeOfDay) => {
+  console.log("Do something with the change event!?")
+})
 ```
