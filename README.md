@@ -7,10 +7,25 @@
 1) Start kapps
 
 ### Example
-`src/flagObserver.ts`
+#### Create a socket
 ```ts
-import { Flags } from "./types";
-import { iRacingSocketConsumer } from "./socketConsumer";
+import {iRacingSocket} from 'iracing-socket-js'
+
+const socket: iRacingSocket = new iRacingSocket({
+  server,
+  fps,
+  requestParameters,
+  requestParametersOnce,
+})
+.on(iRacingSocketEvents.SocketConnect, () => setSocketConnected(true))
+.on(iRacingSocketEvents.SocketDisconnect, () => setSocketConnected(false))
+.on(iRacingSocketEvents.Connect, () => setIRacingConnected(true))
+.on(iRacingSocketEvents.Disconnect, () => setIRacingConnected(false))
+.on(iRacingSocketEvents.Update, () => setData({...newSocket.data}));
+```
+#### Create a socket consumer (taken from `src/flagObserver.ts`)
+```ts
+import {iRacingSocketConsumer, Flags} from "iracing-socket-js";
 
 export const IRACING_REQUEST_PARAMS: string[] = ["SessionFlags", "SessionTime", "SessionTimeOfDay"];
 
@@ -48,4 +63,15 @@ export class FlagsObserver extends iRacingSocketConsumer {
 
 export default FlagsObserver;
 
+```
+#### Connect the socket observer to the socket
+```ts
+const flagObserver = new FlagObserver(socket)
+// !!!: Or, pass the options for creating a new socket directly to the socket consumer:
+const flagObserver = new FlagObserver({
+  server,
+  fps,
+  requestParameters,
+  requestParametersOnce,
+})
 ```
