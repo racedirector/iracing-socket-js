@@ -24,14 +24,21 @@ const getCurrentSession = ({
   return null;
 };
 
+export const parseNumberFromString = (sourceValue: string, unit: string) => {
+  const matches =
+    new RegExp(`/^.*(?=\\s${unit})/`).exec(sourceValue) || Array<string>();
+  if (matches.length > 0) {
+    return parseFloat(matches[0]);
+  }
+
+  return null;
+};
+
 export const parseTrackLength = ({
   WeekendInfo: { TrackLength: trackLengthString = null } = {},
 }: iRacingData): number | null => {
   if (typeof trackLengthString === "string") {
-    const matches = /^.*(?=\skm)/.exec(trackLengthString);
-    if (matches.length > 0) {
-      return parseFloat(matches[0]) * 1000;
-    }
+    return parseNumberFromString(trackLengthString, "km") * 1000;
   }
 
   return null;
@@ -42,10 +49,7 @@ export const parseSessionLength = (data: iRacingData): number | null => {
     getCurrentSession(data) || {};
 
   if (typeof currentSessionLengthString === "string") {
-    const matches = /^.*(?=\ssec)/.exec(currentSessionLengthString);
-    if (matches.length > 0) {
-      return parseFloat(matches[0]);
-    }
+    return parseNumberFromString(currentSessionLengthString, "sec");
   }
 
   return null;
