@@ -1,12 +1,21 @@
-import { TrackLocation } from "./types";
+import { TrackLocation } from "../../types";
 import {
   parseTrackLength,
   isOnTrack,
   isRaceSession,
   isMultiClass,
-} from "./utils";
+  parseNumberFromString,
+} from ".";
 
 describe("Race director util functions", () => {
+  describe("parseNumberFromString", () => {
+    it("returns the number value from the string", () => {
+      const stringValue = "2.34 km";
+
+      expect(parseNumberFromString(stringValue, "km")).toEqual(2.34);
+    });
+  });
+
   describe("parseTrackLength", () => {
     it("returns the approximate length of the track, in meters, or null", () => {
       const expectedLength = 2.34 * 1000;

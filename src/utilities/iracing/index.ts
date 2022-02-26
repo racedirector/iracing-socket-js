@@ -6,7 +6,7 @@ import {
   iRacingData,
   PACE_CAR_CLASS_ID,
   Flags,
-} from "./types";
+} from "../../types";
 
 export const flagsHasFlag = (flags: Flags, hasFlags: Flags): boolean =>
   (flags & hasFlags) === hasFlags;
@@ -26,7 +26,7 @@ const getCurrentSession = ({
 
 export const parseNumberFromString = (sourceValue: string, unit: string) => {
   const matches =
-    new RegExp(`/^.*(?=\\s${unit})/`).exec(sourceValue) || Array<string>();
+    new RegExp(`^.*(?=\\s${unit})`).exec(sourceValue) || Array<string>();
   if (matches.length > 0) {
     return parseFloat(matches[0]);
   }

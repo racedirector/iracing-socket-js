@@ -1,11 +1,15 @@
 /// <reference types="node" />
 import { EventEmitter } from "events";
-import { iRacingData } from "./types";
-export declare enum iRacingSocketEvents {
-    SocketConnect = "socketConnect",
-    SocketDisconnect = "socketDisconnect",
+import { iRacingData } from "../types";
+export declare enum iRacingSocketConnectionEvents {
     Connect = "connect",
-    Disconnect = "disconnect",
+    Disconnect = "disconnect"
+}
+export declare enum iRacingClientConnectionEvents {
+    Connect = "connect",
+    Disconnect = "disconnect"
+}
+export declare enum iRacingSocketEvents {
     Update = "update"
 }
 export interface iRacingSocketOptions {
@@ -28,11 +32,14 @@ export declare class iRacingSocket extends EventEmitter {
     data: iRacingData;
     reconnectTimeoutInterval: number;
     connected: boolean;
+    socketConnectionEmitter: EventEmitter;
+    iRacingConnectionEmitter: EventEmitter;
     constructor(options: iRacingSocketOptions);
     open: () => void;
     close: () => void;
     sendCommand: (command: string, ...args: any[]) => void;
     send: (payload: any) => void;
+    removeAllListeners(event?: string | symbol): this;
     private onOpen;
     private onMessage;
     private onClose;

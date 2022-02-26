@@ -9,12 +9,11 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "outDir": "lib",
-    "rootDir": "src",
-    "baseUrl": "src",
     "moduleResolution": "node",
     "target": "ES6",
     "module": "commonjs",
     "lib": ["es6", "ESNext", "DOM"],
+    "jsx": "react"
   },
   "include": ["src/**/*"],
 }

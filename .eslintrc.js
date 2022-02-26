@@ -13,8 +13,6 @@ module.exports = {
   extends: [
     "airbnb-base",
     "airbnb-typescript/base",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:import/typescript",
     "plugin:prettier/recommended",
     "prettier",
@@ -60,5 +58,7 @@ module.exports = {
         "prefix": ["is", "should", "has", "can", "did", "will", "show", "hide"]
       },
     ],
+    "no-underscore-dangle": 0,
+    "no-bitwise": 0,
   },
 };

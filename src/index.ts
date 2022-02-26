@@ -1,7 +1,5 @@
-export * from "./socket";
-export * from "./socketConsumer";
+export * from "./core";
 export * from "./types";
-export * from "./utils";
-
-// ???: General use socket helpers? idk
-export * from "./flagObserver";
+export * from "./utilities";
+export * from "./consumers";
+export * from "./react";

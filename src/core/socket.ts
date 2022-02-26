@@ -1,14 +1,20 @@
 import { EventEmitter } from "events";
-import { iRacingData } from "./types";
+import { iRacingData } from "../types";
 
 const MAX_FPS = 60;
 const MIN_FPS = 1;
 
-export enum iRacingSocketEvents {
-  SocketConnect = "socketConnect",
-  SocketDisconnect = "socketDisconnect",
+export enum iRacingSocketConnectionEvents {
   Connect = "connect",
   Disconnect = "disconnect",
+}
+
+export enum iRacingClientConnectionEvents {
+  Connect = "connect",
+  Disconnect = "disconnect",
+}
+
+export enum iRacingSocketEvents {
   Update = "update",
 }
 
@@ -43,6 +49,10 @@ export class iRacingSocket extends EventEmitter {
   reconnectTimeoutInterval: number;
 
   connected: boolean;
+
+  socketConnectionEmitter: EventEmitter = new EventEmitter();
+
+  iRacingConnectionEmitter: EventEmitter = new EventEmitter();
 
   constructor(options: iRacingSocketOptions) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -82,8 +92,14 @@ export class iRacingSocket extends EventEmitter {
     this.socket.send(JSON.stringify(payload));
   };
 
+  removeAllListeners(event?: string | symbol): this {
+    this.iRacingConnectionEmitter.removeAllListeners();
+    this.socketConnectionEmitter.removeAllListeners();
+    return super.removeAllListeners(event);
+  }
+
   private onOpen = () => {
-    this.emit(iRacingSocketEvents.SocketConnect);
+    this.socketConnectionEmitter.emit(iRacingSocketConnectionEvents.Connect);
 
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
@@ -108,7 +124,7 @@ export class iRacingSocket extends EventEmitter {
     if (this.firstConnection && !this.connected) {
       this.firstConnection = false;
       this.connected = true;
-      this.emit(iRacingSocketEvents.Connect);
+      this.iRacingConnectionEmitter.emit(iRacingClientConnectionEvents.Connect);
     }
 
     // Update data
@@ -124,7 +140,7 @@ export class iRacingSocket extends EventEmitter {
   };
 
   private onClose = () => {
-    this.emit(iRacingSocketEvents.SocketDisconnect);
+    this.socketConnectionEmitter.emit(iRacingSocketConnectionEvents.Disconnect);
 
     if (this.socket) {
       this.socket.removeEventListener("open", this.onOpen);
@@ -134,7 +150,9 @@ export class iRacingSocket extends EventEmitter {
 
     if (this.connected) {
       this.connected = false;
-      this.emit(iRacingSocketEvents.Disconnect);
+      this.iRacingConnectionEmitter.emit(
+        iRacingClientConnectionEvents.Disconnect,
+      );
     }
 
     this.reconnectTimeout = setTimeout(() => {
