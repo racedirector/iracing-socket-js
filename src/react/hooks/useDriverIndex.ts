@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { keyBy, isEqual } from "lodash";
-import { iRacingSocketOptions } from "../../core";
 import { Driver } from "../../types";
-import { useIRacingSocket } from "./useIRacingSocket";
+import { useIRacingSocketData } from "./useIRacingSocketData";
 
-export const useDriverIndex: (
-  options?: iRacingSocketOptions,
-) => Record<string, Driver> = (socketOptions = null) => {
-  const { data: { DriverInfo: { Drivers: drivers = [] } = {} } = {} } =
-    useIRacingSocket(socketOptions);
+export const useDriverIndex: () => Record<string, Driver> = () => {
+  const { DriverInfo: { Drivers: drivers = [] } = {} } = useIRacingSocketData();
   const [index, setIndex] = useState<Record<string, Driver>>({});
 
   useEffect(() => {

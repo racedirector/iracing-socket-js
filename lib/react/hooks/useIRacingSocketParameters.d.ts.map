@@ -1,1 +1,1 @@
-{"version":3,"file":"useIRacingSocketParameters.d.ts","sourceRoot":"","sources":["../../../src/react/hooks/useIRacingSocketParameters.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,oBAAoB,EAAE,MAAM,YAAY,CAAC;AAGlD,eAAO,MAAM,0BAA0B,EAAE,MAAM,oBAiB9C,CAAC;AAEF,eAAe,0BAA0B,CAAC"}
+{"version":3,"file":"useIRacingSocketParameters.d.ts","sourceRoot":"","sources":["../../../src/react/hooks/useIRacingSocketParameters.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,oBAAoB,EAAE,MAAM,YAAY,CAAC;AAGlD,eAAO,MAAM,0BAA0B,EAAE,MAAM,oBAiB9C,CAAC;AAEF,eAAe,0BAA0B,CAAC"}

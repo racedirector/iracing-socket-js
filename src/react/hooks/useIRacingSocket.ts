@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { invariant } from "../../utilities/globals";
 import { iRacingSocket, iRacingSocketOptions } from "../../core";
 import { useIRacingContext } from "../context";
