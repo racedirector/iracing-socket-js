@@ -8,3 +8,4 @@ export declare abstract class iRacingSocketConsumer extends EventEmitter {
     protected bindUpdate: (prepend?: boolean) => void;
 }
 export default iRacingSocketConsumer;
+//# sourceMappingURL=socketConsumer.d.ts.map

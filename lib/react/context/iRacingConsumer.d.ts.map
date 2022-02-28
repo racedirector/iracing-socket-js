@@ -1,0 +1,1 @@
+{"version":3,"file":"iRacingConsumer.d.ts","sourceRoot":"","sources":["../../../src/react/context/iRacingConsumer.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAE1B,OAAO,EAAE,aAAa,EAAE,MAAM,YAAY,CAAC;AAG3C,MAAM,WAAW,oBAAoB;IACnC,QAAQ,EAAE,CAAC,YAAY,EAAE,aAAa,KAAK,KAAK,CAAC,UAAU,GAAG,IAAI,CAAC;CACpE;AAED,eAAO,MAAM,eAAe,EAAE,KAAK,CAAC,EAAE,CAAC,oBAAoB,CAc1D,CAAC"}

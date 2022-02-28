@@ -1,0 +1,1 @@
+{"version":3,"file":"useIRacingSocket.d.ts","sourceRoot":"","sources":["../../../src/react/hooks/useIRacingSocket.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,aAAa,EAAE,MAAM,YAAY,CAAC;AAG3C,MAAM,WAAW,uBAAuB;IACtC,QAAQ,CAAC,EAAE,CAAC,MAAM,CAAC,EAAE,aAAa,GAAG,IAAI,KAAK,aAAa,CAAC;CAC7D;AAED,eAAO,MAAM,gBAAgB,EAAE,CAC7B,OAAO,CAAC,EAAE,uBAAuB,KAC9B,aAeJ,CAAC"}

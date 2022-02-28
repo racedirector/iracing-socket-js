@@ -172,3 +172,4 @@ export interface CarClassIdentifier {
 }
 export declare type CarClassIDProvider = Pick<CarClassIdentifier, "CarClassID">;
 export declare const PACE_CAR_CLASS_ID = 11;
+//# sourceMappingURL=index.d.ts.map

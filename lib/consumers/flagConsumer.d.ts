@@ -10,3 +10,4 @@ export declare class FlagsConsumer extends iRacingSocketConsumer {
     onUpdate: (keys: string[]) => void;
 }
 export default FlagsConsumer;
+//# sourceMappingURL=flagConsumer.d.ts.map

@@ -11,6 +11,7 @@ module.exports = {
   },
 
   extends: [
+    "plugin:react/recommended",
     "airbnb-base",
     "airbnb-typescript/base",
     "plugin:import/typescript",
@@ -19,13 +20,17 @@ module.exports = {
   ],
 
   plugins: [
+    "react",
     "prettier",
     "@typescript-eslint",
   ],
 
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: "tsconfig.json"
+    project: "tsconfig.json",
+    ecmaFeatures: {
+      jsx: true
+    }
   },
 
   rules: {
@@ -60,5 +65,14 @@ module.exports = {
     ],
     "no-underscore-dangle": 0,
     "no-bitwise": 0,
+    "react/jsx-uses-react": 0,
+    "react/react-in-jsx-scope": 0
   },
+
+  settings: {
+    react: {
+      pragma: "React",
+      version: "detect"
+    }
+  }
 };

@@ -4,11 +4,13 @@ import { getIRacingContext } from "../context";
 export interface UseIRacingSocketConnectionStateOptions {}
 
 export const useIRacingSocketConnectionState: (
-  options: UseIRacingSocketConnectionStateOptions,
-) => { socketConnected: boolean; iRacingConnected: boolean } = () => {
-  const { socketConnected, iRacingConnected } = useContext(getIRacingContext());
+  options?: UseIRacingSocketConnectionStateOptions,
+) => { isSocketConnected: boolean; isIRacingConnected: boolean } = () => {
+  const { isSocketConnected, isIRacingConnected } = useContext(
+    getIRacingContext(),
+  );
   return {
-    socketConnected,
-    iRacingConnected,
+    isSocketConnected,
+    isIRacingConnected,
   };
 };

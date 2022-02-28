@@ -11,3 +11,4 @@ interface SessionNameProvider {
 }
 export declare const isRaceSession: ({ SessionName }: SessionNameProvider) => boolean;
 export {};
+//# sourceMappingURL=index.d.ts.map

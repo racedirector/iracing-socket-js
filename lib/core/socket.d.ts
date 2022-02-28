@@ -22,7 +22,7 @@ export interface iRacingSocketOptions {
 }
 export declare class iRacingSocket extends EventEmitter {
     private socket;
-    private server;
+    readonly server: string;
     private firstConnection;
     private reconnectTimeout;
     readonly requestParameters: string[];
@@ -45,3 +45,4 @@ export declare class iRacingSocket extends EventEmitter {
     private onClose;
 }
 export default iRacingSocket;
+//# sourceMappingURL=socket.d.ts.map

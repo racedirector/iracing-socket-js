@@ -4,3 +4,4 @@ export interface iRacingConsumerProps {
     children: (raceDirector: iRacingSocket) => React.ReactChild | null;
 }
 export declare const iRacingConsumer: React.FC<iRacingConsumerProps>;
+//# sourceMappingURL=iRacingConsumer.d.ts.map

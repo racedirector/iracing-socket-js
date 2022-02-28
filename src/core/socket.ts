@@ -30,7 +30,7 @@ export interface iRacingSocketOptions {
 export class iRacingSocket extends EventEmitter {
   private socket: WebSocket;
 
-  private server: string;
+  readonly server: string;
 
   private firstConnection: boolean;
 

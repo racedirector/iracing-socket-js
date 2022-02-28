@@ -1,5 +1,6 @@
 import { iRacingSocket } from "../../core";
 export interface UseIRacingSocketOptions {
-    override?: iRacingSocket;
+    override?: (socket?: iRacingSocket | null) => iRacingSocket;
 }
 export declare const useIRacingSocket: (options?: UseIRacingSocketOptions) => iRacingSocket;
+//# sourceMappingURL=useIRacingSocket.d.ts.map

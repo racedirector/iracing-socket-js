@@ -4,15 +4,15 @@ import { iRacingSocket } from "../../core";
 import { iRacingData } from "../../types";
 
 export interface iRacingContextType {
-  socketConnected: boolean;
-  iRacingConnected: boolean;
+  isSocketConnected: boolean;
+  isIRacingConnected: boolean;
   socket?: iRacingSocket;
   data?: iRacingData;
 }
 
 const DEFAULT_CONTEXT: iRacingContextType = {
-  socketConnected: false,
-  iRacingConnected: false,
+  isSocketConnected: false,
+  isIRacingConnected: false,
 };
 
 const contextKey = canUseSymbol ? Symbol.for("__IRACING__") : "__IRACING__";

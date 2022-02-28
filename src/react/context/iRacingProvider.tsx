@@ -16,8 +16,8 @@ export const iRacingProvider: React.FC<iRacingProviderProps> = ({
   children,
 }) => {
   const iRacingContext = getIRacingContext();
-  const [socketConnected, setSocketConnected] = useState(false);
-  const [iRacingConnected, setIRacingConnected] = useState(false);
+  const [isSocketConnected, setSocketConnected] = useState(false);
+  const [isIRacingConnected, setIRacingConnected] = useState(false);
 
   useEffect(() => {
     socket.socketConnectionEmitter
@@ -56,7 +56,11 @@ export const iRacingProvider: React.FC<iRacingProviderProps> = ({
 
         return (
           <iRacingContext.Provider
-            value={{ ...context, socketConnected, iRacingConnected }}
+            value={{
+              ...context,
+              isSocketConnected,
+              isIRacingConnected,
+            }}
           >
             {children}
           </iRacingContext.Provider>
@@ -65,3 +69,5 @@ export const iRacingProvider: React.FC<iRacingProviderProps> = ({
     </iRacingContext.Consumer>
   );
 };
+
+export default iRacingProvider;
