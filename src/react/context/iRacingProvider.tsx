@@ -6,7 +6,7 @@ import {
   iRacingSocket,
   iRacingSocketConnectionEvents,
 } from "../../core";
-import { getIRacingContext } from "./iRacingContext";
+import { iRacingContext } from "./iRacingContext";
 
 export interface iRacingProviderProps {
   socket: iRacingSocket;
@@ -16,7 +16,6 @@ export const iRacingProvider: React.FC<iRacingProviderProps> = ({
   socket,
   children,
 }) => {
-  const iRacingContext = getIRacingContext();
   const [isSocketConnected, setSocketConnected] = useState(false);
   const [isIRacingConnected, setIRacingConnected] = useState(false);
 

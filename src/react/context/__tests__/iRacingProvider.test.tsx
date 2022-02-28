@@ -3,7 +3,7 @@ import { render, cleanup } from "@testing-library/react";
 import WS from "jest-websocket-mock";
 import { iRacingSocket } from "../../../core";
 import IRacingProvider from "../iRacingProvider";
-import { getIRacingContext } from "../iRacingContext";
+import { iRacingContext } from "../iRacingContext";
 
 describe("iRacingProvider", () => {
   afterEach(() => {
@@ -43,7 +43,7 @@ describe("iRacingProvider", () => {
   });
   it("should add the socket to the child context", () => {
     const TestChild = () => {
-      const context = useContext(getIRacingContext());
+      const context = useContext(iRacingContext);
       expect(context.socket).toEqual(socket);
       return null;
     };
@@ -52,6 +52,35 @@ describe("iRacingProvider", () => {
       <IRacingProvider socket={socket}>
         <TestChild />
         <TestChild />
+      </IRacingProvider>,
+    );
+  });
+
+  it("should be able to set up multiple contexts for multiple socket definitions", () => {
+    const TestChild = () => {
+      const context = useContext(iRacingContext);
+      expect(context.socket).toEqual(socket);
+      return null;
+    };
+
+    const nestedSocket = new iRacingSocket({
+      server: "localhost:1234",
+      fps: 60,
+      requestParameters: ["DriverInfo"],
+    });
+
+    const NestedTestChild = () => {
+      const context = useContext(iRacingContext);
+      expect(context.socket).toEqual(nestedSocket);
+      return null;
+    };
+
+    render(
+      <IRacingProvider socket={socket}>
+        <TestChild />
+        <IRacingProvider socket={nestedSocket}>
+          <NestedTestChild />
+        </IRacingProvider>
       </IRacingProvider>,
     );
   });

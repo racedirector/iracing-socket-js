@@ -1,4 +1,4 @@
 export { iRacingConsumer, iRacingConsumerProps } from "./iRacingConsumer";
-export { iRacingContextType, getIRacingContext, resetIRacingContext, } from "./iRacingContext";
+export { iRacingContextType, useIRacingContext } from "./iRacingContext";
 export { iRacingProvider, iRacingProviderProps } from "./iRacingProvider";
 //# sourceMappingURL=index.d.ts.map

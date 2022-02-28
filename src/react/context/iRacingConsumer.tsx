@@ -1,14 +1,13 @@
 import * as React from "react";
 import { invariant } from "../../utilities/globals";
 import { iRacingSocket } from "../../core";
-import { getIRacingContext } from "./iRacingContext";
+import { iRacingContext } from "./iRacingContext";
 
 export interface iRacingConsumerProps {
   children: (raceDirector: iRacingSocket) => React.ReactChild | null;
 }
 
 export const iRacingConsumer: React.FC<iRacingConsumerProps> = (props) => {
-  const iRacingContext = getIRacingContext();
   return (
     <iRacingContext.Consumer>
       {(context: any) => {

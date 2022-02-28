@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { invariant } from "../../utilities/globals";
 import { iRacingSocketOptions } from "../../core";
-import { getIRacingContext } from "../context";
+import { useIRacingContext } from "../context";
 
 export const useIRacingSocketParameters: () => iRacingSocketOptions = () => {
-  const { socket } = useContext(getIRacingContext());
+  const { socket } = useIRacingContext();
 
   invariant(
     !!socket,

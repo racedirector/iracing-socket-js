@@ -1,12 +1,10 @@
 import * as React from "react";
 import { iRacingSocket } from "../../core";
-import { iRacingData } from "../../types";
 export interface iRacingContextType {
     isSocketConnected: boolean;
     isIRacingConnected: boolean;
     socket?: iRacingSocket;
-    data?: iRacingData;
 }
-export declare const getIRacingContext: () => React.Context<iRacingContextType>;
-export { getIRacingContext as resetIRacingContext };
+export declare const iRacingContext: React.Context<iRacingContextType>;
+export declare const useIRacingContext: () => iRacingContextType;
 //# sourceMappingURL=iRacingContext.d.ts.map
