@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { iRacingSocket } from "../../core";
 export interface iRacingConsumerProps {
     children: (raceDirector: iRacingSocket) => React.ReactChild | null;

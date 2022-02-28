@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { invariant } from "../../utilities/globals";
 import { iRacingSocket } from "../../core";
 import { getIRacingContext } from "./iRacingContext";

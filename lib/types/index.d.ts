@@ -4,11 +4,38 @@ export interface iRacingData {
 export declare type Driver = {
     CarIdx: number;
     UserID: number;
+    UserName: string;
+    TeamID: number;
+    TeamName: string;
+    CarNumber: string;
+    CarNumberRaw: number;
     CurDriverIncidentCount: number;
     CarClassID: number;
+    CarID: number;
     CarIsPaceCar: number;
     CarIsAI: number;
+    CarScreenName: string;
+    CarScreenNameShort: string;
+    CarClassShortName: string | null;
     CarClassRelSpeed: number;
+    CarClassLicenseLevel: number;
+    CarClassMaxFuelPct: string;
+    CarClassWeightPenalty: string;
+    CarClassPowerAdjust: string;
+    CarClassDryTireSetLimit: string;
+    CarClassColor: number;
+    CarClassEstLapTime: number;
+    IRating: number;
+    LicLevel: number;
+    LicSubLevel: number;
+    LicString: string;
+    LicColo: string;
+    IsSpectator: number;
+    CarDesignStr: string;
+    HelmetDesignStr: string;
+    SuitDesignStr: string;
+    CarNumberDesignStr: string;
+    TeamIncidentCount: number;
 };
 export declare type DriverIndex = Record<number, Driver>;
 export declare enum Flags {

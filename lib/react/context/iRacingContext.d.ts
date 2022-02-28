@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { iRacingSocket } from "../../core";
 import { iRacingData } from "../../types";
 export interface iRacingContextType {

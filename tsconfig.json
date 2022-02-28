@@ -17,7 +17,7 @@
     "target": "ES6",
     "module": "commonjs",
     "lib": ["es6", "ESNext", "DOM"],
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": ["src/**/*"],
 }

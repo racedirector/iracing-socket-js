@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { render, cleanup } from "@testing-library/react";
 import WS from "jest-websocket-mock";
 import { iRacingSocket } from "../../../core";
