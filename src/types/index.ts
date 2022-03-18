@@ -1,11 +1,64 @@
-export interface iRacingData {
-  [key: string]: any;
+// See `docs/` for more info
+
+export const PACE_CAR_CLASS_ID = 11;
+
+interface LiveData {
+  // Laps completed in race (int)
+  RaceLaps: number;
+  // Session number (int)
+  SessionNum: number;
+  // Bit field of flags
+  SessionFlags: Flags;
+  // Seconds since session start
+  SessionTime: number;
+  // Time of day in seconds
+  SessionTimeOfDay: number;
+  // Bitfield of pit service checkboxes
+  PitSvFlags: PitServiceFlags;
+  // Pit service fuel add amount
+  PitSvFuel: number;
+  // ???: Not officially documented :)
+  PlayerCarPitSvStatus: PitServiceFlags;
+  // Pit stop active boolean
+  PitStopActive: boolean;
 }
 
-export type Driver = {
+interface LiveSensorData {}
+
+interface LiveCarData {
+  // Cars class position in race by car index (int)
+  CarIdxClassPosition: number[];
+  // Estimated time to reach current location on track (float, seconds)
+  CarIdxEstTime: number[];
+  // Race time behind leader or fastest lap time otherwise (float, seconds)
+  CarIdxF2Time: number[];
+  // -1=reverse 0=neutral 1..n=current gear by car index (int)
+  CarIdxGear: number[];
+  // Lap count by car index (int)
+  CarIdxLap: number[];
+  // Percentage distance around lap by car index (float, percentage)
+  CarIdxLapDistPct: number[];
+  // On pit road between the cones by car index (int, boolean)
+  CarIdxOnPitRoad: number[];
+  // Cars position in race by car index (int)
+  CarIdxPosition: number[];
+  // Engine rpm by car index (float, revs/min)
+  CarIdxRPM: number[];
+  // Steering wheel angle by car index (float, rads)
+  CarIdxSteer: number[];
+  // Track surface type by car index (int, `TrackLocation`)
+  CarIdxTrackSurface: TrackLocation[];
+  // Track surface material by car index (int, TrackSurface)
+  CarIdxTrackSurfaceMaterial: TrackSurface[];
+  // Best lap time by car index (float, seconds)
+  CarIdxBestLapTime: number[];
+}
+
+export interface Driver {
   CarIdx: number;
   UserID: number;
   UserName: string;
+  AbbrevName: string;
   TeamID: number;
   TeamName: string;
   CarNumber: string;
@@ -30,14 +83,44 @@ export type Driver = {
   LicLevel: number;
   LicSubLevel: number;
   LicString: string;
-  LicColo: string;
+  LicColor: string;
   IsSpectator: number;
   CarDesignStr: string;
   HelmetDesignStr: string;
   SuitDesignStr: string;
   CarNumberDesignStr: string;
   TeamIncidentCount: number;
-};
+}
+
+interface DriverInfoData {
+  DriverCarIdx: number;
+  Drivers: Driver[];
+}
+
+interface SessionStringData {
+  WeekendInfo: Record<string, any>;
+  DriverInfo: Partial<DriverInfoData>;
+  SessionInfo: Record<string, any>;
+  QualifyResultsInfo: Record<string, any>;
+  CameraInfo: Record<string, any>;
+  RadioInfo: Record<string, any>;
+  SplitTimeInfo: Record<string, any>;
+}
+
+// !!!: It's all partial cause it's not guaranteed that a socket will be asking for all
+// of it, nor is it guaranteed to come back. You get what you get ¯\_(ツ)_/¯
+export interface iRacingData
+  extends Partial<LiveData>,
+    Partial<LiveSensorData>,
+    Partial<LiveCarData>,
+    Partial<SessionStringData> {
+  // !!!: Don't let this come back unless you're really annoyed cause
+  // people should just come back here and file a PR and add the types.
+  // See `docs/`
+  // [key: string]: any;
+}
+
+export type iRacingDataKey = keyof iRacingData;
 
 export type DriverIndex = Record<number, Driver>;
 
@@ -225,5 +308,3 @@ export interface CarClassIdentifier {
 }
 
 export type CarClassIDProvider = Pick<CarClassIdentifier, "CarClassID">;
-
-export const PACE_CAR_CLASS_ID = 11;

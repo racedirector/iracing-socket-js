@@ -11,6 +11,9 @@ import {
 export const flagsHasFlag = (flags: Flags, hasFlags: Flags): boolean =>
   (flags & hasFlags) === hasFlags;
 
+export const flagsHasFlags = (flags: Flags, ...hasFlags: Flags[]): boolean[] =>
+  hasFlags.map((flag) => flagsHasFlag(flags, flag));
+
 const getCurrentSession = ({
   SessionNum: currentSessionNumber = -1,
   SessionInfo: { Sessions: sessions = [] } = {},

@@ -1,4 +1,6 @@
-export { FlagsConsumer, FlagsConsumerEvents, IRACING_REQUEST_PARAMS as FLAGS_REQUEST_PARAMS, } from "./flagConsumer";
-export { DriverSwapConsumer, DriverSwapEvents, IRACING_REQUEST_PARAMS as DRIVER_SWAP_REQUEST_PARAMS, } from "./driverSwapConsumer";
-export { PitTimingConsumer, PitTimingEvents, IRACING_REQUEST_PARAMS as PIT_TIMING_REQUEST_PARAMS, } from "./pitTimingConsumer";
+export { DriverSwapConsumer, DriverSwapEvents } from "./driverSwapConsumer";
+export { FlagsConsumer, FlagsEvents } from "./flagConsumer";
+export { LapConsumer, LapEvents } from "./lapConsumer";
+export { PitTimingConsumer, PitTimingEvents } from "./pitTimingConsumer";
+export { SimIncidentConsumer, SimIncidentConsumerConfig, SimIncidentEvents, } from "./simIncidentConsumer";
 //# sourceMappingURL=index.d.ts.map

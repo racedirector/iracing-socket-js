@@ -1,35 +1,53 @@
 import { EventEmitter } from "events";
-import {
-  iRacingSocket,
-  iRacingSocketEvents,
-  iRacingSocketOptions,
-} from "./socket";
+import { iRacingDataKey } from "../types";
+import { iRacingSocket, iRacingSocketEvents } from "./socket";
 
+/**
+ * An `iRacingSocketConsumer` is an abstract class provided as a convenience
+ * for users to easily seperate concerns associated with consuming data from
+ * an iRacing socket. Given an `iRacingSocket` instance, a consumer binds
+ * itself to the update event from the socket, invoking `onUpdate` on the
+ * concrete implementation.
+ *
+ * Examples of concreate implemenations can be found in the "consumers" directory.
+ *
+ * @listens iRacingSocket.update
+ */
 export abstract class iRacingSocketConsumer extends EventEmitter {
+  static requestParameters: iRacingDataKey[];
+  static requestParametersOnce?: iRacingDataKey[];
+
+  /**
+   * The socket providing the data
+   */
   protected socket: iRacingSocket;
 
+  /**
+   * A function that must be implemented by concrete implmentations that is
+   * invoked when the socket data updates.
+   * @param keys An array of keys that updated in the socket data.
+   */
   abstract onUpdate(keys: string[]): void;
 
-  constructor(
-    socket: iRacingSocket | iRacingSocketOptions,
-    prepend: boolean = false,
-  ) {
+  /**
+   * Constructor that handles creating an `iRacingSocket`, if necessary, and
+   * binds a listener to the update events.
+   *
+   * @param socket an `iRacingSocket` instance or options to create a this
+   * managed socket.
+   * @param prepend Whether or not to prepend the registered observer to the
+   * front of the socket listeners, ensuring we get the "latest" updates.
+   */
+  constructor(socket: iRacingSocket) {
     super();
 
-    this.socket =
-      socket instanceof iRacingSocket ? socket : new iRacingSocket(socket);
-
-    this.bindUpdate(prepend);
+    this.socket = socket;
+    this.bindUpdate();
   }
 
-  protected bindUpdate = (prepend: boolean = false) => {
+  protected bindUpdate = () => {
     const boundUpdate = (keys: string[]) => this.onUpdate(keys);
-
-    if (prepend) {
-      this.socket.prependListener(iRacingSocketEvents.Update, boundUpdate);
-    } else {
-      this.socket.on(iRacingSocketEvents.Update, boundUpdate);
-    }
+    this.socket.on(iRacingSocketEvents.Update, boundUpdate);
   };
 }
 

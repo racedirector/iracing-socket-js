@@ -1,13 +1,14 @@
-import { TrackLocation } from "../../types";
+import { Flags, TrackLocation } from "../../types";
 import {
   parseTrackLength,
   isOnTrack,
   isRaceSession,
   isMultiClass,
   parseNumberFromString,
+  flagsHasFlag,
 } from ".";
 
-describe("Race director util functions", () => {
+describe("iracing util functions", () => {
   describe("parseNumberFromString", () => {
     it("returns the number value from the string", () => {
       const stringValue = "2.34 km";
@@ -92,6 +93,28 @@ describe("Race director util functions", () => {
           },
         ]),
       ).toBeFalsy();
+    });
+  });
+
+  describe("flagsHasFlag", () => {
+    it("Can tell if a single flag is in the bitfield", () => {
+      expect(
+        flagsHasFlag(Flags.CautionWaving, Flags.CautionWaving),
+      ).toBeTruthy();
+
+      expect(flagsHasFlag(Flags.CautionWaving, Flags.Caution)).toBeFalsy();
+    });
+
+    it("Can tell if multiple flags are in the bitfield", () => {
+      // The race is about to go green, but the user has a meatball!
+      const runningFlags =
+        Flags.StartHidden |
+        Flags.OneLapToGreen |
+        Flags.Repair |
+        Flags.GreenHeld;
+
+      const aboutToGoGreen = Flags.StartHidden | Flags.GreenHeld;
+      expect(flagsHasFlag(runningFlags, aboutToGoGreen)).toBeTruthy();
     });
   });
 });

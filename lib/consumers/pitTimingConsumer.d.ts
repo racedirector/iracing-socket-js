@@ -1,7 +1,5 @@
 import { iRacingSocket, iRacingSocketConsumer, iRacingSocketOptions } from "../core";
-import { TrackLocation } from "../types";
-export declare const IRACING_REQUEST_PARAMS: string[];
-export declare const IRACING_REQUEST_PARAMS_ONCE: any[];
+import { iRacingDataKey, TrackLocation } from "../types";
 export declare enum PitTimingEvents {
     PitEntry = "PitEntry",
     PitExit = "PitExit",
@@ -15,6 +13,7 @@ export interface PitTimingConsumerOptions {
     socket: iRacingSocket | iRacingSocketOptions;
 }
 export declare class PitTimingConsumer extends iRacingSocketConsumer {
+    static requestParameters: iRacingDataKey[];
     protected trackLocation: TrackLocation;
     protected isOnPitRoad: boolean;
     protected isPitStopActive: boolean;

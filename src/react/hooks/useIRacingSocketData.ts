@@ -5,7 +5,7 @@ import { useIRacingContext } from "../context";
 
 export const useIRacingSocketData: () => iRacingData = () => {
   let { socket } = useIRacingContext();
-  const [data, setData] = useState({});
+  const [data, setData] = useState<iRacingData>({});
 
   useEffect(() => {
     function handleUpdate() {

@@ -18,7 +18,7 @@ describe("iRacingProvider", () => {
 
     socket = new iRacingSocket({
       server: "localhost:1234",
-      requestParameters: [],
+      requestParameters: ["DriverInfo"],
     });
 
     await serverMock.connected;

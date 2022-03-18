@@ -1,10 +1,10 @@
-import { Flags } from "../types";
+import { Flags, iRacingDataKey } from "../types";
 import { iRacingSocketConsumer } from "../core";
-export declare const IRACING_REQUEST_PARAMS: string[];
-export declare enum FlagsConsumerEvents {
+export declare enum FlagsEvents {
     FlagChange = "flagChange"
 }
 export declare class FlagsConsumer extends iRacingSocketConsumer {
+    static requestParameters: iRacingDataKey[];
     private _previousFlags;
     get flags(): Flags;
     onUpdate: (keys: string[]) => void;

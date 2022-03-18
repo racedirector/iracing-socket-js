@@ -1,12 +1,17 @@
 import { EventEmitter } from "events";
+import invariant from "ts-invariant";
 import { iRacingData } from "../types";
 
 const MAX_FPS = 60;
 const MIN_FPS = 1;
 
+const fps = (desiredFps: number): number =>
+  Math.min(Math.max(desiredFps, MIN_FPS), MAX_FPS);
+
 export enum iRacingSocketConnectionEvents {
   Connect = "connect",
   Disconnect = "disconnect",
+  Error = "connectionError",
 }
 
 export enum iRacingClientConnectionEvents {
@@ -25,10 +30,25 @@ export interface iRacingSocketOptions {
   server: string;
   readIBT?: boolean;
   reconnectTimeoutInterval?: number;
+  autoconnect?: boolean;
 }
 
 export class iRacingSocket extends EventEmitter {
-  private socket: WebSocket;
+  private _socket: WebSocket;
+  get socket(): WebSocket {
+    return this._socket;
+  }
+
+  set socket(socket: WebSocket) {
+    if (this._socket) {
+      this._socket.removeEventListener("open", this.onOpen);
+      this._socket.removeEventListener("message", this.onMessage);
+      this._socket.removeEventListener("close", this.onClose);
+      this._socket.removeEventListener("error", this.onError);
+    }
+
+    this._socket = socket;
+  }
 
   readonly server: string;
 
@@ -44,53 +64,94 @@ export class iRacingSocket extends EventEmitter {
 
   readonly readIBT: boolean;
 
-  data: iRacingData = {};
+  readonly socketConnectionEmitter: EventEmitter = new EventEmitter();
+
+  readonly iRacingConnectionEmitter: EventEmitter = new EventEmitter();
+
+  private _data: iRacingData = {};
+  get data(): iRacingData {
+    return this._data;
+  }
 
   reconnectTimeoutInterval: number;
 
-  connected: boolean;
+  private _connecting: boolean;
 
-  socketConnectionEmitter: EventEmitter = new EventEmitter();
+  private _connected: boolean;
+  get connected(): boolean {
+    return this._connected;
+  }
 
-  iRacingConnectionEmitter: EventEmitter = new EventEmitter();
+  private set connected(isConnected: boolean) {
+    if (this._connecting) {
+      this._connecting = false;
+    }
 
-  constructor(options: iRacingSocketOptions) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    this._connected = isConnected;
+  }
+
+  constructor({
+    server,
+    requestParameters,
+    requestParametersOnce,
+    fps: desiredFps = 1,
+    readIBT = false,
+    reconnectTimeoutInterval = 2000,
+    autoconnect = true,
+  }: iRacingSocketOptions) {
     super();
 
-    this.server = options.server;
-    this.requestParameters = options.requestParameters;
-    this.requestParametersOnce = options.requestParametersOnce;
-    this.fps = Math.min(Math.max(options.fps || 1, MIN_FPS), MAX_FPS);
-    this.readIBT = options.readIBT || false;
-    this.reconnectTimeoutInterval = options.reconnectTimeoutInterval || 2000;
+    invariant(
+      requestParameters.length > 0 || requestParametersOnce.length > 0,
+      "Request parameters must be provided and cannot be empty.",
+    );
+
+    this.server = server;
+    this.requestParameters = requestParameters;
+    this.requestParametersOnce = requestParametersOnce;
+    this.fps = fps(desiredFps);
+    this.readIBT = readIBT;
+    this.reconnectTimeoutInterval = reconnectTimeoutInterval;
     this.connected = false;
     this.firstConnection = true;
 
-    this.open();
+    if (autoconnect) {
+      this.open();
+    }
   }
 
   open = () => {
-    this.socket = new WebSocket(`ws://${this.server}/ws`);
-    this.socket.addEventListener("open", this.onOpen);
-    this.socket.addEventListener("message", this.onMessage);
-    this.socket.addEventListener("close", this.onClose);
+    if (!this._connecting) {
+      this.socket = new WebSocket(`ws://${this.server}/ws`);
+      this.socket.addEventListener("open", this.onOpen);
+      this.socket.addEventListener("message", this.onMessage);
+      this.socket.addEventListener("close", this.onClose);
+      this.socket.addEventListener("error", this.onError);
+      this._connecting = true;
+    }
   };
 
-  close = () => {
-    this.socket.close();
+  close = () => this.socket.close();
+
+  scheduleRetry = (retryInterval?: number) => {
+    this.reconnectTimeout = setTimeout(() => {
+      this.open();
+    }, retryInterval || this.reconnectTimeoutInterval);
   };
 
-  sendCommand = (command: string, ...args: any[]) => {
+  cancelRetry = () => {
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+    }
+  };
+
+  sendCommand = (command: string, ...args: any[]) =>
     this.send({
       command,
       args,
     });
-  };
 
-  send = (payload: any) => {
-    this.socket.send(JSON.stringify(payload));
-  };
+  send = (payload: any) => this.socket.send(JSON.stringify(payload));
 
   removeAllListeners(event?: string | symbol): this {
     this.iRacingConnectionEmitter.removeAllListeners();
@@ -98,12 +159,22 @@ export class iRacingSocket extends EventEmitter {
     return super.removeAllListeners(event);
   }
 
+  private onError = (event) => {
+    const connectionError = !this.connected && this._connecting;
+    if (connectionError) {
+      this.socketConnectionEmitter.emit(
+        iRacingSocketConnectionEvents.Error,
+        event,
+      );
+
+      this.scheduleRetry();
+    }
+  };
+
   private onOpen = () => {
     this.socketConnectionEmitter.emit(iRacingSocketConnectionEvents.Connect);
 
-    if (this.reconnectTimeout) {
-      clearTimeout(this.reconnectTimeout);
-    }
+    this.cancelRetry();
 
     this.send({
       fps: this.fps,
@@ -130,10 +201,9 @@ export class iRacingSocket extends EventEmitter {
     // Update data
     if (data) {
       const keys: string[] = [];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       Object.entries(data).forEach(([key, value]) => {
         keys.push(key);
-        this.data[key] = value;
+        this._data[key] = value;
       });
       this.emit(iRacingSocketEvents.Update, keys);
     }
@@ -142,11 +212,7 @@ export class iRacingSocket extends EventEmitter {
   private onClose = () => {
     this.socketConnectionEmitter.emit(iRacingSocketConnectionEvents.Disconnect);
 
-    if (this.socket) {
-      this.socket.removeEventListener("open", this.onOpen);
-      this.socket.removeEventListener("message", this.onMessage);
-      this.socket.removeEventListener("close", this.onClose);
-    }
+    this.socket = null;
 
     if (this.connected) {
       this.connected = false;
@@ -155,9 +221,7 @@ export class iRacingSocket extends EventEmitter {
       );
     }
 
-    this.reconnectTimeout = setTimeout(() => {
-      this.open();
-    }, this.reconnectTimeoutInterval);
+    this.scheduleRetry();
   };
 }
 

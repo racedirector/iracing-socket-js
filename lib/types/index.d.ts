@@ -1,10 +1,37 @@
-export interface iRacingData {
-    [key: string]: any;
+export declare const PACE_CAR_CLASS_ID = 11;
+interface LiveData {
+    RaceLaps: number;
+    SessionNum: number;
+    SessionFlags: Flags;
+    SessionTime: number;
+    SessionTimeOfDay: number;
+    PitSvFlags: PitServiceFlags;
+    PitSvFuel: number;
+    PlayerCarPitSvStatus: PitServiceFlags;
+    PitStopActive: boolean;
 }
-export declare type Driver = {
+interface LiveSensorData {
+}
+interface LiveCarData {
+    CarIdxClassPosition: number[];
+    CarIdxEstTime: number[];
+    CarIdxF2Time: number[];
+    CarIdxGear: number[];
+    CarIdxLap: number[];
+    CarIdxLapDistPct: number[];
+    CarIdxOnPitRoad: number[];
+    CarIdxPosition: number[];
+    CarIdxRPM: number[];
+    CarIdxSteer: number[];
+    CarIdxTrackSurface: TrackLocation[];
+    CarIdxTrackSurfaceMaterial: TrackSurface[];
+    CarIdxBestLapTime: number[];
+}
+export interface Driver {
     CarIdx: number;
     UserID: number;
     UserName: string;
+    AbbrevName: string;
     TeamID: number;
     TeamName: string;
     CarNumber: string;
@@ -29,14 +56,30 @@ export declare type Driver = {
     LicLevel: number;
     LicSubLevel: number;
     LicString: string;
-    LicColo: string;
+    LicColor: string;
     IsSpectator: number;
     CarDesignStr: string;
     HelmetDesignStr: string;
     SuitDesignStr: string;
     CarNumberDesignStr: string;
     TeamIncidentCount: number;
-};
+}
+interface DriverInfoData {
+    DriverCarIdx: number;
+    Drivers: Driver[];
+}
+interface SessionStringData {
+    WeekendInfo: Record<string, any>;
+    DriverInfo: Partial<DriverInfoData>;
+    SessionInfo: Record<string, any>;
+    QualifyResultsInfo: Record<string, any>;
+    CameraInfo: Record<string, any>;
+    RadioInfo: Record<string, any>;
+    SplitTimeInfo: Record<string, any>;
+}
+export interface iRacingData extends Partial<LiveData>, Partial<LiveSensorData>, Partial<LiveCarData>, Partial<SessionStringData> {
+}
+export declare type iRacingDataKey = keyof iRacingData;
 export declare type DriverIndex = Record<number, Driver>;
 export declare enum Flags {
     Checkered = 1,
@@ -198,5 +241,5 @@ export interface CarClassIdentifier {
     CarClassEstLapTime: number | null;
 }
 export declare type CarClassIDProvider = Pick<CarClassIdentifier, "CarClassID">;
-export declare const PACE_CAR_CLASS_ID = 11;
+export {};
 //# sourceMappingURL=index.d.ts.map

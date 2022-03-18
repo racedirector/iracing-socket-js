@@ -3,7 +3,8 @@ import { EventEmitter } from "events";
 import { iRacingData } from "../types";
 export declare enum iRacingSocketConnectionEvents {
     Connect = "connect",
-    Disconnect = "disconnect"
+    Disconnect = "disconnect",
+    Error = "connectionError"
 }
 export declare enum iRacingClientConnectionEvents {
     Connect = "connect",
@@ -19,9 +20,12 @@ export interface iRacingSocketOptions {
     server: string;
     readIBT?: boolean;
     reconnectTimeoutInterval?: number;
+    autoconnect?: boolean;
 }
 export declare class iRacingSocket extends EventEmitter {
-    private socket;
+    private _socket;
+    get socket(): WebSocket;
+    set socket(socket: WebSocket);
     readonly server: string;
     private firstConnection;
     private reconnectTimeout;
@@ -29,17 +33,24 @@ export declare class iRacingSocket extends EventEmitter {
     readonly requestParametersOnce: string[];
     readonly fps: number;
     readonly readIBT: boolean;
-    data: iRacingData;
+    readonly socketConnectionEmitter: EventEmitter;
+    readonly iRacingConnectionEmitter: EventEmitter;
+    private _data;
+    get data(): iRacingData;
     reconnectTimeoutInterval: number;
-    connected: boolean;
-    socketConnectionEmitter: EventEmitter;
-    iRacingConnectionEmitter: EventEmitter;
-    constructor(options: iRacingSocketOptions);
+    private _connecting;
+    private _connected;
+    get connected(): boolean;
+    private set connected(value);
+    constructor({ server, requestParameters, requestParametersOnce, fps: desiredFps, readIBT, reconnectTimeoutInterval, autoconnect, }: iRacingSocketOptions);
     open: () => void;
     close: () => void;
+    scheduleRetry: (retryInterval?: number) => void;
+    cancelRetry: () => void;
     sendCommand: (command: string, ...args: any[]) => void;
     send: (payload: any) => void;
     removeAllListeners(event?: string | symbol): this;
+    private onError;
     private onOpen;
     private onMessage;
     private onClose;

@@ -1,8 +1,6 @@
 import { isEmpty, keyBy } from "lodash";
 import { iRacingSocketConsumer } from "../core";
-import { Driver } from "../types";
-
-export const IRACING_REQUEST_PARAMS = ["DriverInfo"];
+import { Driver, iRacingDataKey } from "../types";
 
 export type DriverSwapFragment = Pick<Driver, "UserID">;
 
@@ -45,12 +43,14 @@ export enum DriverSwapEvents {
 }
 
 export class DriverSwapConsumer extends iRacingSocketConsumer {
+  static requestParameters: iRacingDataKey[] = ["DriverInfo"];
+
   private driverIndex: Record<number, Driver>;
 
   onUpdate = (keys: string[]): void => {
     if (keys.includes("DriverInfo")) {
       const nextData = { ...this.socket.data };
-      const nextIndex = keyBy(nextData.DriverInfo?.Drivers || [], "carIdx");
+      const nextIndex = keyBy(nextData.DriverInfo?.Drivers || [], "CarIdx");
 
       if (this.driverIndex) {
         const driverSwaps = getDriverSwapIndex(this.driverIndex, nextIndex);

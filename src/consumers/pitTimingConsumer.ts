@@ -3,19 +3,7 @@ import {
   iRacingSocketConsumer,
   iRacingSocketOptions,
 } from "../core";
-import { PitServiceStatus, TrackLocation } from "../types";
-
-export const IRACING_REQUEST_PARAMS = [
-  "CarIdxOnPitRoad",
-  "CarIdxTrackSurface",
-  "DriverInfo",
-  "PitStopActive",
-  "PitSvFlags",
-  "PitSvFuel",
-  "PlayerCarPitSvStatus",
-];
-
-export const IRACING_REQUEST_PARAMS_ONCE = [];
+import { iRacingDataKey, PitServiceStatus, TrackLocation } from "../types";
 
 export enum PitTimingEvents {
   PitEntry = "PitEntry",
@@ -32,10 +20,21 @@ export interface PitTimingConsumerOptions {
 }
 
 export class PitTimingConsumer extends iRacingSocketConsumer {
+  static requestParameters: iRacingDataKey[] = [
+    "CarIdxOnPitRoad",
+    "CarIdxTrackSurface",
+    "DriverInfo",
+    "PitStopActive",
+    "PitSvFlags",
+    "PitSvFuel",
+    "PlayerCarPitSvStatus",
+  ];
+
   protected trackLocation: TrackLocation = undefined;
   protected isOnPitRoad: boolean = undefined;
   protected isPitStopActive: boolean = undefined;
 
+  // TODO: Make this dynamic and support all cars instead of just one...
   onUpdate = (keys) => {
     const {
       CarIdxOnPitRoad: carIdxOnPitRoad = [],
@@ -48,7 +47,9 @@ export class PitTimingConsumer extends iRacingSocketConsumer {
     } = this.socket.data;
 
     const currentTrackLocation = carIdxTrackSurface[driverCarIdx];
-    const currentOnPitRoad = carIdxOnPitRoad[driverCarIdx];
+    const currentOnPitRoad = Boolean(carIdxOnPitRoad[driverCarIdx]);
+
+    // TODO: What does towing look like?
 
     const previousStateExists =
       typeof this.trackLocation !== "undefined" &&
@@ -84,7 +85,9 @@ export class PitTimingConsumer extends iRacingSocketConsumer {
       if (!currentOnPitRoad && this.isOnPitRoad) {
         this.emit(PitTimingEvents.PitExit, driverCarIdx, new Date());
       }
+    }
 
+    if (keys.includes("PitStopActive")) {
       if (isPitStopActive && !this.isPitStopActive) {
         this.emit(
           PitTimingEvents.PitServiceStart,
@@ -102,7 +105,11 @@ export class PitTimingConsumer extends iRacingSocketConsumer {
 
     if (keys.includes("PlayerCarPitSvStatus")) {
       if (playerCarPitServiceStatus >= PitServiceStatus.TooFarLeft) {
-        this.emit(PitTimingEvents.PitServiceError, playerCarPitServiceStatus);
+        this.emit(
+          PitTimingEvents.PitServiceError,
+          playerCarPitServiceStatus,
+          new Date(),
+        );
       }
     }
 
