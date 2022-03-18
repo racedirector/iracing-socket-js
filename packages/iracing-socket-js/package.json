@@ -1,6 +1,6 @@
 {
   "name": "@racedirector/iracing-socket-js",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "iRacingBrowserApps/Kapps socket adpater for iRacing",
   "repository": {
     "type": "git",
@@ -18,10 +18,14 @@
   },
   "peerDependencies": {
     "lodash": "*",
-    "react": "^17.0.0"
+    "react": "^17.0.0",
+    "ws": "^8"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "ws": {
       "optional": true
     }
   },

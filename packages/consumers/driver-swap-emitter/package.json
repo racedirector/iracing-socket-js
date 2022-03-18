@@ -1,6 +1,6 @@
 {
   "name": "@racedirector/iracing-driver-swap-emitter",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "EventEmitter that emits events when driver swaps are detected from iRacing.",
   "repository": {
     "type": "git",
@@ -14,8 +14,8 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@racedirector/iracing-socket-js": "0.1.0"
-  },  
+    "@racedirector/iracing-socket-js": "1.0.0"
+  },
   "peerDependencies": {
     "lodash": "*"
   },

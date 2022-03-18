@@ -3,22 +3,27 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*",
-      "packages/consumers/*"
+      "packages/iracing-*",
+      "packages/consumers/*",
+      "examples/*"
     ]
   },
   "scripts": {
     "clean": "rimraf node_modules packages/{*,consumers/*}/node_modules",
     "prebuild": "rimraf packages/{*,consumers/*}/dist",
-    "build": "tsc --project tsconfig.json && bob build",
-    "build:watch": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
+    "build": "tsc --project tsconfig.build.json && bob build",
+    "build:watch": "npx tsc-watch --project tsconfig.build.json --onSuccess \"bob build\"",
     "test": "jest --no-watchman",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx}\"",
+    "prerelease": "yarn build",
+    "release": "changeset publish",
+    "release:canary": "node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha",
     "types:check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@changesets/cli": "2.22.0",
     "@testing-library/react": "12.1.3",
     "@types/jest": "27.4.1",
     "@types/lodash": "4.14.179",
@@ -34,6 +39,7 @@
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.0.0",
     "eslint-plugin-react-hooks": "4.3.0",
+    "get-yarn-workspaces": "1.0.2",
     "husky": "7.0.4",
     "jest": "27.5.1",
     "jest-websocket-mock": "2.3.0",
@@ -44,8 +50,8 @@
     "react-dom": "17.0.2",
     "rimraf": "3.0.2",
     "timekeeper": "2.2.0",
-    "tsc-watch": "4.6.2",
     "ts-jest": "27.1.4",
+    "tsc-watch": "4.6.2",
     "tslib": "2.3.1",
     "typescript": "4.5.5",
     "waait": "1.0.5"
@@ -60,5 +66,6 @@
     "yarn.lock": [
       "npx yarn-deduplicate"
     ]
-  }
+  },
+  "packageManager": "yarn@3.2.3"
 }

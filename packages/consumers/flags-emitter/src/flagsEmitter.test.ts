@@ -1,7 +1,7 @@
 import { iRacingSocket, Flags } from "@racedirector/iracing-socket-js";
 import { flagsHasFlag } from "@racedirector/iracing-utilities";
 import WS from "jest-websocket-mock";
-import { FlagsConsumer, FlagsEvents } from "./";
+import { FlagsEmitter, FlagsEvents } from "./";
 
 describe("Flags Consumer", () => {
   afterEach(() => {
@@ -15,14 +15,14 @@ describe("Flags Consumer", () => {
     serverMock = new WS(`ws://${serverMockAddress}/ws`);
   });
 
-  it("emits 'flagChange' (FlagsConsumerEvents.FlagChange) events when the flags change", async () => {
+  it("emits 'flagChange' (FlagsEmitterEvents.FlagChange) events when the flags change", async () => {
     const socket = new iRacingSocket({
       server: serverMockAddress,
-      requestParameters: FlagsConsumer.requestParameters,
+      requestParameters: FlagsEmitter.requestParameters,
     });
 
     const mockFlagChange = jest.fn(() => {});
-    const flagsConsumer = new FlagsConsumer(socket).on(
+    const emitter = new FlagsEmitter(socket).on(
       FlagsEvents.FlagChange,
       mockFlagChange,
     );
@@ -61,16 +61,16 @@ describe("Flags Consumer", () => {
       70,
       1060,
     );
-    expect(flagsHasFlag(flagsConsumer.flags, Flags.CautionWaving)).toBeTruthy();
+    expect(flagsHasFlag(emitter.flags, Flags.CautionWaving)).toBeTruthy();
   });
   it("keeps track of the flags after an update", async () => {
     const socket = new iRacingSocket({
       server: serverMockAddress,
-      requestParameters: FlagsConsumer.requestParameters,
+      requestParameters: FlagsEmitter.requestParameters,
     });
 
     const mockFlagChange = jest.fn(() => {});
-    const flagsConsumer = new FlagsConsumer(socket).on(
+    const emitter = new FlagsEmitter(socket).on(
       FlagsEvents.FlagChange,
       mockFlagChange,
     );
@@ -90,6 +90,6 @@ describe("Flags Consumer", () => {
     // Flags should have changed
     expect(mockFlagChange).toBeCalled();
     expect(mockFlagChange).toBeCalledWith(undefined, Flags.StartGo, 10, 1000);
-    expect(flagsConsumer.flags).toBe(Flags.StartGo);
+    expect(emitter.flags).toBe(Flags.StartGo);
   });
 });

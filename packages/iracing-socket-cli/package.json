@@ -1,6 +1,6 @@
 {
   "name": "@racedirector/iracing-socket-cli",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "iRacingBrowserApps/Kapps socket adpater for iRacing... in CLI form",
   "repository": {
     "type": "git",
@@ -19,10 +19,11 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@racedirector/iracing-socket-js": "^0.1.0",
-    "chalk": "^5.0.1",
-    "lodash":"^4.17.21",
+    "@racedirector/iracing-socket-js": "^1.0.0",
+    "lodash": "^4.17.21",
     "ts-invariant": "^0.9.4",
+    "websocket-polyfill": "^0.0.3",
+    "winston": "^3.6.0",
     "yargs": "^17.4.0"
   },
   "devDependencies": {

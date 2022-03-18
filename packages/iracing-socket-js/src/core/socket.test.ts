@@ -1,11 +1,11 @@
 import {
   iRacingSocket,
-  iRacingSocketCommands,
   iRacingSocketConnectionEvents,
   iRacingSocketOptions,
 } from "./socket";
 import WS from "jest-websocket-mock";
 import wait from "waait";
+import { iRacingSocketCommands } from "../types";
 
 describe("iRacing Socket", () => {
   afterEach(() => {
@@ -76,7 +76,7 @@ describe("iRacing Socket", () => {
 
       await serverMock.nextMessage;
 
-      socket.sendCommand(iRacingSocketCommands.ChatCommandMacro, 8);
+      socket.sendCommand(iRacingSocketCommands.ChatCommandMacro, [8]);
 
       // await serverMock.nextMessage;
 

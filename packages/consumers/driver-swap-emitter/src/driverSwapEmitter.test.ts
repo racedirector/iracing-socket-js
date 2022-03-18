@@ -1,6 +1,6 @@
 import WS from "jest-websocket-mock";
 import { iRacingSocket } from "@racedirector/iracing-socket-js";
-import { DriverSwapConsumer, DriverSwapEvents } from "./";
+import { DriverSwapEmitter, DriverSwapEvents } from "./";
 
 const driverMakaila = {
   CarIdx: 1,
@@ -17,7 +17,7 @@ const driverAlonso = {
   UserID: 524549,
 };
 
-describe("Driver Swap Consumer", () => {
+describe("Driver Swap Emitter", () => {
   afterEach(() => {
     WS.clean();
   });
@@ -32,11 +32,11 @@ describe("Driver Swap Consumer", () => {
   it("emits 'driverSwaps' (DriverSwapEvents.DriverSwaps) events that represent detected driver swaps per update", async () => {
     const socket = new iRacingSocket({
       server: serverMockAddress,
-      requestParameters: DriverSwapConsumer.requestParameters,
+      requestParameters: DriverSwapEmitter.requestParameters,
     });
 
     const mockDriverSwapHandler = jest.fn(() => {});
-    const driverSwapConsumer = new DriverSwapConsumer(socket);
+    const driverSwapConsumer = new DriverSwapEmitter(socket);
     driverSwapConsumer.on(DriverSwapEvents.DriverSwaps, mockDriverSwapHandler);
 
     // Wait for the socket to connect and mock an initial response...

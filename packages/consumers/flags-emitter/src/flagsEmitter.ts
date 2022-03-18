@@ -5,17 +5,17 @@ import {
 } from "@racedirector/iracing-socket-js";
 
 /**
- * All events that `FlagsConsumer` can emit.
+ * All events that `FlagsEmitter` can emit.
  */
 export enum FlagsEvents {
   FlagChange = "flagChange",
 }
 
 /**
- * A `FlagsConsumer` is a derived implementation of `iRacingSocketConsumer` to
+ * A `FlagsEmitter` is a derived implementation of `iRacingSocketConsumer` to
  * emit timestamped events for `SessionFlags` changes.
  */
-export class FlagsConsumer extends iRacingSocketConsumer {
+export class FlagsEmitter extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = [
     "SessionFlags",
     "SessionTime",
@@ -31,7 +31,7 @@ export class FlagsConsumer extends iRacingSocketConsumer {
   /**
    * Handle update events
    * @param keys the changed keys
-   * @fires FlagsConsumer.flagChange
+   * @fires FlagsEmitter.flagChange
    */
   onUpdate = (keys: string[]) => {
     if (!keys.includes("SessionFlags")) {
@@ -47,7 +47,7 @@ export class FlagsConsumer extends iRacingSocketConsumer {
     if (flags !== this._previousFlags) {
       /**
        * Flag change event
-       * @event FlagsConsumer.flagChange
+       * @event FlagsEmitter.flagChange
        * @param {Flags} previousFlags The previous flag value
        * @param {Flags} flags The next flag value
        * @param {number} sessionTime The session time
@@ -66,4 +66,4 @@ export class FlagsConsumer extends iRacingSocketConsumer {
   };
 }
 
-export default FlagsConsumer;
+export default FlagsEmitter;
