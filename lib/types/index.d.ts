@@ -217,29 +217,5 @@ export declare enum VideoCaptureMode {
     ShowVideoTimer = 4,
     HideVideoTimer = 5
 }
-export interface CarClass {
-    id: string;
-    className: string;
-    relativeSpeed: string;
-    carName: string;
-    carNameShort: string;
-    color?: string;
-}
-export declare type CarClassIndex = Record<string, CarClass>;
-export interface CarClassIdentifier {
-    CarClassID: number | null;
-    CarScreenName: string | null;
-    CarScreenNameShort: string | null;
-    CarClassShortName: string | null;
-    CarClassRelSpeed: number | null;
-    CarClassLicenseLevel: number | null;
-    CarClassMaxFuelPct: string | null;
-    CarClassWeightPenalty: string | null;
-    CarClassPowerAdjust: string | null;
-    CarClassDryTireSetLimit: string | null;
-    CarClassColor: number | null;
-    CarClassEstLapTime: number | null;
-}
-export declare type CarClassIDProvider = Pick<CarClassIdentifier, "CarClassID">;
 export {};
 //# sourceMappingURL=index.d.ts.map

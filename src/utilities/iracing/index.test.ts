@@ -2,8 +2,6 @@ import { Flags, TrackLocation } from "../../types";
 import {
   parseTrackLength,
   isOnTrack,
-  isRaceSession,
-  isMultiClass,
   parseNumberFromString,
   flagsHasFlag,
 } from ".";
@@ -14,6 +12,12 @@ describe("iracing util functions", () => {
       const stringValue = "2.34 km";
 
       expect(parseNumberFromString(stringValue, "km")).toEqual(2.34);
+    });
+
+    it("only works on strings matching the format", () => {
+      const stringValue = "2.34km";
+
+      expect(parseNumberFromString(stringValue, "km")).toBeNull();
     });
   });
 
@@ -53,45 +57,6 @@ describe("iracing util functions", () => {
       // Expect the off track values to be false
       expect(
         offTrackValues.reduce((testValue, value) => testValue || value, false),
-      ).toBeFalsy();
-    });
-  });
-
-  describe("isRaceSession", () => {
-    it("properly recognizes a race session", () => {
-      expect(isRaceSession({ SessionName: "RACE" })).toBeTruthy();
-      expect(isRaceSession({ SessionName: "PRACTICE" })).toBeFalsy();
-    });
-  });
-
-  describe("isMultiClass", () => {
-    it("properly identifies a multiclass race session, excluding the pace car", () => {
-      expect(
-        isMultiClass([
-          {
-            CarClassID: 11,
-          },
-          {
-            CarClassID: 14,
-          },
-          {
-            CarClassID: 15,
-          },
-        ]),
-      ).toBeTruthy();
-
-      expect(
-        isMultiClass([
-          {
-            CarClassID: 11,
-          },
-          {
-            CarClassID: 14,
-          },
-          {
-            CarClassID: 14,
-          },
-        ]),
       ).toBeFalsy();
     });
   });
