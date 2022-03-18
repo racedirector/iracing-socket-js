@@ -1,6 +1,6 @@
 {
   "name": "iracing-socket-js",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "iRacingBrowserApps/Kapps socket adpater for iRacing",
   "repository": "git@github.com:racedirector/iracing-socket-js.git",
   "author": "Justin Makaila <justinmakaila@gmail.com>",
