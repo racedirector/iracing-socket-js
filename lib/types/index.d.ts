@@ -11,6 +11,13 @@ interface LiveData {
     PitStopActive: boolean;
 }
 interface LiveSensorData {
+    CFrideHeight: number;
+    CFshockDefl: number;
+    CFshockVel: number;
+    CFSRrideHeight: number;
+    CRrideHeight: number;
+    CRshockDefl: number;
+    CRshockVel: number;
 }
 interface LiveCarData {
     CarIdxClassPosition: number[];
@@ -26,6 +33,7 @@ interface LiveCarData {
     CarIdxTrackSurface: TrackLocation[];
     CarIdxTrackSurfaceMaterial: TrackSurface[];
     CarIdxBestLapTime: number[];
+    PlayerTrackSurface: TrackSurface;
 }
 export interface Driver {
     CarIdx: number;

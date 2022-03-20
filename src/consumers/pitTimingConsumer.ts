@@ -28,6 +28,7 @@ export class PitTimingConsumer extends iRacingSocketConsumer {
     "PitSvFlags",
     "PitSvFuel",
     "PlayerCarPitSvStatus",
+    "PlayerTrackSurface",
   ];
 
   protected trackLocation: TrackLocation = undefined;

@@ -23,7 +23,22 @@ interface LiveData {
   PitStopActive: boolean;
 }
 
-interface LiveSensorData {}
+interface LiveSensorData {
+  // CF ride height (float, m)
+  CFrideHeight: number;
+  // CF shock deflection (float, m)
+  CFshockDefl: number;
+  // CF shock velocity (float, m/s)
+  CFshockVel: number;
+  // CFSR ride height (float, m)
+  CFSRrideHeight: number;
+  // CR ride height (float, m)
+  CRrideHeight: number;
+  // CR shock deflection (float, m)
+  CRshockDefl: number;
+  // CR shock velocity (float, m/s)
+  CRshockVel: number;
+}
 
 interface LiveCarData {
   // Cars class position in race by car index (int)
@@ -52,6 +67,7 @@ interface LiveCarData {
   CarIdxTrackSurfaceMaterial: TrackSurface[];
   // Best lap time by car index (float, seconds)
   CarIdxBestLapTime: number[];
+  PlayerTrackSurface: TrackSurface;
 }
 
 export interface Driver {
