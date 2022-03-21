@@ -10,7 +10,9 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-material/core": "^1.3.7",
     "iracing-socket-js": "file:../",
+    "moment": "^2.29.1",
     "react": "17.0.2",
     "react-native": "0.67.4"
   },

@@ -23,6 +23,25 @@ export enum iRacingSocketEvents {
   Update = "update",
 }
 
+export enum iRacingSocketCommands {
+  CameraSwitchPosition = "cam_switch_pos",
+  CameraSwitchNumber = "cam_switch_num",
+  CameraSetState = "cam_set_state",
+  ReplaySetPlaySpeed = "replay_set_play_speed",
+  ReplaySetPlayPosition = "replay_set_play_position",
+  ReplaySearch = "replay_search",
+  ReplaySetState = "replay_set_state",
+  ReloadAllTextures = "reload_all_textures",
+  ReloadTexture = "reload_texture",
+  ChatCommand = "chat_command",
+  ChatCommandMacro = "chat_command_macro",
+  PitCommand = "pit_command",
+  TelemetryCommand = "telem_command",
+  FFBCommand = "ffb_command",
+  ReplaySearchSessionTime = "replay_search_session_time",
+  VideoCapture = "video_capture",
+}
+
 export interface iRacingSocketOptions {
   requestParameters: string[];
   requestParametersOnce?: string[];
@@ -145,7 +164,7 @@ export class iRacingSocket extends EventEmitter {
     }
   };
 
-  sendCommand = (command: string, ...args: any[]) =>
+  sendCommand = (command: iRacingSocketCommands, ...args: any[]) =>
     this.send({
       command,
       args,

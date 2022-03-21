@@ -13,6 +13,24 @@ export declare enum iRacingClientConnectionEvents {
 export declare enum iRacingSocketEvents {
     Update = "update"
 }
+export declare enum iRacingSocketCommands {
+    CameraSwitchPosition = "cam_switch_pos",
+    CameraSwitchNumber = "cam_switch_num",
+    CameraSetState = "cam_set_state",
+    ReplaySetPlaySpeed = "replay_set_play_speed",
+    ReplaySetPlayPosition = "replay_set_play_position",
+    ReplaySearch = "replay_search",
+    ReplaySetState = "replay_set_state",
+    ReloadAllTextures = "reload_all_textures",
+    ReloadTexture = "reload_texture",
+    ChatCommand = "chat_command",
+    ChatCommandMacro = "chat_command_macro",
+    PitCommand = "pit_command",
+    TelemetryCommand = "telem_command",
+    FFBCommand = "ffb_command",
+    ReplaySearchSessionTime = "replay_search_session_time",
+    VideoCapture = "video_capture"
+}
 export interface iRacingSocketOptions {
     requestParameters: string[];
     requestParametersOnce?: string[];
@@ -47,7 +65,7 @@ export declare class iRacingSocket extends EventEmitter {
     close: () => void;
     scheduleRetry: (retryInterval?: number) => void;
     cancelRetry: () => void;
-    sendCommand: (command: string, ...args: any[]) => void;
+    sendCommand: (command: iRacingSocketCommands, ...args: any[]) => void;
     send: (payload: any) => void;
     removeAllListeners(event?: string | symbol): this;
     private onError;

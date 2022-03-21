@@ -1,5 +1,6 @@
 import {
   iRacingSocket,
+  iRacingSocketCommands,
   iRacingSocketConnectionEvents,
   iRacingSocketOptions,
 } from "./socket";
@@ -75,7 +76,7 @@ describe("iRacing Socket", () => {
 
       await serverMock.nextMessage;
 
-      socket.sendCommand("chat_command_macro", 8);
+      socket.sendCommand(iRacingSocketCommands.ChatCommandMacro, 8);
 
       // await serverMock.nextMessage;
 
