@@ -6,6 +6,18 @@ export const flagsHasFlag = (flags: Flags, hasFlags: Flags): boolean =>
 export const flagsHasFlags = (flags: Flags, ...hasFlags: Flags[]): boolean[] =>
   hasFlags.map((flag) => flagsHasFlag(flags, flag));
 
+export const flagsHasSomeFlags = (
+  flags: Flags,
+  ...hasFlags: Flags[]
+): boolean =>
+  flagsHasFlags(flags, ...hasFlags).reduce(
+    (someFlags, hasFlag) => someFlags || hasFlag,
+    false,
+  );
+
+export const flagsHasAllFlags = (flags: Flags, ...hasFlags: Flags[]): boolean =>
+  hasFlags.every((flag) => flagsHasFlag(flags, flag));
+
 export const parseNumberFromString = (sourceValue: string, unit: string) => {
   const matches =
     new RegExp(`^.*(?=\\s${unit})`).exec(sourceValue) || Array<string>();

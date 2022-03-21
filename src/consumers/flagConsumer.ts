@@ -12,7 +12,7 @@ export enum FlagsEvents {
  * A `FlagsConsumer` is a derived implementation of `iRacingSocketConsumer` to
  * emit timestamped events for `SessionFlags` changes.
  */
-export class FlagsConsumer extends iRacingSocketConsumer {
+export class SimIncidentsConsumer extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = [
     "SessionFlags",
     "SessionTime",
@@ -63,4 +63,4 @@ export class FlagsConsumer extends iRacingSocketConsumer {
   };
 }
 
-export default FlagsConsumer;
+export default SimIncidentsConsumer;

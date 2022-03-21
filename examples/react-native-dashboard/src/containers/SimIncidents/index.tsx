@@ -1,10 +1,23 @@
 import React from 'react';
-import {SimIncidentConsumer, IRacingProvider} from 'iracing-socket-js';
+import {SimIncidentConsumer} from 'iracing-socket-js';
+import {SocketProvider} from '../SocketProvider';
 
-export interface SimIncidentsProps {}
+export interface SimIncidentsProps {
+  server: string;
+}
 
-export const SimIncidents: React.FC<SimIncidentsProps> = ({children}) => {
-  return <IRacingProvider>{children}</IRacingProvider>;
+export const SimIncidents: React.FC<SimIncidentsProps> = ({
+  server,
+  children,
+}) => {
+  return (
+    <SocketProvider
+      server={server}
+      requestParameters={SimIncidentConsumer.requestParameters}
+      requestParametersOnce={SimIncidentConsumer.requestParametersOnce}>
+      {children}
+    </SocketProvider>
+  );
 };
 
 export default SimIncidents;

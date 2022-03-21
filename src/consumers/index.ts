@@ -1,5 +1,8 @@
 export { DriverSwapConsumer, DriverSwapEvents } from "./driverSwapConsumer";
-export { FlagsConsumer, FlagsEvents } from "./flagConsumer";
+export {
+  SimIncidentsConsumer as FlagsConsumer,
+  FlagsEvents,
+} from "./flagConsumer";
 export { LapConsumer, LapEvents } from "./lapConsumer";
 export { PitTimingConsumer, PitTimingEvents } from "./pitTimingConsumer";
 export {
