@@ -42,6 +42,16 @@ export enum iRacingSocketCommands {
   VideoCapture = "video_capture",
 }
 
+export enum _iRacingSocketCommands {
+  CameraSwitchPosition,
+}
+
+export interface iRacingSocketCommandParameters {
+  [iRacingSocketCommands.CameraSwitchPosition]: {
+    position: number;
+  };
+}
+
 export interface iRacingSocketOptions {
   requestParameters: string[];
   requestParametersOnce?: string[];

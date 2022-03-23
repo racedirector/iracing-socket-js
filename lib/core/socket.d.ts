@@ -31,6 +31,14 @@ export declare enum iRacingSocketCommands {
     ReplaySearchSessionTime = "replay_search_session_time",
     VideoCapture = "video_capture"
 }
+export declare enum _iRacingSocketCommands {
+    CameraSwitchPosition = 0
+}
+export interface iRacingSocketCommandParameters {
+    [iRacingSocketCommands.CameraSwitchPosition]: {
+        position: number;
+    };
+}
 export interface iRacingSocketOptions {
     requestParameters: string[];
     requestParametersOnce?: string[];
