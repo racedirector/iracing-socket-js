@@ -1,8 +1,6 @@
 import React from 'react';
 import {FlatList, FlatListProps, Pressable, StyleSheet} from 'react-native';
-import {IncidentRow, IncidentRowProps} from 'components/IncidentRow';
-import {IncidentHeader} from 'components/IncidentHeader';
-import {Card} from 'components/Card';
+import {IncidentRow, IncidentRowProps} from '../IncidentRow';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,29 +22,24 @@ export const Incidents: React.FC<IncidentsProps> = ({
   onSelectItem = () => {},
   ...props
 }) => (
-  <Card
-    style={[styles.container, style]}
-    title={`Incidents (${props.data.length})`}>
-    <FlatList
-      {...props}
-      inverted
-      ListFooterComponent={IncidentHeader}
-      ListFooterComponentStyle={styles.header}
-      renderItem={({item, index}) => {
-        return (
-          <Pressable
-            onPress={() => {
-              onSelectItem(item, index);
-            }}>
-            <IncidentRow
-              key={`${item.driverName}-${item.weight}-${index}`}
-              {...item}
-            />
-          </Pressable>
-        );
-      }}
-    />
-  </Card>
+  <FlatList
+    {...props}
+    inverted
+    ListFooterComponentStyle={styles.header}
+    renderItem={({item, index}) => {
+      return (
+        <Pressable
+          onPress={() => {
+            onSelectItem(item, index);
+          }}>
+          <IncidentRow
+            key={`${item.driverName}-${item.weight}-${index}`}
+            {...item}
+          />
+        </Pressable>
+      );
+    }}
+  />
 );
 
 export default Incidents;

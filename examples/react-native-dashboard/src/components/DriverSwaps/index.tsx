@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, FlatListProps, Pressable, StyleSheet} from 'react-native';
-import {DriverSwapRow, DriverSwapRowProps} from 'components/DriverSwapRow';
+import {DriverSwapRow, DriverSwapRowProps} from '../DriverSwapRow';
 
 const styles = StyleSheet.create({
   container: {
