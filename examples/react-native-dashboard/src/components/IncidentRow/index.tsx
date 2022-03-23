@@ -1,5 +1,3 @@
-import {capitalize} from 'lodash';
-import {IncidentType} from 'racedirector-js/lib/types';
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
@@ -17,16 +15,13 @@ const styles = StyleSheet.create({
 });
 
 export interface IncidentRowProps {
-  type: IncidentType;
-  carIdx: number;
-  carNumber: string;
+  carIndex: string;
   sessionTime: number;
   simTime: number;
   sessionNumber: number;
   driverName: string;
-  driverId: string;
+  driverId: number;
   weight: number;
-  reason: string;
 }
 
 export const IncidentRow: React.FC<IncidentRowProps> = ({
@@ -34,17 +29,13 @@ export const IncidentRow: React.FC<IncidentRowProps> = ({
   simTime,
   driverName,
   weight,
-  reason,
-  type,
 }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.sessionTimeLabel}>{sessionTime}</Text>
       <Text style={styles.sessionTimeLabel}>{simTime}</Text>
       <Text style={styles.driverNameLabel}>{driverName}</Text>
-      <Text style={styles.incidentTypeLabel}>{capitalize(type)}</Text>
       <Text style={styles.incidentWeightLabel}>{weight}</Text>
-      <Text style={styles.incidentReasonLabel}>{reason}</Text>
     </View>
   );
 };

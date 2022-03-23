@@ -18,7 +18,6 @@ export interface IncidentsProps
 }
 
 export const Incidents: React.FC<IncidentsProps> = ({
-  style,
   onSelectItem = () => {},
   ...props
 }) => (
