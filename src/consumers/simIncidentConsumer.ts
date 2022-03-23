@@ -2,12 +2,7 @@ import { iRacingSocket, iRacingSocketConsumer } from "../core";
 import { iRacingDataKey, Driver, Flags } from "../types";
 import { chain, isEmpty } from "lodash";
 
-export type DriverIncidentFragment = Pick<
-  Driver,
-  "UserID" | "CurDriverIncidentCount"
->;
-
-export interface DriverSimIncidentEvent {
+export interface SimIncidentEvent {
   // The value of incidents detected from the sim
   value: number;
   // The weight of the incidents, computed by the config
@@ -29,7 +24,7 @@ export interface DriverSimIncidentEvent {
 }
 
 export interface SimIncidentIndex {
-  [carIndex: string]: DriverSimIncidentEvent;
+  [carIndex: string]: SimIncidentEvent;
 }
 
 export enum SimIncidentEvents {
@@ -59,7 +54,10 @@ export class SimIncidentConsumer extends iRacingSocketConsumer {
     "SessionNum",
   ];
 
-  private driverIndex: Record<number, Driver>;
+  private _driverIndex: Record<string, Driver>;
+  public get driverIndex() {
+    return this._driverIndex;
+  }
 
   private _config: SimIncidentConsumerConfig;
 
@@ -96,7 +94,7 @@ export class SimIncidentConsumer extends iRacingSocketConsumer {
     if (this.driverIndex) {
       const incidents: SimIncidentIndex = Object.entries(nextIndex).reduce(
         (incidentIndex, [carIndex, driver]) => {
-          const existingDriver = this.driverIndex?.[carIndex] || undefined;
+          const existingDriver = this._driverIndex?.[carIndex] || undefined;
           if (existingDriver && existingDriver.UserID === driver.UserID) {
             const incidentCount =
               driver.CurDriverIncidentCount -
@@ -130,7 +128,7 @@ export class SimIncidentConsumer extends iRacingSocketConsumer {
       }
     }
 
-    this.driverIndex = nextIndex;
+    this._driverIndex = nextIndex;
   };
 
   private weightForIncidentValue = (incidentValue: number): number => {

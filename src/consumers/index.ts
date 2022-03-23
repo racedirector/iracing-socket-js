@@ -6,4 +6,6 @@ export {
   SimIncidentConsumer,
   SimIncidentConsumerConfig,
   SimIncidentEvents,
+  SimIncidentEvent,
+  SimIncidentIndex,
 } from "./simIncidentConsumer";

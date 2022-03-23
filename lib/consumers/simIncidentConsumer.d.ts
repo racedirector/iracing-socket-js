@@ -1,7 +1,6 @@
 import { iRacingSocket, iRacingSocketConsumer } from "../core";
 import { iRacingDataKey, Driver, Flags } from "../types";
-export declare type DriverIncidentFragment = Pick<Driver, "UserID" | "CurDriverIncidentCount">;
-export interface DriverSimIncidentEvent {
+export interface SimIncidentEvent {
     value: number;
     weight: number;
     sessionNumber: number;
@@ -13,7 +12,7 @@ export interface DriverSimIncidentEvent {
     carIndex: string;
 }
 export interface SimIncidentIndex {
-    [carIndex: string]: DriverSimIncidentEvent;
+    [carIndex: string]: SimIncidentEvent;
 }
 export declare enum SimIncidentEvents {
     SimIncidents = "simIncidents"
@@ -28,7 +27,8 @@ export interface SimIncidentConsumerOptions {
 }
 export declare class SimIncidentConsumer extends iRacingSocketConsumer {
     static requestParameters: iRacingDataKey[];
-    private driverIndex;
+    private _driverIndex;
+    get driverIndex(): Record<string, Driver>;
     private _config;
     get config(): SimIncidentConsumerConfig;
     set config(config: Partial<SimIncidentConsumerConfig>);
