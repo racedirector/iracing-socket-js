@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import Flags from '../containers/Flags';
 import PitTiming from '../containers/PitTiming';
 import Incidents from '../containers/SimIncidents';
@@ -18,19 +18,19 @@ const linking = {
   },
 };
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export interface NavigatorProps {}
 
 export const Navigator: React.FC<NavigatorProps> = ({children}) => {
   return (
     <NavigationContainer linking={linking}>
-      <Stack.Navigator>
-        <Stack.Screen name="Flags" component={Flags} />
-        <Stack.Screen name="DriverSwaps" component={DriverSwaps} />
-        <Stack.Screen name="Incidents" component={Incidents} />
-        <Stack.Screen name="PitTiming" component={PitTiming} />
-      </Stack.Navigator>
+      <Drawer.Navigator>
+        <Drawer.Screen name="Flags" component={Flags} />
+        <Drawer.Screen name="DriverSwaps" component={DriverSwaps} />
+        <Drawer.Screen name="Incidents" component={Incidents} />
+        <Drawer.Screen name="PitTiming" component={PitTiming} />
+      </Drawer.Navigator>
       {children}
     </NavigationContainer>
   );
