@@ -8,7 +8,7 @@ interface LiveData {
     PitSvFlags: PitServiceFlags;
     PitSvFuel: number;
     PlayerCarPitSvStatus: PitServiceFlags;
-    PitStopActive: boolean;
+    PitstopActive: boolean;
 }
 interface LiveSensorData {
     CFrideHeight: number;
@@ -25,6 +25,7 @@ interface LiveCarData {
     CarIdxF2Time: number[];
     CarIdxGear: number[];
     CarIdxLap: number[];
+    CarIdxLapCompleted: number[];
     CarIdxLapDistPct: number[];
     CarIdxOnPitRoad: number[];
     CarIdxPosition: number[];
@@ -33,7 +34,16 @@ interface LiveCarData {
     CarIdxTrackSurface: TrackLocation[];
     CarIdxTrackSurfaceMaterial: TrackSurface[];
     CarIdxBestLapTime: number[];
-    PlayerTrackSurface: TrackSurface;
+    CarIdxFastRepairsUsed: number[];
+    CarIdxPaceFlags: PaceFlags[];
+    CarIdxPaceLine: number[];
+    CarIdxPaceRow: number[];
+    CarIdxSessionFlags: Flags[];
+    PlayerTrackSurface: TrackLocation;
+    PlayerTrackSurfaceMaterial: TrackSurface;
+    PlayerCarTowTime: number;
+    PlayerFastRepairsUsed: number;
+    OnPitRoad: boolean;
 }
 export interface Driver {
     CarIdx: number;

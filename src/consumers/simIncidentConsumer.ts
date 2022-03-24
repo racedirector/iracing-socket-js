@@ -50,8 +50,8 @@ export class SimIncidentConsumer extends iRacingSocketConsumer {
     "CarIdxLapDistPct",
     "SessionTimeOfDay",
     "SessionTime",
-    "SessionFlags",
     "SessionNum",
+    "CarIdxSessionFlags",
   ];
 
   private _driverIndex: Record<string, Driver>;
@@ -110,7 +110,7 @@ export class SimIncidentConsumer extends iRacingSocketConsumer {
                   sessionNumber: nextData.SessionNum || -1,
                   sessionTime: nextData.SessionTime || -1,
                   sessionTimeOfDay: nextData.SessionTimeOfDay || -1,
-                  sessionFlags: nextData.SessionFlags || 0x0,
+                  sessionFlags: nextData.CarIdxSessionFlags[carIndex] || 0x0,
                   lapPercentage: nextData.CarIdxLapDistPct[carIndex],
                   driverId: driver.UserID,
                 },

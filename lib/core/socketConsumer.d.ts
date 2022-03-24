@@ -6,7 +6,7 @@ export declare abstract class iRacingSocketConsumer extends EventEmitter {
     static requestParameters: iRacingDataKey[];
     static requestParametersOnce?: iRacingDataKey[];
     protected socket: iRacingSocket;
-    abstract onUpdate(keys: string[]): void;
+    abstract onUpdate(keys: iRacingDataKey[]): void;
     constructor(socket: iRacingSocket);
     protected bindUpdate: () => void;
 }

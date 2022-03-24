@@ -1,5 +1,5 @@
-import { iRacingSocket, iRacingSocketConsumer, iRacingSocketOptions } from "../core";
-import { iRacingDataKey, TrackLocation } from "../types";
+import { iRacingSocketConsumer } from "../core";
+import { iRacingDataKey, PitServiceFlags, TrackLocation } from "../types";
 export declare enum PitTimingEvents {
     PitEntry = "PitEntry",
     PitExit = "PitExit",
@@ -7,16 +7,20 @@ export declare enum PitTimingEvents {
     PitBoxExit = "PitBoxExit",
     PitServiceStart = "PitServiceStart",
     PitServiceEnd = "PitServiceEnd",
-    PitServiceError = "PitServiceError"
-}
-export interface PitTimingConsumerOptions {
-    socket: iRacingSocket | iRacingSocketOptions;
+    PitServiceStatus = "PitServiceStatus",
+    PitServiceRequest = "PitServiceRequest",
+    PitServiceFuelLevelRequest = "PitServiceFuelLevelRequest",
+    PitServiceTirePressureLevelRequest = "PitServiceTirePressureLevelRequest"
 }
 export declare class PitTimingConsumer extends iRacingSocketConsumer {
     static requestParameters: iRacingDataKey[];
     protected trackLocation: TrackLocation;
     protected isOnPitRoad: boolean;
     protected isPitStopActive: boolean;
+    private _serviceFlags;
+    get serviceFlags(): PitServiceFlags;
+    private _fuelAmount;
+    get fuelAmount(): number;
     onUpdate: (keys: any) => void;
 }
 //# sourceMappingURL=pitTimingConsumer.d.ts.map

@@ -1,42 +1,13 @@
-import { isEmpty, keyBy } from "lodash";
+import { chain, isEmpty } from "lodash";
 import { iRacingSocketConsumer } from "../core";
 import { Driver, iRacingDataKey } from "../types";
-
-export type DriverSwapFragment = Pick<Driver, "UserID">;
 
 export interface DriverSwapEvent {
   from?: Driver;
   to: Driver;
 }
 
-export type DriverSwapIndex = Record<number, DriverSwapEvent>;
-
-export const getDriverSwapIndex = (
-  previousIndex: Record<number, DriverSwapFragment>,
-  nextIndex: Record<number, DriverSwapFragment>,
-): DriverSwapIndex => {
-  return Object.entries(nextIndex).reduce((swapIndex, [carIndex, driver]) => {
-    // Get the existing driver, if any
-    const existingDriver = previousIndex?.[carIndex] || undefined;
-    // A driver swap is considered if the existing driver exists and the current driver
-    // UserID does not match, or if the existing driver doesn't exist (new entry?)
-    const isDriverSwap = existingDriver
-      ? driver.UserID !== existingDriver.UserID
-      : true;
-
-    if (isDriverSwap) {
-      return {
-        ...swapIndex,
-        [carIndex]: {
-          from: existingDriver,
-          to: driver,
-        },
-      };
-    }
-
-    return swapIndex;
-  }, {});
-};
+export type DriverSwapIndex = Record<string, DriverSwapEvent>;
 
 export enum DriverSwapEvents {
   DriverSwaps = "driverSwaps",
@@ -45,21 +16,54 @@ export enum DriverSwapEvents {
 export class DriverSwapConsumer extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = ["DriverInfo"];
 
-  private driverIndex: Record<number, Driver>;
+  private _driverIndex: Record<string, Driver>;
+  public get driverIndex() {
+    return this._driverIndex;
+  }
 
   onUpdate = (keys: string[]): void => {
-    if (keys.includes("DriverInfo")) {
-      const nextData = { ...this.socket.data };
-      const nextIndex = keyBy(nextData.DriverInfo?.Drivers || [], "CarIdx");
-
-      if (this.driverIndex) {
-        const driverSwaps = getDriverSwapIndex(this.driverIndex, nextIndex);
-        if (!isEmpty(driverSwaps)) {
-          this.emit(DriverSwapEvents.DriverSwaps, driverSwaps);
-        }
-      }
-
-      this.driverIndex = nextIndex;
+    // Only run if there's an update to DriverInfo
+    if (!keys.includes("DriverInfo")) {
+      return;
     }
+
+    const nextData = { ...this.socket.data };
+    // !!!: Don't include the pace car
+    const nextIndex = chain(nextData.DriverInfo?.Drivers || [])
+      .filter(({ CarIsPaceCar }) => !CarIsPaceCar)
+      .keyBy("CarIdx")
+      .value();
+
+    if (this.driverIndex) {
+      const driverSwaps = Object.entries(nextIndex).reduce(
+        (swapIndex, [carIndex, driver]) => {
+          // Get the existing driver, if any
+          const existingDriver = this.driverIndex?.[carIndex] || undefined;
+          // A driver swap is considered if the existing driver exists and the current driver
+          // UserID does not match, or if the existing driver doesn't exist (new entry?)
+          const isDriverSwap = existingDriver
+            ? driver.UserID !== existingDriver.UserID
+            : true;
+
+          if (isDriverSwap) {
+            return {
+              ...swapIndex,
+              [carIndex]: {
+                from: existingDriver,
+                to: driver,
+              },
+            };
+          }
+
+          return swapIndex;
+        },
+        {},
+      );
+      if (!isEmpty(driverSwaps)) {
+        this.emit(DriverSwapEvents.DriverSwaps, driverSwaps);
+      }
+    }
+
+    this._driverIndex = nextIndex;
   };
 }

@@ -1,4 +1,4 @@
-import { SimIncidentsConsumer, FlagsEvents } from "./flagConsumer";
+import { FlagsConsumer, FlagsEvents } from "./flagConsumer";
 import WS from "jest-websocket-mock";
 import { Flags } from "../types";
 import { flagsHasFlag } from "../utilities";
@@ -19,11 +19,11 @@ describe("Flags Consumer", () => {
   it("emits 'flagChange' (FlagsConsumerEvents.FlagChange) events when the flags change", async () => {
     const socket = new iRacingSocket({
       server: serverMockAddress,
-      requestParameters: SimIncidentsConsumer.requestParameters,
+      requestParameters: FlagsConsumer.requestParameters,
     });
 
     const mockFlagChange = jest.fn(() => {});
-    const flagsConsumer = new SimIncidentsConsumer(socket).on(
+    const flagsConsumer = new FlagsConsumer(socket).on(
       FlagsEvents.FlagChange,
       mockFlagChange,
     );
@@ -67,11 +67,11 @@ describe("Flags Consumer", () => {
   it("keeps track of the flags after an update", async () => {
     const socket = new iRacingSocket({
       server: serverMockAddress,
-      requestParameters: SimIncidentsConsumer.requestParameters,
+      requestParameters: FlagsConsumer.requestParameters,
     });
 
     const mockFlagChange = jest.fn(() => {});
-    const flagsConsumer = new SimIncidentsConsumer(socket).on(
+    const flagsConsumer = new FlagsConsumer(socket).on(
       FlagsEvents.FlagChange,
       mockFlagChange,
     );

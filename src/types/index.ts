@@ -20,7 +20,7 @@ interface LiveData {
   // ???: Not officially documented :)
   PlayerCarPitSvStatus: PitServiceFlags;
   // Pit stop active boolean
-  PitStopActive: boolean;
+  PitstopActive: boolean;
 }
 
 interface LiveSensorData {
@@ -51,6 +51,8 @@ interface LiveCarData {
   CarIdxGear: number[];
   // Lap count by car index (int)
   CarIdxLap: number[];
+  // Lap completed by car index (int)
+  CarIdxLapCompleted: number[];
   // Percentage distance around lap by car index (float, percentage)
   CarIdxLapDistPct: number[];
   // On pit road between the cones by car index (int, boolean)
@@ -67,7 +69,25 @@ interface LiveCarData {
   CarIdxTrackSurfaceMaterial: TrackSurface[];
   // Best lap time by car index (float, seconds)
   CarIdxBestLapTime: number[];
-  PlayerTrackSurface: TrackSurface;
+  // Fast repairs used by car index (int)
+  CarIdxFastRepairsUsed: number[];
+  // Pace flags by car index (int, `PaceFlags`)
+  CarIdxPaceFlags: PaceFlags[];
+  // Pace line by car index (int)
+  CarIdxPaceLine: number[];
+  // Pace row by car index (int)
+  CarIdxPaceRow: number[];
+  // Session flags by car index
+  CarIdxSessionFlags: Flags[];
+
+  // Track surface type of current player (int, `TrackLocation`)
+  PlayerTrackSurface: TrackLocation;
+  // Track surface material of current palyer (int, `TrackSurface`)
+  PlayerTrackSurfaceMaterial: TrackSurface;
+  PlayerCarTowTime: number;
+  // Number of fast repairs used
+  PlayerFastRepairsUsed: number;
+  OnPitRoad: boolean;
 }
 
 export interface Driver {

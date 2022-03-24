@@ -1,11 +1,88 @@
 import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import {Text} from 'react-native';
+import {PitServiceFlags, PitServiceStatus} from '../../../../../lib';
+import {capitalize, isEmpty} from 'lodash';
+
 const secondsDifference = (start: Date, end: Date) =>
   moment(end).diff(moment(start), 'seconds');
 
 const secondsDuration = (start: Date, end: Date) =>
   moment.duration(secondsDifference(start, end), 'seconds');
+
+const stringForPitServiceStatus = (serviceStatus: PitServiceStatus): string => {
+  switch (serviceStatus) {
+    case PitServiceStatus.InProgress:
+      return 'In progress';
+    case PitServiceStatus.Complete:
+      return 'Complete';
+    case PitServiceStatus.TooFarLeft:
+      return 'Too far left';
+    case PitServiceStatus.TooFarRight:
+      return 'Too far right';
+    case PitServiceStatus.TooFarForward:
+      return 'Too far forward';
+    case PitServiceStatus.TooFarBack:
+      return 'Too far back';
+    case PitServiceStatus.BadAngle:
+      return 'Bad angle';
+    case PitServiceStatus.CantFixThat:
+      return "Can't fix that";
+    default:
+      return 'None';
+  }
+};
+
+const stringForTireService = (serviceFlags: PitServiceFlags) => {
+  const tireService = [
+    (serviceFlags & PitServiceFlags.LFChange) === PitServiceFlags.LFChange
+      ? 'LF'
+      : null,
+    (serviceFlags & PitServiceFlags.RFChange) === PitServiceFlags.RFChange
+      ? 'RF'
+      : null,
+    (serviceFlags & PitServiceFlags.LRChange) === PitServiceFlags.LRChange
+      ? 'LR'
+      : null,
+    (serviceFlags & PitServiceFlags.RRChange) === PitServiceFlags.RRChange
+      ? 'RR'
+      : null,
+  ].filter(Boolean);
+
+  if (isEmpty(tireService)) {
+    return 'None';
+  } else {
+    return tireService.join(', ');
+  }
+};
+
+const stringForNextService = (
+  serviceFlags: PitServiceFlags,
+  fuelAmount: number,
+) => {
+  const tireServiceString = stringForTireService(serviceFlags);
+  const fuelServiceString =
+    (serviceFlags & PitServiceFlags.Fuel) === PitServiceFlags.Fuel
+      ? `${fuelAmount} fuel`
+      : 'None';
+  const tearoffServiceString =
+    (serviceFlags & PitServiceFlags.WindshieldTearoff) ===
+    PitServiceFlags.WindshieldTearoff
+      ? 'Yes'
+      : 'No';
+
+  const fastRepairServiceString =
+    (serviceFlags & PitServiceFlags.FastRepair) === PitServiceFlags.FastRepair
+      ? 'Yes'
+      : 'No';
+
+  return [
+    `Tires: ${tireServiceString}`,
+    `Fuel: ${fuelServiceString}`,
+    `Tearoff: ${tearoffServiceString}`,
+    `Fast repair: ${fastRepairServiceString}`,
+  ].join('\n');
+};
 
 export interface PitTimingProps {
   pitEntryDate?: Date;
@@ -14,6 +91,9 @@ export interface PitTimingProps {
   pitExitDate?: Date;
   serviceStartDate?: Date;
   serviceEndDate?: Date;
+  serviceStatus?: PitServiceStatus;
+  serviceFlags?: PitServiceFlags;
+  fuelAmount?: number;
 }
 
 export const PitTiming: React.FC<PitTimingProps> = ({
@@ -23,8 +103,14 @@ export const PitTiming: React.FC<PitTimingProps> = ({
   pitExitDate,
   serviceStartDate,
   serviceEndDate,
+  serviceFlags: serviceFlagsProp = 0x0,
+  fuelAmount: fuelAmountProp = 0,
+  serviceStatus = PitServiceStatus.None,
   children,
 }) => {
+  const [serviceFlags, setServiceFlags] =
+    useState<PitServiceFlags>(serviceFlagsProp);
+  const [fuelAmount, setFuelAmount] = useState(fuelAmountProp);
   const [stationaryDuration, setStationaryDuration] =
     useState<moment.Duration>(null);
   const [totalPitDuration, setTotalPitDuration] =
@@ -34,6 +120,14 @@ export const PitTiming: React.FC<PitTimingProps> = ({
     useState<moment.Duration>(null);
   const [entryToServiceStart, setEntryToServiceStart] =
     useState<moment.Duration>(null);
+
+  useEffect(() => {
+    setServiceFlags(serviceFlagsProp);
+  }, [serviceFlagsProp]);
+
+  useEffect(() => {
+    setFuelAmount(fuelAmountProp);
+  }, [fuelAmountProp]);
 
   useEffect(() => {
     if (pitEntryDate && pitExitDate) {
@@ -65,8 +159,18 @@ export const PitTiming: React.FC<PitTimingProps> = ({
     }
   }, [pitEntryDate, serviceEndDate]);
 
+  console.log('Render');
+
   return (
     <>
+      <Text>{`Next requested service status:\n${stringForNextService(
+        serviceFlags,
+        fuelAmount,
+      )}`}</Text>
+      <Text>{`Pit service status: ${stringForPitServiceStatus(
+        serviceStatus,
+      )}`}</Text>
+
       {pitEntryDate ? (
         <Text>{`Pit entry: ${pitEntryDate.toString()}`}</Text>
       ) : null}

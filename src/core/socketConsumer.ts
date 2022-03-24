@@ -27,7 +27,7 @@ export abstract class iRacingSocketConsumer extends EventEmitter {
    * invoked when the socket data updates.
    * @param keys An array of keys that updated in the socket data.
    */
-  abstract onUpdate(keys: string[]): void;
+  abstract onUpdate(keys: iRacingDataKey[]): void;
 
   /**
    * Constructor that handles creating an `iRacingSocket`, if necessary, and
@@ -46,7 +46,7 @@ export abstract class iRacingSocketConsumer extends EventEmitter {
   }
 
   protected bindUpdate = () => {
-    const boundUpdate = (keys: string[]) => this.onUpdate(keys);
+    const boundUpdate = (keys: iRacingDataKey[]) => this.onUpdate(keys);
     this.socket.on(iRacingSocketEvents.Update, boundUpdate);
   };
 }
