@@ -13,7 +13,7 @@
     "prebuild": "rimraf packages/{*,consumers/*}/dist",
     "build": "tsc --project tsconfig.json && bob build",
     "build:watch": "npx tsc-watch --project tsconfig.json --onSuccess \"bob build\"",
-    "test": "jest --forceExit --no-watchman",
+    "test": "jest --no-watchman",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx}\"",
