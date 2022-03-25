@@ -1,0 +1,60 @@
+{
+  "name": "@racedirector/iracing-socket-cli",
+  "version": "0.0.1",
+  "description": "iRacingBrowserApps/Kapps socket adpater for iRacing... in CLI form",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/racedirector/iracing-socket-js.git",
+    "directory": "packages/iracing-socket-cli"
+  },
+  "license": "MIT",
+  "bin": {
+    "iracing-socket": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman"
+  },
+  "dependencies": {
+    "@racedirector/iracing-socket-js": "^0.1.0",
+    "chalk": "^5.0.1",
+    "lodash":"^4.17.21",
+    "ts-invariant": "^0.9.4",
+    "yargs": "^17.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.179",
+    "@types/yargs": "^17.0.10",
+    "prettier": "2.5.1",
+    "ts-jest": "^27.1.3",
+    "typescript": "4.5.5"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "bin": {
+      "iracing-socket": {
+        "input": "src/cli.ts"
+      }
+    }
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
+}

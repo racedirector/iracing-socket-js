@@ -1,19 +1,10 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "pretty": true,
+    "rootDir": "../../",
     "inlineSourceMap": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "target": "esnext",
-    "module": "commonjs",
-    "lib": ["es2017", "ESNext", "dom"],
     "allowJs": true,
     "jsx": "react-native",
-    "moduleResolution": "node",
     "paths": {
       "*": ["./src/*"]
     }

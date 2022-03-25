@@ -9,42 +9,11 @@ import {
 } from 'iracing-socket-js';
 import {PitTiming as PitTimingUI} from '../../components/PitTiming';
 import {useIRacingServerContext} from '../../context/iRacingServer/iRacingServerContext';
-import {isEmpty} from 'lodash';
 
 interface RequestedService {
   serviceFlags: PitServiceFlags;
   fuelAmount: number;
 }
-
-const useRequestedService = (): [
-  RequestedService,
-  (service: RequestedService) => void,
-] => {
-  const [requestedService, setRequestedService] = useState<RequestedService>({
-    serviceFlags: 0x0,
-    fuelAmount: 0,
-  });
-
-  const setRequestedServiceOverride = ({
-    serviceFlags: requestedFlags,
-    fuelAmount: requestedFuelAmount,
-  }: RequestedService): void => {
-    let update: Partial<RequestedService> = {};
-    if (requestedFlags !== requestedService.serviceFlags) {
-      update.serviceFlags = requestedFlags;
-    }
-
-    if (requestedFuelAmount !== requestedService.fuelAmount) {
-      update.fuelAmount = requestedFuelAmount;
-    }
-
-    if (!isEmpty(update)) {
-      setRequestedService(previous => ({...previous, update}));
-    }
-  };
-
-  return [requestedService, setRequestedServiceOverride];
-};
 
 export interface PitTimingProps {}
 
@@ -53,9 +22,17 @@ export const PitTiming: React.FC<PitTimingProps> = ({children}) => {
   invariant(!!host, 'host must be set');
 
   const [pitEntryDate, setPitEntryDate] = useState<Date>(null);
+  const [pitExitDate, setPitExitDate] = useState<Date>(null);
+  const [pitBoxEntryDate, setPitBoxEntryDate] = useState<Date>(null);
+  const [pitBoxExitDate, setPitBoxExitDate] = useState<Date>(null);
+  const [pitServiceStartDate, setPitServiceStartDate] = useState<Date>(null);
+  const [pitServiceEndDate, setPitServiceEndDate] = useState<Date>(null);
   const [serviceStatus, setServiceStatus] = useState<PitServiceStatus>(null);
   const [{serviceFlags, fuelAmount}, setRequestedService] =
-    useRequestedService();
+    useState<RequestedService>({
+      serviceFlags: 0x0,
+      fuelAmount: 0,
+    });
 
   const socketRef = useRef(
     new iRacingSocket({
@@ -70,29 +47,25 @@ export const PitTiming: React.FC<PitTimingProps> = ({children}) => {
   useEffect(() => {
     const consumer = pitTimingConsumerRef.current;
     consumer
-      .on(PitTimingEvents.PitEntry, timestamp => {
-        console.log(`${carIndex} entered the pits at ${timestamp}`);
-        setPitEntryDate(timestamp);
-      })
-      .on(PitTimingEvents.PitExit, timestamp => {
-        console.log(`${carIndex} exited the pits at ${timestamp}`);
-      })
-      .on(PitTimingEvents.PitBoxEntry, timestamp => {
-        console.log(`${carIndex} entered their pit box at ${timestamp}`);
-      })
-      .on(PitTimingEvents.PitBoxExit, timestamp => {
-        console.log(`${carIndex} exited their pit box at ${timestamp}`);
-      })
-      .on(PitTimingEvents.PitServiceStart, timestamp => {
-        console.log(`${carIndex} started pit service at ${timestamp}`);
-      })
-      .on(PitTimingEvents.PitServiceEnd, timestamp => {
-        console.log(`${carIndex} ended pit service at ${timestamp}`);
-      })
-      .on(PitTimingEvents.PitServiceStatus, error => {
-        setServiceStatus(error);
-      })
-      .on(PitTimingEvents.PitServiceFuelLevelRequest, console.log)
+      .on(PitTimingEvents.PitEntry, setPitEntryDate)
+      .on(PitTimingEvents.PitExit, setPitExitDate)
+      .on(PitTimingEvents.PitBoxEntry, setPitBoxEntryDate)
+      .on(PitTimingEvents.PitBoxExit, setPitBoxExitDate)
+      .on(PitTimingEvents.PitServiceStart, setPitServiceStartDate)
+      .on(PitTimingEvents.PitServiceEnd, setPitServiceEndDate)
+      .on(PitTimingEvents.PitServiceStatus, setServiceStatus)
+      .on(PitTimingEvents.PitServiceRequest, newServiceFlags =>
+        setRequestedService(previous => ({
+          ...previous,
+          serviceFlags: newServiceFlags,
+        })),
+      )
+      .on(PitTimingEvents.PitServiceFuelLevelRequest, newFuelAmount =>
+        setRequestedService(previous => ({
+          ...previous,
+          fuelAmount: newFuelAmount,
+        })),
+      )
       .on(PitTimingEvents.PitServiceTirePressureLevelRequest, console.log);
 
     return () => {
@@ -105,6 +78,11 @@ export const PitTiming: React.FC<PitTimingProps> = ({children}) => {
       serviceFlags={serviceFlags}
       fuelAmount={fuelAmount}
       pitEntryDate={pitEntryDate}
+      pitExitDate={pitExitDate}
+      pitBoxEntryDate={pitBoxEntryDate}
+      pitBoxExitDate={pitBoxExitDate}
+      serviceStartDate={pitServiceStartDate}
+      serviceEndDate={pitServiceEndDate}
       serviceStatus={serviceStatus}>
       {children}
     </PitTimingUI>

@@ -1,23 +1,36 @@
 {
   "compilerOptions": {
-    "pretty": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "outDir": "dist",
+    "rootDir": "packages",
+    "sourceMap": true,
     "declaration": true,
-    "declarationMap": true,
     "allowSyntheticDefaultImports": true,
     "removeComments": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
+    "noImplicitThis": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "outDir": "lib",
     "moduleResolution": "node",
-    "target": "ES6",
-    "module": "commonjs",
+    "target": "es2018",
+    "module": "esnext",
     "lib": ["es6", "ESNext", "DOM"],
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@racedirector/iracing-socket-js": ["packages/iracing-socket-js/src/index.ts"],
+      "@racedirector/iracing-socket-cli": ["packages/iracing-socket-cli/src/index.ts"],
+      "@racedirector/iracing-driver-swap-emitter": ["packages/consumers/driver-swap-emitter/src/index.ts"],
+      "@racedirector/iracing-flags-emitter": ["packages/consumers/flags-emitter/src/index.ts"],
+      "@racedirector/iracing-laps-emitter": ["packages/consumers/laps-emitter/src/index.ts"],
+      "@racedirector/iracing-pit-timing-emitter": ["packages/consumers/pit-timing-emitter/src/index.ts"],
+      "@racedirector/iracing-sim-incident-emitter": ["packages/consumers/sim-incident-emitter/src/index.ts"],
+    }
   },
-  "include": ["src/**/*"],
+  "include": ["packages"],
+  "exclude": ["**/lib", "**/temp"]
 }

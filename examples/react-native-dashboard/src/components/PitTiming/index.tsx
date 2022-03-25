@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import moment from 'moment';
 import {Text} from 'react-native';
 import {PitServiceFlags, PitServiceStatus} from '../../../../../lib';
-import {capitalize, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
 
 const secondsDifference = (start: Date, end: Date) =>
   moment(end).diff(moment(start), 'seconds');
@@ -158,8 +158,6 @@ export const PitTiming: React.FC<PitTimingProps> = ({
       setEntryToServiceEnd(secondsDuration(pitEntryDate, serviceEndDate));
     }
   }, [pitEntryDate, serviceEndDate]);
-
-  console.log('Render');
 
   return (
     <>

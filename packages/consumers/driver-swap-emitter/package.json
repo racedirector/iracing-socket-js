@@ -1,0 +1,23 @@
+{
+  "name": "@racedirector/iracing-driver-swap-emitter",
+  "version": "0.0.1",
+  "description": "EventEmitter that emits events when driver swaps are detected from iRacing.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/racedirector/iracing-socket-js.git",
+    "directory": "packages/consumers/driver-swap-emitter"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman --config ../../../jest.config.js"
+  },
+  "dependencies": {
+    "@racedirector/iracing-socket-js": "0.1.0"
+  }
+}
