@@ -2,8 +2,8 @@ import {
   iRacingSocketConsumer,
   iRacingDataKey,
   Flags,
-  flagsHasFlags,
 } from "@racedirector/iracing-socket-js";
+import { flagsHasFlags } from "@racedirector/iracing-utilities";
 
 export enum LapEvents {
   LapChange = "lapChange",

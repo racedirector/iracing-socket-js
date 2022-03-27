@@ -1,4 +1,4 @@
-import { TrackLocation, iRacingData, Flags } from "../../types";
+import { iRacingData, Flags } from "@racedirector/iracing-socket-js";
 
 export const flagsHasFlag = (flags: Flags, hasFlags: Flags): boolean =>
   (flags & hasFlags) === hasFlags;
@@ -37,11 +37,3 @@ export const parseTrackLength = ({
 
   return null;
 };
-
-/**
- *
- * @param location a track location
- * @returns whether or not the track location is on track.
- */
-export const isOnTrack = (location: TrackLocation) =>
-  location > TrackLocation.OffTrack;

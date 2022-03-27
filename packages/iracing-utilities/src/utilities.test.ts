@@ -1,4 +1,4 @@
-import { Flags, TrackLocation } from "../../types";
+import { Flags, TrackLocation } from "../../iracing-socket-js/src/types";
 import {
   parseTrackLength,
   isOnTrack,

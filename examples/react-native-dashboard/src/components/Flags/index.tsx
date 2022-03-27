@@ -1,6 +1,10 @@
 import React from 'react';
 import {View, Text, ViewProps, StyleSheet} from 'react-native';
-import {flagsHasFlag, Flags, flagsHasSomeFlags} from 'iracing-socket-js';
+import {
+  flagsHasFlag,
+  Flags,
+  flagsHasSomeFlags,
+} from '@racedirector/iracing-socket-js';
 
 const styles = StyleSheet.create({
   container: {
