@@ -49,7 +49,7 @@
   "buildOptions": {
     "bin": {
       "iracing-socket": {
-        "input": "src/cli.ts"
+        "input": "src/cli.js"
       }
     }
   },

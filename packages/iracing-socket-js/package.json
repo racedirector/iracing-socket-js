@@ -32,7 +32,6 @@
     "definition": "dist/index.d.ts"
   },
   "exports": {
-    "./package.json": "./package.json",
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
@@ -41,9 +40,6 @@
       "require": "./dist/*.js",
       "import": "./dist/*.mjs"
     }
-  },
-  "buildOptions": {
-    "input": "./src/index.ts"
   },
   "publishConfig": {
     "directory": "dist",

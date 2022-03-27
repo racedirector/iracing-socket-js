@@ -66,4 +66,4 @@ export class FlagsConsumer extends iRacingSocketConsumer {
   };
 }
 
-export default Flags;
+export default FlagsConsumer;
