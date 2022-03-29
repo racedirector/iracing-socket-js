@@ -1,0 +1,47 @@
+{
+  "name": "@racedirector/iracing-flags-emitter",
+  "version": "0.0.1",
+  "description": "EventEmitter that emits events when flag changes are detected from iRacing.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/racedirector/iracing-socket-js.git",
+    "directory": "packages/consumers/flags-emitter"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "test": "jest --no-watchman",
+    "prepack": "bob prepack"
+  },
+  "dependencies": {
+    "@racedirector/iracing-socket-js": "0.1.0"
+  },
+  "devDependencies": {
+    "@racedirector/iracing-utilities": "0.0.1"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
+}

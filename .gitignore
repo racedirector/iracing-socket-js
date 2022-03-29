@@ -2,10 +2,21 @@
 #
 **/node_modules/**
 npm-debug.log
+lerna-debug.log
 yarn-error.log
 
+.idea
+.npmrc
 .DS_Store
+.bob
+.cache
+.yarn
 
-coverage/
-cache/
-caches/
+build
+coverage
+cache
+caches
+temp
+dist
+lib
+tsconfig.tsbuildinfo
