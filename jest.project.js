@@ -6,17 +6,20 @@ const CI = !!process.env.CI;
 
 function testEnvironmentForPackage(packageName) {
   switch (packageName) {
+    // If we're testing from the root, or the `iracing-socket-js` project
+    // directly, run in jsdom to support react tests.
+    case "iracing-socket":
     case "iracing-socket-js":
-      return "jsdom"
+      return "jsdom";
     default:
-      return "node"
+      return "node";
   }
 }
 
 module.exports = ({ dirName, projectMode = true }) => {
   const package = require(resolve(dirName, "package.json"));
   const packageDisplayName = package.name.replace("@racedirector/", "");
-  const cacheDirectory = `${CI ? "" : "node_modules/"}.cache/jest`
+  const cacheDirectory = `${CI ? "" : "node_modules/"}.cache/jest`;
 
   return {
     ...baseConfig,
@@ -25,9 +28,6 @@ module.exports = ({ dirName, projectMode = true }) => {
     restoreMocks: true,
     reporters: ["default"],
     modulePathIgnorePatterns: ["dist"],
-    cacheDirectory: resolve(
-      ROOT_DIR,
-      cacheDirectory
-    ),
+    cacheDirectory: resolve(ROOT_DIR, cacheDirectory),
   };
 };
