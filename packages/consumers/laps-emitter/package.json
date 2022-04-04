@@ -14,8 +14,8 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@racedirector/iracing-socket-js": "0.1.0",
-    "@racedirector/iracing-utilities": "0.0.1"
+    "@racedirector/iracing-socket-js": "1.0.0-alpha-a22d0cf.0",
+    "@racedirector/iracing-utilities": "1.0.0-alpha-a22d0cf.0"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
