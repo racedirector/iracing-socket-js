@@ -19,19 +19,18 @@
     "moduleResolution": "node",
     "target": "es2018",
     "module": "esnext",
-    "lib": ["es6", "ESNext", "DOM"],
+    "lib": ["es6", "ESNext"],
     "jsx": "react-jsx",
     "paths": {
-      "@racedirector/iracing-utilities": ["packages/iracing-utilities/src/index.ts"],
-      "@racedirector/iracing-socket-js": ["packages/iracing-socket-js/src/index.ts"],
-      "@racedirector/iracing-socket-cli": ["packages/iracing-socket-cli/src/index.ts"],
       "@racedirector/iracing-driver-swap-emitter": ["packages/consumers/driver-swap-emitter/src/index.ts"],
       "@racedirector/iracing-flags-emitter": ["packages/consumers/flags-emitter/src/index.ts"],
       "@racedirector/iracing-laps-emitter": ["packages/consumers/laps-emitter/src/index.ts"],
       "@racedirector/iracing-pit-timing-emitter": ["packages/consumers/pit-timing-emitter/src/index.ts"],
-      "@racedirector/iracing-sim-incident-emitter": ["packages/consumers/sim-incident-emitter/src/index.ts"]
+      "@racedirector/iracing-sim-incident-emitter": ["packages/consumers/sim-incident-emitter/src/index.ts"],
+      "@racedirector/iracing-socket-cli": ["packages/iracing-socket-cli/src/index.ts"],
+      "@racedirector/iracing-socket-js": ["packages/iracing-socket-js/src/index.ts"],
+      "@racedirector/iracing-utilities": ["packages/iracing-utilities/src/index.ts"]
     }
   },
   "include": ["packages"],
-  "exclude": ["**/lib", "**/temp", "**/__tests__", "**/*.test.*"]
 }

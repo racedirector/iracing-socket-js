@@ -128,19 +128,146 @@ export interface Driver {
   TeamIncidentCount: number;
 }
 
-interface DriverInfoData {
+interface DriverInfo {
   DriverCarIdx: number;
+  DriverHeadPosX: number;
+  DriverHeadPosY: number;
+  DriverHeadPosZ: number;
+  DriverCarIdleRPM: number;
+  DriverCarRedLine: number;
+  DriverCarFuelKgPerLtr: number;
+  DriverCarFuelMaxLtr: number;
+  DriverCarMaxFuelPct: number;
+  DriverCarSLFirstRPM: number;
+  DriverCarSLShiftRPM: number;
+  DriverCarSLLastRPM: number;
+  DriverCarSLBlinkRPM: number;
+  DriverPitTrkPct: number;
+  DriverCarEstLapTime: number;
+  DriverSetupName: string;
+  DriverSetupIsModified: number;
+  DriverSetupLoadTypeName: string;
+  DriverSetupPassedTech: number;
   Drivers: Driver[];
 }
 
+interface WeekendOptions {
+  NumStarters: number;
+  StartingGrid: string;
+  QualifyScoring: string;
+  CourseCautions: string;
+  StandingStart: number;
+  Restarts: string;
+  WeatherType: string;
+  Skies: string;
+  WindDirection: string;
+  WindSpeed: number;
+  WeatherTemp: number;
+  RelativeHumidity: number;
+  FogLevel: number;
+  Unofficial: number;
+  CommercialMode: string;
+  NightMode: number;
+  IsFixedSetup: number;
+  StrictLapsChecking: string;
+  HasOpenRegistration: number;
+  HardcoreLevel: number;
+}
+
+interface WeekendInfo {
+  TrackName: string;
+  TrackID: number;
+  // meters
+  TrackLength: string;
+  TrackDisplayName: string;
+  TrackDisplayShortName: string;
+  TrackConfigName: string;
+  TrackCity: string;
+  TrackCountry: string;
+  TrackAltitude: number;
+  // 6 decimal places, meters
+  TrackLatitude: number;
+  // 6 decimal places, meters
+  TrackLongitude: number;
+  // 4 decimal places, radians
+  TrackNorthOffset: number;
+  TrackNumTurns: number;
+  TrackPitSpeedLimit: number;
+  TrackType: string;
+  TrackWeatherType: string;
+  TrackSkies: string;
+  TrackSurfaceTemp: number;
+  TrackAirTemp: number;
+  TrackAirPressure: number;
+  TrackWindVel: number;
+  TrackWindDir: number;
+  TrackRelativeHumidity: number;
+  TrackFogLevel: number;
+  TrackCleanup: number;
+  TrackDynamicTrack: number;
+  SeriesID: number;
+  SeasonID: number;
+  SessionID: number;
+  SubSessionID: number;
+  LeagueID: number;
+  Official: number;
+  RaceWeek: number;
+  EventType: string;
+  Category: string;
+  SimMode: string;
+  TeamRacing: number;
+  MinDrivers: number;
+  MaxDrivers: number;
+  DCRuleSet: string;
+  QualifierMustStartRace: number;
+  NumCarClasses: number;
+  NumCarTypes: number;
+  WeekendOptions: WeekendOptions;
+}
+
+interface QualifyResultsInfo {
+  [key: string]: any;
+}
+
+interface CameraInfo {
+  [key: string]: any;
+}
+
+interface RadioInfo {
+  [key: string]: any;
+}
+
+interface Sector {
+  SectorNum: number;
+  SectorStartPct: number;
+}
+
+interface SplitTimeInfo {
+  Sectors: Sector[];
+}
+
+interface Session {
+  SessionNum: number;
+  SessionLaps: number;
+  SessionTime: number;
+  SessionNumLapsToAvg: number;
+  SessionType: string;
+  SessionTrackRubberState: string;
+}
+
+interface SessionInfo {
+  NumSessions: number;
+  Sessions: Session[];
+}
+
 interface SessionStringData {
-  WeekendInfo: Record<string, any>;
-  DriverInfo: Partial<DriverInfoData>;
-  SessionInfo: Record<string, any>;
-  QualifyResultsInfo: Record<string, any>;
-  CameraInfo: Record<string, any>;
-  RadioInfo: Record<string, any>;
-  SplitTimeInfo: Record<string, any>;
+  WeekendInfo: Partial<WeekendInfo>;
+  DriverInfo: Partial<DriverInfo>;
+  SessionInfo: Partial<SessionInfo>;
+  QualifyResultsInfo: Partial<QualifyResultsInfo>;
+  CameraInfo: Partial<CameraInfo>;
+  RadioInfo: Partial<RadioInfo>;
+  SplitTimeInfo: Partial<SplitTimeInfo>;
 }
 
 // !!!: It's all partial cause it's not guaranteed that a socket will be asking for all
@@ -149,12 +276,7 @@ export interface iRacingData
   extends Partial<LiveData>,
     Partial<LiveSensorData>,
     Partial<LiveCarData>,
-    Partial<SessionStringData> {
-  // !!!: Don't let this come back unless you're really annoyed cause
-  // people should just come back here and file a PR and add the types.
-  // See `docs/`
-  // [key: string]: any;
-}
+    Partial<SessionStringData> {}
 
 export type iRacingDataKey = keyof iRacingData;
 
@@ -315,4 +437,66 @@ export enum VideoCaptureMode {
   ToggleVideoCapture = 3, // toggle video capture on/off
   ShowVideoTimer = 4, // show video timer in upper left corner of display
   HideVideoTimer = 5, // hide video timer
+}
+
+export enum ChatCommand {
+  BeginChat = 1,
+  Reply,
+  Cancel,
+}
+
+export enum PitCommandMode {
+  Clear = 0,
+  Windshield,
+  Fuel,
+  LF,
+  RF,
+  LR,
+  RR,
+  ClearTires,
+  FR,
+}
+
+export enum TelemetryCommand {
+  Start = 0,
+  Stop,
+  Restart,
+}
+
+export enum iRacingSocketCommands {
+  CameraSwitchPosition = "cam_switch_pos",
+  CameraSwitchNumber = "cam_switch_num",
+  CameraSetState = "cam_set_state",
+  ReplaySetPlaySpeed = "replay_set_play_speed",
+  ReplaySetPlayPosition = "replay_set_play_position",
+  ReplaySearch = "replay_search",
+  ReplaySetState = "replay_set_state",
+  ReloadAllTextures = "reload_all_textures",
+  ReloadTexture = "reload_texture",
+  ChatCommand = "chat_command",
+  ChatCommandMacro = "chat_command_macro",
+  PitCommand = "pit_command",
+  TelemetryCommand = "telem_command",
+  FFBCommand = "ffb_command",
+  ReplaySearchSessionTime = "replay_search_session_time",
+  VideoCapture = "video_capture",
+}
+
+export interface SocketCommandEventMap {
+  [iRacingSocketCommands.CameraSwitchPosition]: [number, number, number];
+  [iRacingSocketCommands.CameraSwitchNumber]: [string, number, number];
+  [iRacingSocketCommands.CameraSetState]: [CameraState];
+  [iRacingSocketCommands.ReplaySetPlaySpeed]: [number, boolean];
+  [iRacingSocketCommands.ReplaySetPlayPosition]: [number, number];
+  [iRacingSocketCommands.ReplaySearch]: [];
+  [iRacingSocketCommands.ReplaySetState]: [0];
+  [iRacingSocketCommands.ReloadAllTextures]: undefined;
+  [iRacingSocketCommands.ReloadTexture]: [number];
+  [iRacingSocketCommands.ChatCommand]: [ChatCommand];
+  [iRacingSocketCommands.ChatCommandMacro]: [number];
+  [iRacingSocketCommands.PitCommand]: [PitCommandMode, number | 0];
+  [iRacingSocketCommands.TelemetryCommand]: [TelemetryCommand];
+  [iRacingSocketCommands.FFBCommand]: [FFBCommandMode, number];
+  [iRacingSocketCommands.ReplaySearchSessionTime]: [number, number];
+  [iRacingSocketCommands.VideoCapture]: [VideoCaptureMode];
 }
