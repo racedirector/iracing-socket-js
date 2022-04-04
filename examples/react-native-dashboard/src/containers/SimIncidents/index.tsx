@@ -24,6 +24,7 @@ export const SimIncidents: React.FC<SimIncidentsProps> = ({children}) => {
   const socketRef = useRef(
     new iRacingSocket({
       server: host,
+      fps: 5,
       requestParameters: SimIncidentConsumer.requestParameters,
       requestParametersOnce: SimIncidentConsumer.requestParametersOnce,
     }),
