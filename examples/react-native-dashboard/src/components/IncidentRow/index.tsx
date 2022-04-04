@@ -5,13 +5,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
   },
-  sessionTimeLabel: {
+  label: {
     flex: 1,
   },
-  driverNameLabel: {flex: 1},
-  incidentWeightLabel: {flex: 1},
-  incidentReasonLabel: {flex: 1},
-  incidentTypeLabel: {flex: 1},
 });
 
 export interface IncidentRowProps {
@@ -22,6 +18,7 @@ export interface IncidentRowProps {
   driverName: string;
   driverId: number;
   weight: number;
+  lapPercentage: number;
 }
 
 export const IncidentRow: React.FC<IncidentRowProps> = ({
@@ -29,13 +26,15 @@ export const IncidentRow: React.FC<IncidentRowProps> = ({
   simTime,
   driverName,
   weight,
+  lapPercentage,
 }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.sessionTimeLabel}>{sessionTime}</Text>
-      <Text style={styles.sessionTimeLabel}>{simTime}</Text>
-      <Text style={styles.driverNameLabel}>{driverName}</Text>
-      <Text style={styles.incidentWeightLabel}>{weight}</Text>
+      <Text style={styles.label}>{sessionTime}</Text>
+      <Text style={styles.label}>{`${lapPercentage * 100}%`}</Text>
+      <Text style={styles.label}>{simTime}</Text>
+      <Text style={styles.label}>{driverName}</Text>
+      <Text style={styles.label}>{weight}</Text>
     </View>
   );
 };

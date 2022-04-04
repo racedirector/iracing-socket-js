@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FlatList, FlatListProps, Pressable, StyleSheet} from 'react-native';
 import {IncidentRow, IncidentRowProps} from '../IncidentRow';
 
@@ -20,26 +20,30 @@ export interface IncidentsProps
 export const Incidents: React.FC<IncidentsProps> = ({
   onSelectItem = () => {},
   ...props
-}) => (
-  <FlatList
-    {...props}
-    inverted
-    ListFooterComponentStyle={styles.header}
-    renderItem={({item, index}) => {
-      return (
-        <Pressable
-          onPress={() => {
-            onSelectItem(item, index);
-          }}
-        >
-          <IncidentRow
-            key={`${item.driverName}-${item.weight}-${index}`}
-            {...item}
-          />
-        </Pressable>
-      );
-    }}
-  />
-);
+}) => {
+  const renderItem = useCallback(
+    ({item, index}) => (
+      <Pressable
+        onPress={() => {
+          onSelectItem(item, index);
+        }}>
+        <IncidentRow
+          key={`${item.driverName}-${item.weight}-${index}`}
+          {...item}
+        />
+      </Pressable>
+    ),
+    [onSelectItem],
+  );
+
+  return (
+    <FlatList
+      {...props}
+      inverted
+      ListFooterComponentStyle={styles.header}
+      renderItem={renderItem}
+    />
+  );
+};
 
 export default Incidents;
