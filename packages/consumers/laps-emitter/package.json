@@ -1,6 +1,6 @@
 {
   "name": "@racedirector/iracing-laps-emitter",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "description": "EventEmitter that emits events when lap changes are detected from iRacing.",
   "repository": {
     "type": "git",
