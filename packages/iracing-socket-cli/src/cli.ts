@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import "websocket-polyfill";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
