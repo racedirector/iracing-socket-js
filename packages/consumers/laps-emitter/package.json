@@ -8,6 +8,9 @@
     "directory": "packages/consumers/laps-emitter"
   },
   "license": "MIT",
+  "bin": {
+    "iracing-laps": "dist/cli.js"
+  },
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman",
@@ -15,9 +18,13 @@
   },
   "dependencies": {
     "@racedirector/iracing-socket-js": "0.1.0",
-    "@racedirector/iracing-utilities": "0.0.1"
+    "@racedirector/iracing-utilities": "0.0.1",
+    "websocket-polyfill": "^0.0.3",
+    "winston": "^3.6.0",
+    "yargs": "^17.4.0"
   },
   "devDependencies": {
+    "@types/yargs": "^17",
     "jest-websocket-mock": "^2.3.0"
   },
   "main": "dist/index.js",
@@ -39,7 +46,12 @@
   },
   "typings": "dist/index.d.ts",
   "buildOptions": {
-    "input": "./src/index.ts"
+    "input": "./src/index.ts",
+    "bin": {
+      "iracing-laps": {
+        "input": "src/cli.ts"
+      }
+    }
   },
   "publishConfig": {
     "directory": "dist",
