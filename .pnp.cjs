@@ -4482,6 +4482,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["timekeeper", "npm:2.2.0"],\
+            ["websocket-polyfill", "npm:0.0.3"],\
             ["winston", "npm:3.7.2"],\
             ["yargs", "npm:17.4.1"]\
           ],\

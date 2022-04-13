@@ -10,7 +10,7 @@ import {
   iRacingSocket,
   iRacingSocketConnectionEvents,
   iRacingSocketEvents,
-} from "@racedirector/iracing-socket-js";
+} from "./core";
 import { createLogger, transports, format } from "winston";
 import { pick } from "lodash";
 

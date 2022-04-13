@@ -2015,6 +2015,7 @@ __metadata:
     "@types/yargs": ^17
     jest-websocket-mock: 2.3.0
     timekeeper: 2.2.0
+    websocket-polyfill: ^0.0.3
     winston: ^3.6.0
     yargs: ^17.4.0
   bin:
