@@ -1,3 +1,7 @@
+/**
+ * The CLI is always run in a node env, so we're going to need to import the polyfill here...
+ * TODO: Do we have to shebang this?
+ */
 import "websocket-polyfill";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";

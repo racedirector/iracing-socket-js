@@ -10,7 +10,7 @@
   },
   "scripts": {
     "clean": "rimraf node_modules packages/{*,consumers/*}/node_modules",
-    "prebuild": "rimraf packages/{*,consumers/*}/dist",
+    "prebuild": "rimraf packages/*/dist packages/consumers/*/dist",
     "build": "tsc --project tsconfig.build.json && bob build",
     "build:watch": "npx tsc-watch --project tsconfig.build.json --onSuccess \"bob build\"",
     "test": "jest --no-watchman",
@@ -20,6 +20,10 @@
     "types:check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/jest": "^27",
+    "@types/lodash": "^4",
+    "@types/node": "^17",
+    "@types/yargs": "^17",
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
     "bob-the-bundler": "1.6.1",
@@ -34,6 +38,7 @@
     "husky": "7.0.4",
     "jest": "27.5.1",
     "lint-staged": "12.3.7",
+    "lodash": "^4.17.21",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.1.4",

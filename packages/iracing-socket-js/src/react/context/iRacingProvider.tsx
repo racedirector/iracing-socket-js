@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
-import { invariant } from "../../utilities/globals";
+import { invariant } from "ts-invariant";
 import {
   iRacingClientConnectionEvents,
   iRacingSocket,
@@ -10,9 +10,10 @@ import { iRacingContext } from "./iRacingContext";
 
 export interface iRacingProviderProps {
   socket: iRacingSocket;
+  children?: React.ReactNode;
 }
 
-export const iRacingProvider: React.FC<iRacingProviderProps> = ({
+export const IRacingProvider: React.FC<iRacingProviderProps> = ({
   socket,
   children,
 }) => {
@@ -70,4 +71,4 @@ export const iRacingProvider: React.FC<iRacingProviderProps> = ({
   );
 };
 
-export default iRacingProvider;
+export default IRacingProvider;

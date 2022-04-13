@@ -1,4 +1,4 @@
-import { invariant } from "../../utilities/globals";
+import { invariant } from "ts-invariant";
 import { iRacingSocketOptions } from "../../core";
 import { useIRacingContext } from "../context";
 

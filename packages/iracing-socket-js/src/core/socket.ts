@@ -163,7 +163,7 @@ export class iRacingSocket extends EventEmitter {
     return super.removeAllListeners(event);
   }
 
-  private onError = (event: WebSocketErrorEvent) => {
+  private onError = (event: any) => {
     const connectionError = !this.connected && this._connecting;
     if (connectionError) {
       this.socketConnectionEmitter.emit(
@@ -188,7 +188,7 @@ export class iRacingSocket extends EventEmitter {
     });
   };
 
-  private onMessage = ({ data: eventData }: WebSocketMessageEvent) => {
+  private onMessage = ({ data: eventData }: any) => {
     // Normalize the JSON
     const normalizedEventData = eventData
       .toString()

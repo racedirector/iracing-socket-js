@@ -1,5 +1,5 @@
 import * as React from "react";
-import { invariant } from "../../utilities/globals";
+import { invariant } from "ts-invariant";
 import { iRacingSocket } from "../../core";
 import { iRacingContext } from "./iRacingContext";
 

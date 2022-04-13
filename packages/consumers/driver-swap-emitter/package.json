@@ -20,7 +20,8 @@
     "lodash": "*"
   },
   "devDependencies": {
-    "jest-websocket-mock": "^2.3.0"
+    "jest-websocket-mock": "^2.3.0",
+    "lodash": "^4.17.21"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",

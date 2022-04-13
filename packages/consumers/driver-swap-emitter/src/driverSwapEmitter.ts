@@ -32,7 +32,9 @@ export class DriverSwapConsumer extends iRacingSocketConsumer {
 
     const nextData = { ...this.socket.data };
     // !!!: Don't include the pace car
-    const nextIndex = chain(nextData.DriverInfo?.Drivers || [])
+    const nextIndex: Record<string, Driver> = chain(
+      nextData.DriverInfo?.Drivers || [],
+    )
       .filter(({ CarIsPaceCar }) => !CarIsPaceCar)
       .keyBy("CarIdx")
       .value();
