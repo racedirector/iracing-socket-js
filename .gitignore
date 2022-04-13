@@ -54,7 +54,7 @@ buck-out/
 *.jsbundle
 
 # CocoaPods
-/ios/Pods/
+Pods/
 
 .npmrc
 .DS_Store

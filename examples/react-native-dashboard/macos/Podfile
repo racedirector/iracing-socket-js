@@ -1,0 +1,17 @@
+project_modules = "../node_modules"
+workspace_modules = "../../#{project_modules}"
+
+react_native_macos_path = "#{workspace_modules}/react-native-macos"
+
+require_relative "#{react_native_macos_path}/scripts/react_native_pods"
+require_relative "#{workspace_modules}/@react-native-community/cli-platform-ios/native_modules"
+
+target 'dashboard-macOS' do
+  platform :macos, '10.15'
+  use_native_modules!
+  use_react_native!(
+    :path => react_native_macos_path,
+  )
+
+  # Pods specifically for macOS target
+end

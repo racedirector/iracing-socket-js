@@ -7,6 +7,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "windows": "react-native run-windows",
+    "macos": "react-native run-macos",
     "web": "cd web && webpack-dev-server",
     "build:web": "cd web && webpack",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
