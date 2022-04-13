@@ -26,7 +26,8 @@ export const Incidents: React.FC<IncidentsProps> = ({
       <Pressable
         onPress={() => {
           onSelectItem(item, index);
-        }}>
+        }}
+      >
         <IncidentRow
           key={`${item.driverName}-${item.weight}-${index}`}
           {...item}
