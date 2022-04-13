@@ -9,6 +9,7 @@
     "windows": "react-native run-windows",
     "macos": "react-native run-macos",
     "web": "cd web && webpack-dev-server",
+    "socket": "iracing-socket",
     "build:web": "cd web && webpack",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
