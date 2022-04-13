@@ -1982,8 +1982,13 @@ __metadata:
     "@racedirector/iracing-socket-js": 0.1.0
     jest-websocket-mock: ^2.3.0
     lodash: ^4.17.21
+    websocket-polyfill: ^0.0.3
+    winston: ^3.6.0
+    yargs: ^17.4.0
   peerDependencies:
     lodash: "*"
+  bin:
+    iracing-driver-swaps: dist/cli.js
   languageName: unknown
   linkType: soft
 

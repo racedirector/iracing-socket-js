@@ -4430,7 +4430,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
             ["@types/lodash", null],\
             ["jest-websocket-mock", "npm:2.3.0"],\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.21"],\
+            ["websocket-polyfill", "npm:0.0.3"],\
+            ["winston", "npm:3.7.2"],\
+            ["yargs", "npm:17.4.1"]\
           ],\
           "packagePeers": [\
             "@types/lodash",\
@@ -4444,7 +4447,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@racedirector/iracing-driver-swap-emitter", "workspace:packages/consumers/driver-swap-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.21"],\
+            ["websocket-polyfill", "npm:0.0.3"],\
+            ["winston", "npm:3.7.2"],\
+            ["yargs", "npm:17.4.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
