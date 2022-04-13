@@ -1980,7 +1980,7 @@ __metadata:
   resolution: "@racedirector/iracing-driver-swap-emitter@workspace:packages/consumers/driver-swap-emitter"
   dependencies:
     "@racedirector/iracing-socket-js": 0.1.0
-    lodash: "*"
+    jest-websocket-mock: ^2.3.0
   peerDependencies:
     lodash: "*"
   languageName: unknown
@@ -1992,6 +1992,7 @@ __metadata:
   dependencies:
     "@racedirector/iracing-socket-js": 0.1.0
     "@racedirector/iracing-utilities": 0.0.1
+    jest-websocket-mock: ^2.3.0
   languageName: unknown
   linkType: soft
 
@@ -2001,6 +2002,7 @@ __metadata:
   dependencies:
     "@racedirector/iracing-socket-js": 0.1.0
     "@racedirector/iracing-utilities": 0.0.1
+    jest-websocket-mock: ^2.3.0
   languageName: unknown
   linkType: soft
 
@@ -2009,6 +2011,9 @@ __metadata:
   resolution: "@racedirector/iracing-pit-timing-emitter@workspace:packages/consumers/pit-timing-emitter"
   dependencies:
     "@racedirector/iracing-socket-js": 0.1.0
+    "@types/yargs": ^17
+    jest-websocket-mock: 2.3.0
+    timekeeper: 2.2.0
     winston: ^3.6.0
     yargs: ^17.4.0
   bin:
@@ -2021,24 +2026,9 @@ __metadata:
   resolution: "@racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter"
   dependencies:
     "@racedirector/iracing-socket-js": 0.1.0
-    lodash: "*"
+    jest-websocket-mock: ^2.3.0
   peerDependencies:
-    lodash: "*"
-  languageName: unknown
-  linkType: soft
-
-"@racedirector/iracing-socket-cli@0.0.1, @racedirector/iracing-socket-cli@workspace:packages/iracing-socket-cli":
-  version: 0.0.0-use.local
-  resolution: "@racedirector/iracing-socket-cli@workspace:packages/iracing-socket-cli"
-  dependencies:
-    "@racedirector/iracing-socket-js": ^0.1.0
-    lodash: ^4.17.21
-    ts-invariant: ^0.9.4
-    websocket-polyfill: ^0.0.3
-    winston: ^3.6.0
-    yargs: ^17.4.0
-  bin:
-    iracing-socket: dist/cli.js
+    lodash: ^4
   languageName: unknown
   linkType: soft
 
@@ -2046,16 +2036,24 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-socket-js@workspace:packages/iracing-socket-js"
   dependencies:
+    "@testing-library/react": ^13.0.1
+    "@types/yargs": ^17
+    jest-websocket-mock: ^2.3.0
     ts-invariant: ^0.9.4
+    waait: ^1.0.5
+    winston: ^3.7.2
+    yargs: ^17.4.1
   peerDependencies:
-    lodash: "*"
+    lodash: ^4
     react: ^17.0.0
-    ws: ^8
+    websocket-polyfill: ^0.0.3
   peerDependenciesMeta:
     react:
       optional: true
-    ws:
+    websocket-polyfill:
       optional: true
+  bin:
+    iracing-socket: dist/cli.js
   languageName: unknown
   linkType: soft
 
@@ -2490,7 +2488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^8.0.0":
+"@testing-library/dom@npm:^8.5.0":
   version: 8.13.0
   resolution: "@testing-library/dom@npm:8.13.0"
   dependencies:
@@ -2506,17 +2504,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:12.1.3":
-  version: 12.1.3
-  resolution: "@testing-library/react@npm:12.1.3"
+"@testing-library/react@npm:^13.0.1":
+  version: 13.0.1
+  resolution: "@testing-library/react@npm:13.0.1"
   dependencies:
     "@babel/runtime": ^7.12.5
-    "@testing-library/dom": ^8.0.0
-    "@types/react-dom": "*"
+    "@testing-library/dom": ^8.5.0
+    "@types/react-dom": ^18.0.0
   peerDependencies:
-    react: "*"
-    react-dom: "*"
-  checksum: 2f059e93dc3f161c4d15910d1fa80cd4f5cfb6eff8a733939a72ac720c2499b74761e8980c02983a6e49153b776e82bd770a1c3e66e05c4429db0e01612f7d0a
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: fb38255439eeb79118f4704d3e37eb2435fdd2ccaa709298a3ee04c1fcf630731bcd96937a50203f3c1b60a6886d1490493a2e360f9bcac76571edb52fd4a2c3
   languageName: node
   linkType: hard
 
@@ -2741,16 +2739,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:27.4.1":
-  version: 27.4.1
-  resolution: "@types/jest@npm:27.4.1"
-  dependencies:
-    jest-matcher-utils: ^27.0.0
-    pretty-format: ^27.0.0
-  checksum: 5184f3eef4832d01ee8f59bed15eec45ccc8e29c724a5e6ce37bf74396b37bdf04f557000f45ba4fc38ae6075cf9cfcce3d7a75abc981023c61ceb27230a93e4
-  languageName: node
-  linkType: hard
-
 "@types/json-schema@npm:*, @types/json-schema@npm:^7.0.5, @types/json-schema@npm:^7.0.8, @types/json-schema@npm:^7.0.9":
   version: 7.0.11
   resolution: "@types/json-schema@npm:7.0.11"
@@ -2762,13 +2750,6 @@ __metadata:
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
   checksum: e60b153664572116dfea673c5bda7778dbff150498f44f998e34b5886d8afc47f16799280e4b6e241c0472aef1bc36add771c569c68fc5125fc2ae519a3eb9ac
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:4.14.179":
-  version: 4.14.179
-  resolution: "@types/lodash@npm:4.14.179"
-  checksum: 71faa0c8071732c2b7f0bd092850d3cea96fc7912055d57d819cf2ab399a64150e4190d8a4ea35a0905662ddc118be9d2abd55891d8047c085acf98608156149
   languageName: node
   linkType: hard
 
@@ -2792,13 +2773,6 @@ __metadata:
   version: 17.0.23
   resolution: "@types/node@npm:17.0.23"
   checksum: a3517554737cbb042e76c30d0e5482192ac4d9bea0eeb086e2622d9cabf460a0eb52a696b99fcd18e7fcc93c96db6cc7ae507f6608f256ef0b5c1d8c87a5a470
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:17.0.12":
-  version: 17.0.12
-  resolution: "@types/node@npm:17.0.12"
-  checksum: f7e4c384b72648550391c2c8bd42560dfccf5b7a0506fb5842f326f8b176286be279dd63f62af621fe6d409d474ea5d312855061f512132e999f4e902a22e4db
   languageName: node
   linkType: hard
 
@@ -2844,7 +2818,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:*":
+"@types/react-dom@npm:^18.0.0":
   version: 18.0.0
   resolution: "@types/react-dom@npm:18.0.0"
   dependencies:
@@ -2879,17 +2853,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: ebee02778ca08f954c316dc907802264e0121c87b8fa2e7e0156ab0ef2a1b0a09d968c016a3600ec4c9a17dc09b4274f292d9b15a1a5369bb7e4072def82808f
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:17.0.39":
-  version: 17.0.39
-  resolution: "@types/react@npm:17.0.39"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: bf04d3c2894559012710d595553e12b422d3b91cd8f4f7e122d8cb044ba9c2ba17f6e8a4e09581359cc5509ddc59cd8c8fabd6774f3505a40a45393f074d6e6e
   languageName: node
   linkType: hard
 
@@ -2985,7 +2948,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yargs@npm:^17.0.10":
+"@types/yargs@npm:^17":
   version: 17.0.10
   resolution: "@types/yargs@npm:17.0.10"
   dependencies:
@@ -4400,16 +4363,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bufferutil@npm:^4.0.1":
-  version: 4.0.6
-  resolution: "bufferutil@npm:4.0.6"
-  dependencies:
-    node-gyp: latest
-    node-gyp-build: ^4.3.0
-  checksum: dd107560947445280af7820c3d0534127b911577d85d537e1d7e0aa30fd634853cef8a994d6e8aed3d81388ab1a20257de776164afe6a6af8e78f5f17968ebd6
-  languageName: node
-  linkType: hard
-
 "builtin-modules@npm:^3.1.0":
   version: 3.2.0
   resolution: "builtin-modules@npm:3.2.0"
@@ -5273,7 +5226,6 @@ __metadata:
     "@racedirector/iracing-laps-emitter": ^0.0.1
     "@racedirector/iracing-pit-timing-emitter": ^0.0.1
     "@racedirector/iracing-sim-incident-emitter": ^0.0.1
-    "@racedirector/iracing-socket-cli": 0.0.1
     "@racedirector/iracing-socket-js": ^0.1.0
     "@racedirector/iracing-utilities": ^0.0.1
     "@react-navigation/drawer": ^6.3.1
@@ -7943,12 +7895,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "iracing-socket@workspace:."
   dependencies:
-    "@testing-library/react": 12.1.3
-    "@types/jest": 27.4.1
-    "@types/lodash": 4.14.179
-    "@types/node": 17.0.12
-    "@types/react": 17.0.39
-    "@types/yargs": ^17.0.10
     "@typescript-eslint/eslint-plugin": 5.16.0
     "@typescript-eslint/parser": 5.16.0
     bob-the-bundler: 1.6.1
@@ -7963,19 +7909,13 @@ __metadata:
     get-yarn-workspaces: 1.0.2
     husky: 7.0.4
     jest: 27.5.1
-    jest-websocket-mock: 2.3.0
     lint-staged: 12.3.7
-    lodash: 4.17.21
     prettier: 2.5.1
-    react: 17.0.2
-    react-dom: 17.0.2
     rimraf: 3.0.2
-    timekeeper: 2.2.0
     ts-jest: 27.1.4
     tsc-watch: 4.6.2
     tslib: 2.3.1
     typescript: 4.5.5
-    waait: 1.0.5
   languageName: unknown
   linkType: soft
 
@@ -8709,7 +8649,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-matcher-utils@npm:^27.0.0, jest-matcher-utils@npm:^27.5.1":
+"jest-matcher-utils@npm:^27.5.1":
   version: 27.5.1
   resolution: "jest-matcher-utils@npm:27.5.1"
   dependencies:
@@ -8983,7 +8923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-websocket-mock@npm:2.3.0":
+"jest-websocket-mock@npm:2.3.0, jest-websocket-mock@npm:^2.3.0":
   version: 2.3.0
   resolution: "jest-websocket-mock@npm:2.3.0"
   dependencies:
@@ -9568,7 +9508,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:*, lodash@npm:4.17.21, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.5, lodash@npm:^4.7.0":
+"lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.20, lodash@npm:^4.17.21, lodash@npm:^4.17.5, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -10547,17 +10487,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-gyp-build@npm:^4.3.0":
-  version: 4.4.0
-  resolution: "node-gyp-build@npm:4.4.0"
-  bin:
-    node-gyp-build: bin.js
-    node-gyp-build-optional: optional.js
-    node-gyp-build-test: build-test.js
-  checksum: 972a059f960253d254e0b23ce10f54c8982236fc0edcab85166d0b7f87443b2ce98391c877cfb2f6eeafcf03c538c5f4dd3e0bfff03828eb48634f58f4c64343
-  languageName: node
-  linkType: hard
-
 "node-gyp@npm:latest":
   version: 9.0.0
   resolution: "node-gyp@npm:9.0.0"
@@ -11347,7 +11276,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.0.0, pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
+"pretty-format@npm:^27.0.2, pretty-format@npm:^27.5.1":
   version: 27.5.1
   resolution: "pretty-format@npm:27.5.1"
   dependencies:
@@ -13825,13 +13754,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tstl@npm:^2.0.7":
-  version: 2.5.3
-  resolution: "tstl@npm:2.5.3"
-  checksum: 177c7ab03dec887da6080834dd2d0725864549f2342bc4c386f1c14d13705ef05e41ad79bddec082bc967b5b19aeaff8f826c64d82588aaaa4e787b66be5f98c
-  languageName: node
-  linkType: hard
-
 "tsup@npm:^5.11.6":
   version: 5.12.5
   resolution: "tsup@npm:5.12.5"
@@ -14182,16 +14104,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"utf-8-validate@npm:^5.0.2":
-  version: 5.0.9
-  resolution: "utf-8-validate@npm:5.0.9"
-  dependencies:
-    node-gyp: latest
-    node-gyp-build: ^4.3.0
-  checksum: 90117f1b65e0a1256c83dfad529983617263b622f2379745311d0438c7ea31db0d134ebd0dca84c3f5847a3560a3d249644e478a9109c616f63c7ea19cac53dc
-  languageName: node
-  linkType: hard
-
 "util-deprecate@npm:^1.0.1, util-deprecate@npm:~1.0.1":
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
@@ -14291,7 +14203,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"waait@npm:1.0.5":
+"waait@npm:^1.0.5":
   version: 1.0.5
   resolution: "waait@npm:1.0.5"
   checksum: fd12c556c2295a2f7f1810f214148a2301f11127b8f7e27d97b5e4ea13db7487ead49b57be4170db99acac17c1da6401a1537502a9a37b063fe8e512c5b9d337
@@ -14539,30 +14451,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"websocket-polyfill@npm:^0.0.3":
-  version: 0.0.3
-  resolution: "websocket-polyfill@npm:0.0.3"
-  dependencies:
-    tstl: ^2.0.7
-    websocket: ^1.0.28
-  checksum: e4f2d532717f007eb69c424d9fa0e7296b56d19d6b7a753722523b9f3be3f7d0d70d12840392b70ad711c8f1eb508e40beb62abf64e8fc48992a27157ba2c45e
-  languageName: node
-  linkType: hard
-
-"websocket@npm:^1.0.28":
-  version: 1.0.34
-  resolution: "websocket@npm:1.0.34"
-  dependencies:
-    bufferutil: ^4.0.1
-    debug: ^2.2.0
-    es5-ext: ^0.10.50
-    typedarray-to-buffer: ^3.1.5
-    utf-8-validate: ^5.0.2
-    yaeti: ^0.0.6
-  checksum: 8a0ce6d79cc1334bb6ea0d607f0092f3d32700b4dd19e4d5540f2a85f3b50e1f8110da0e4716737056584dde70bbebcb40bbd94bbb437d7468c71abfbfa077d8
-  languageName: node
-  linkType: hard
-
 "whatwg-encoding@npm:^1.0.5":
   version: 1.0.5
   resolution: "whatwg-encoding@npm:1.0.5"
@@ -14676,7 +14564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"winston@npm:^3.6.0":
+"winston@npm:^3.6.0, winston@npm:^3.7.2":
   version: 3.7.2
   resolution: "winston@npm:3.7.2"
   dependencies:
@@ -14920,13 +14808,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaeti@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "yaeti@npm:0.0.6"
-  checksum: 6db12c152f7c363b80071086a3ebf5032e03332604eeda988872be50d6c8469e1f13316175544fa320f72edad696c2d83843ad0ff370659045c1a68bcecfcfea
-  languageName: node
-  linkType: hard
-
 "yallist@npm:^4.0.0":
   version: 4.0.0
   resolution: "yallist@npm:4.0.0"
@@ -15018,7 +14899,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.4.0":
+"yargs@npm:^17.4.0, yargs@npm:^17.4.1":
   version: 17.4.1
   resolution: "yargs@npm:17.4.1"
   dependencies:

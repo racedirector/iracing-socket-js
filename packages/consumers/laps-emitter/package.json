@@ -17,6 +17,9 @@
     "@racedirector/iracing-socket-js": "0.1.0",
     "@racedirector/iracing-utilities": "0.0.1"
   },
+  "devDependencies": {
+    "jest-websocket-mock": "^2.3.0"
+  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

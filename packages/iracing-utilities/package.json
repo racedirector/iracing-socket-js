@@ -22,7 +22,11 @@
   "typescript": {
     "definition": "dist/index.d.ts"
   },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"

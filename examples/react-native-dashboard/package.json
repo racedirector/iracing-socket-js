@@ -47,7 +47,6 @@
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
     "@babel/runtime": "7.17.8",
-    "@racedirector/iracing-socket-cli": "0.0.1",
     "@types/moment-duration-format": "^2.2.3",
     "@types/react-native": "^0.66.15",
     "@types/react-test-renderer": "^17.0.1",

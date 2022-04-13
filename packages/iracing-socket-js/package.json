@@ -8,26 +8,37 @@
     "directory": "packages/iracing-socket-js"
   },
   "license": "MIT",
+  "bin": {
+    "iracing-socket": "dist/cli.js"
+  },
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman",
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "ts-invariant": "^0.9.4"
+    "ts-invariant": "^0.9.4",
+    "winston": "^3.7.2",
+    "yargs": "^17.4.1"
   },
   "peerDependencies": {
-    "lodash": "*",
+    "lodash": "^4",
     "react": "^17.0.0",
-    "ws": "^8"
+    "websocket-polyfill": "^0.0.3"
   },
   "peerDependenciesMeta": {
     "react": {
       "optional": true
     },
-    "ws": {
+    "websocket-polyfill": {
       "optional": true
     }
+  },
+  "devDependencies": {
+    "@testing-library/react": "^13.0.1",
+    "@types/yargs": "^17",
+    "jest-websocket-mock": "^2.3.0",
+    "waait": "^1.0.5"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -35,7 +46,16 @@
   "typescript": {
     "definition": "dist/index.d.ts"
   },
+  "buildOptions": {
+    "input": "./src/index.ts",
+    "bin": {
+      "iracing-socket": {
+        "input": "./src/cli.ts"
+      }
+    }
+  },
   "exports": {
+    "./package.json": "./package.json",
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
