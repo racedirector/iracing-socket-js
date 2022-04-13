@@ -8,18 +8,25 @@
     "directory": "packages/consumers/sim-incident-emitter"
   },
   "license": "MIT",
+  "bin": {
+    "iracing-sim-incidents": "dist/cli.js"
+  },
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman",
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@racedirector/iracing-socket-js": "0.1.0"
+    "@racedirector/iracing-socket-js": "0.1.0",
+    "winston": "^3.6.0",
+    "yargs": "^17.4.0"
   },
   "peerDependencies": {
     "lodash": "^4"
   },
   "devDependencies": {
+    "@types/lodash": "^4",
+    "@types/yargs": "^17",
     "jest-websocket-mock": "^2.3.0",
     "lodash": "^4.17.21"
   },
@@ -42,7 +49,12 @@
   },
   "typings": "dist/index.d.ts",
   "buildOptions": {
-    "input": "./src/index.ts"
+    "input": "./src/index.ts",
+    "bin": {
+      "iracing-sim-incidents": {
+        "input": "src/cli.ts"
+      }
+    }
   },
   "publishConfig": {
     "directory": "dist",
