@@ -4495,12 +4495,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-sim-incident-emitter", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/consumers/sim-incident-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
-            ["@types/lodash", null],\
+            ["@types/lodash", "npm:4.14.181"],\
+            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.21"],\
+            ["websocket-polyfill", "npm:0.0.3"],\
+            ["winston", "npm:3.7.2"],\
+            ["yargs", "npm:17.4.1"]\
           ],\
           "packagePeers": [\
-            "@types/lodash",\
             "lodash"\
           ],\
           "linkType": "SOFT"\
@@ -4510,8 +4513,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-sim-incident-emitter", "workspace:packages/consumers/sim-incident-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
+            ["@types/lodash", "npm:4.14.181"],\
+            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
-            ["lodash", "npm:4.17.21"]\
+            ["lodash", "npm:4.17.21"],\
+            ["websocket-polyfill", "npm:0.0.3"],\
+            ["winston", "npm:3.7.2"],\
+            ["yargs", "npm:17.4.1"]\
           ],\
           "linkType": "SOFT"\
         }]\
