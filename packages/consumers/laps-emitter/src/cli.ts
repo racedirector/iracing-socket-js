@@ -6,7 +6,7 @@ import {
   iRacingSocket,
   iRacingSocketConnectionEvents,
 } from "@racedirector/iracing-socket-js";
-import { createLogger, transports, format } from "winston";
+import { createLogger, transports } from "winston";
 import { LapConsumer, LapEvents } from "./lapsEmitter";
 
 const { host, fps, output, verbose } = yargs(hideBin(process.argv))
@@ -43,23 +43,16 @@ const { host, fps, output, verbose } = yargs(hideBin(process.argv))
   .alias("h", "help")
   .parseSync();
 
+console.log(host, fps, output, verbose);
+
 const consoleTransport = new transports.Console();
 
 // All socket updates will go here. By default, they will go to the console.
 const socketUpdateLogger = createLogger({
   level: "info",
-  format: format.combine(
-    format((info) => {
-      if (typeof info.message === "object") {
-        return info.message;
-      }
-
-      return info;
-    })(),
-  ),
   defaultMeta: { service: "iracing-laps-cli", name: "socket-update" },
   transports: [
-    verbose ? consoleTransport : null,
+    consoleTransport,
     output ? new transports.File({ filename: output }) : null,
   ].filter(Boolean),
 });

@@ -9,7 +9,7 @@ import {
 import { createLogger, transports, format } from "winston";
 import { SimIncidentConsumer, SimIncidentEvents } from "./simIncidentEmitter";
 
-const { host, fps, output, verbose } = yargs(hideBin(process.argv))
+const { host, fps, output } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-sim-incidents [options]")
   .example(
     "iracing-sim-incidents --host 192.168.4.33:8182 --fps 1 --output output.txt",
@@ -33,11 +33,6 @@ const { host, fps, output, verbose } = yargs(hideBin(process.argv))
       alias: ["o", "out"],
       description: "the location to output updates from the server",
     },
-    verbose: {
-      type: "boolean",
-      default: false,
-      description: "Log updates to the console?",
-    },
   })
   .help("h")
   .alias("h", "help")
@@ -48,18 +43,9 @@ const consoleTransport = new transports.Console();
 // All socket updates will go here. By default, they will go to the console.
 const socketUpdateLogger = createLogger({
   level: "info",
-  format: format.combine(
-    format((info) => {
-      if (typeof info.message === "object") {
-        return info.message;
-      }
-
-      return info;
-    })(),
-  ),
   defaultMeta: { service: "iracing-sim-incidents-cli", name: "socket-update" },
   transports: [
-    verbose ? consoleTransport : null,
+    consoleTransport,
     output ? new transports.File({ filename: output }) : null,
   ].filter(Boolean),
 });

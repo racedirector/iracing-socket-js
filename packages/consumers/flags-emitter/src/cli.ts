@@ -9,7 +9,7 @@ import {
 import { createLogger, transports } from "winston";
 import { FlagsConsumer, FlagsEvents } from "./flagsEmitter";
 
-const { host, fps, output, verbose } = yargs(hideBin(process.argv))
+const { host, fps, output } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-flags [options]")
   .example(
     "iracing-flags --host 192.168.4.33:8182 --fps 1 --output output.txt",
@@ -33,11 +33,6 @@ const { host, fps, output, verbose } = yargs(hideBin(process.argv))
       alias: ["o", "out"],
       description: "the location to output updates from the server",
     },
-    verbose: {
-      type: "boolean",
-      default: false,
-      description: "Log updates to the console?",
-    },
   })
   .help("h")
   .alias("h", "help")
@@ -50,7 +45,7 @@ const socketUpdateLogger = createLogger({
   level: "info",
   defaultMeta: { service: "iracing-flags-cli", name: "socket-update" },
   transports: [
-    verbose ? consoleTransport : null,
+    consoleTransport,
     output ? new transports.File({ filename: output }) : null,
   ].filter(Boolean),
 });
@@ -98,7 +93,8 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-new FlagsConsumer(socket).on(
+const flagsConsumer = new FlagsConsumer(socket);
+flagsConsumer.on(
   FlagsEvents.FlagChange,
   (previousFlags, nextFlags, sessionTime, sessionTimeOfDay) => {
     socketUpdateLogger.info({

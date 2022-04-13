@@ -92,14 +92,16 @@ export class iRacingSocket extends EventEmitter {
 
   constructor({
     server,
-    requestParameters,
-    requestParametersOnce,
+    requestParameters = [],
+    requestParametersOnce = [],
     fps: desiredFps = 1,
     readIBT = false,
     reconnectTimeoutInterval = 2000,
     autoconnect = true,
   }: iRacingSocketOptions) {
     super();
+
+    console.log(server, requestParameters, requestParametersOnce, desiredFps);
 
     invariant(
       requestParameters.length > 0 || requestParametersOnce.length > 0,
