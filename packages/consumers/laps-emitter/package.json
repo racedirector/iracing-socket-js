@@ -19,6 +19,7 @@
   "dependencies": {
     "@racedirector/iracing-socket-js": "0.1.0",
     "@racedirector/iracing-utilities": "0.0.1",
+    "websocket-polyfill": "^0.0.3",
     "winston": "^3.6.0",
     "yargs": "^17.4.0"
   },
