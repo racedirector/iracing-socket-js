@@ -8,13 +8,18 @@
     "directory": "packages/consumers/driver-swap-emitter"
   },
   "license": "MIT",
+  "bin": {
+    "iracing-driver-swaps": "dist/cli.js"
+  },
   "scripts": {
     "lint": "eslint **/*.ts",
     "test": "jest --no-watchman",
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@racedirector/iracing-socket-js": "0.1.0"
+    "@racedirector/iracing-socket-js": "0.1.0",
+    "winston": "^3.6.0",
+    "yargs": "^17.4.0"
   },
   "peerDependencies": {
     "lodash": "*"
@@ -42,7 +47,12 @@
   },
   "typings": "dist/index.d.ts",
   "buildOptions": {
-    "input": "./src/index.ts"
+    "input": "./src/index.ts",
+    "bin": {
+      "iracing-driver-swaps": {
+        "input": "src/cli.ts"
+      }
+    }
   },
   "publishConfig": {
     "directory": "dist",
