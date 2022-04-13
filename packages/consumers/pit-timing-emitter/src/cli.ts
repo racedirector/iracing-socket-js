@@ -1,7 +1,3 @@
-/**
- * The CLI is always run in a node env, so we're going to need to import the polyfill here...
- * TODO: Do we have to shebang this?
- */
 import "websocket-polyfill";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
@@ -9,18 +5,15 @@ import {
   iRacingClientConnectionEvents,
   iRacingSocket,
   iRacingSocketConnectionEvents,
-  iRacingSocketEvents,
-} from "./core";
+} from "@racedirector/iracing-socket-js";
 import { createLogger, transports, format } from "winston";
-import { pick } from "lodash";
+import { PitTimingConsumer, PitTimingEvents } from "./pitTimingEmitter";
 
-const { host, request, requestOnce, fps, output, updatesOnly, verbose } = yargs(
-  hideBin(process.argv),
-)
-  .usage("Usage: iracing-socket [options]")
+const { host, fps, output, verbose } = yargs(hideBin(process.argv))
+  .usage("Usage: iracing-pit-timing [options]")
   .example(
-    "iracing-socket --host 192.168.4.33:8182 --request DriverInfo, SessionInfo --requestOnce WeekendInfo --fps 1 --output output.txt",
-    "Connect to `host` and send `request`, `requestOnce`, and `fps` in the initial request, writing all responses to `output`",
+    "iracing-pit-timing --host 192.168.4.33:8182 --fps 1 --output output.txt",
+    "Connect to `host` and writes all responses to `output`",
   )
   .options({
     host: {
@@ -34,25 +27,6 @@ const { host, request, requestOnce, fps, output, updatesOnly, verbose } = yargs(
       alias: ["f"],
       default: 1,
       description: "the rate at which to get updates from the server",
-    },
-    request: {
-      type: "array",
-      alias: ["r", "req"],
-      demandOption: true,
-      string: true,
-      description: "the properties to request from the server",
-    },
-    requestOnce: {
-      type: "array",
-      alias: ["rO", "once"],
-      default: [],
-      string: true,
-      description: "the properties to request once from the server",
-    },
-    updatesOnly: {
-      type: "boolean",
-      default: false,
-      description: "whether to only send updates as output",
     },
     output: {
       type: "string",
@@ -106,12 +80,8 @@ const socketMetaLogger = createLogger({
 const socket = new iRacingSocket({
   fps,
   server: host,
-  requestParameters: request,
-  requestParametersOnce: requestOnce,
-}).on(iRacingSocketEvents.Update, (keys) => {
-  socketMetaLogger.info(`Socket did update keys:${keys}`);
-  const nextData = { ...socket.data };
-  socketUpdateLogger.info(updatesOnly ? pick(nextData, keys) : nextData);
+  requestParameters: PitTimingConsumer.requestParameters,
+  requestParametersOnce: PitTimingConsumer.requestParametersOnce,
 });
 
 socketMetaLogger.info("Successfully set up socket!");
@@ -136,3 +106,38 @@ socket.iRacingConnectionEmitter
   .on(iRacingClientConnectionEvents.Disconnect, () => {
     socketMetaLogger.info("iRacing disconnected");
   });
+
+const pitTimingEmitter = new PitTimingConsumer(socket);
+
+pitTimingEmitter
+  .on(PitTimingEvents.PitEntry, (timestamp) => {
+    socketUpdateLogger.log("info", "Pit entry date", timestamp);
+  })
+  .on(PitTimingEvents.PitExit, (timestamp) => {
+    socketUpdateLogger.log("info", "Pit exit date", timestamp);
+  })
+  .on(PitTimingEvents.PitBoxEntry, (timestamp) => {
+    socketUpdateLogger.log("info", "Pit box entry date", timestamp);
+  })
+  .on(PitTimingEvents.PitBoxExit, (timestamp) => {
+    socketUpdateLogger.log("info", "Pit box exit date", timestamp);
+  })
+  .on(PitTimingEvents.PitServiceStart, (timestamp) => {
+    socketUpdateLogger.log("info", "Service start", timestamp);
+  })
+  .on(PitTimingEvents.PitServiceEnd, (timestamp) => {
+    socketUpdateLogger.log("info", "Service end", timestamp);
+  })
+  .on(PitTimingEvents.PitServiceStatus, (status) => {
+    socketUpdateLogger.log("info", "Service status", status);
+  })
+  .on(PitTimingEvents.PitServiceRequest, (serviceFlags) => {
+    socketUpdateLogger.log("info", "Pit service request", serviceFlags);
+  })
+  .on(PitTimingEvents.PitServiceFuelLevelRequest, (fuelLevelRequest) => {
+    socketUpdateLogger.log("info", "Fuel level request", fuelLevelRequest);
+  })
+  .on(
+    PitTimingEvents.PitServiceTirePressureLevelRequest,
+    socketUpdateLogger.info,
+  );
