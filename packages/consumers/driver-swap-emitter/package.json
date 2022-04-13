@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@racedirector/iracing-socket-js": "0.1.0"
-  },  
+  },
   "peerDependencies": {
     "lodash": "*"
   },

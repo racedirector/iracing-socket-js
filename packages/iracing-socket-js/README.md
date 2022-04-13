@@ -79,3 +79,42 @@ flagObserver.on(FlagObserverEvents.FlagChange, (previousFlags, nextFlags, sessio
   console.log("Do something with the change event!?")
 })
 ```
+
+### React Extensions
+#### IRacingProvider
+You must wrap your application in `IRacingProvider` to have access to the hooks.
+```ts
+const socket = new iRacingSocket({
+  server: "localhost:1234",
+  requestParameters: ["DriverInfo"],
+});
+
+const App: React.FC<{}> = ({children}) => (
+  <IRacingProvider socket={socket}>
+    {children}
+  </IRacingProvider>
+)
+```
+#### useIRacingSocket
+```ts
+const SocketConsumingComponent: React.FC<{}> = ({children}) => {
+  const socket = useIRacingSocket()
+
+  // TODO: Do something with the socket
+  useEffect(() => {
+    const updateEventHandler = (keys) => {
+      console.log("Socket did update keys:", keys)
+    }
+
+    socket.on(iRacingSocketEvents.Update, updateEventHandler)
+
+    return () => {
+      socket.removeEventListener(iRacingSocketEvents.Update, updateEventHandler)
+    }
+  }, [socket])
+} 
+```
+
+#### useIRacingSocketConnectionState
+
+#### useIRacingSocketParameters
