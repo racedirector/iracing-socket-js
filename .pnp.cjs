@@ -4756,7 +4756,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@racedirector/iracing-laps-emitter", "workspace:packages/consumers/laps-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
             ["@racedirector/iracing-utilities", "workspace:packages/iracing-utilities"],\
-            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["websocket-polyfill", "npm:0.0.3"],\
             ["winston", "npm:3.7.2"],\
@@ -4771,7 +4770,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-pit-timing-emitter", "workspace:packages/consumers/pit-timing-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
-            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["timekeeper", "npm:2.2.0"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4787,8 +4785,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-sim-incident-emitter", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/consumers/sim-incident-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
-            ["@types/lodash", "npm:4.14.181"],\
-            ["@types/yargs", "npm:17.0.10"],\
+            ["@types/lodash", null],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4796,6 +4793,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yargs", "npm:17.4.1"]\
           ],\
           "packagePeers": [\
+            "@types/lodash",\
             "lodash"\
           ],\
           "linkType": "SOFT"\
@@ -4805,8 +4803,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-sim-incident-emitter", "workspace:packages/consumers/sim-incident-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
-            ["@types/lodash", "npm:4.14.181"],\
-            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4822,10 +4818,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-socket-js", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/iracing-socket-js"],\
             ["@testing-library/react", "virtual:54976e76f1096f597f5691b1d40767a79cab7a171f255ff8ed26015c1f74f327277af683f9fb010a90c4efd4973c6c00cf831e1bceeb9acf2795011ef98f3664#npm:13.0.1"],\
-            ["@types/lodash", "npm:4.14.181"],\
+            ["@types/lodash", null],\
             ["@types/react", "npm:18.0.4"],\
             ["@types/react-dom", "npm:18.0.0"],\
-            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["react", "npm:17.0.2"],\
@@ -4837,6 +4832,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["yargs", "npm:17.4.1"]\
           ],\
           "packagePeers": [\
+            "@types/lodash",\
             "lodash",\
             "react"\
           ],\
@@ -4847,10 +4843,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
             ["@testing-library/react", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:13.0.1"],\
-            ["@types/lodash", "npm:4.14.181"],\
+            ["@types/lodash", null],\
             ["@types/react", "npm:18.0.4"],\
             ["@types/react-dom", "npm:18.0.0"],\
-            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["react", "npm:18.0.0"],\
@@ -4861,6 +4856,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["winston", "npm:3.7.2"],\
             ["yargs", "npm:17.4.1"]\
           ],\
+          "packagePeers": [\
+            "@types/lodash"\
+          ],\
           "linkType": "SOFT"\
         }],\
         ["workspace:packages/iracing-socket-js", {\
@@ -4868,10 +4866,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@racedirector/iracing-socket-js", "workspace:packages/iracing-socket-js"],\
             ["@testing-library/react", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:13.0.1"],\
-            ["@types/lodash", "npm:4.14.181"],\
             ["@types/react", "npm:18.0.4"],\
             ["@types/react-dom", "npm:18.0.0"],\
-            ["@types/yargs", "npm:17.0.10"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["react", "npm:18.0.0"],\
@@ -9024,6 +9020,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["concurrently", [\
+        ["npm:7.1.0", {\
+          "packageLocation": "./.yarn/cache/concurrently-npm-7.1.0-d3983cf1fe-723996afc7.zip/node_modules/concurrently/",\
+          "packageDependencies": [\
+            ["concurrently", "npm:7.1.0"],\
+            ["chalk", "npm:4.1.2"],\
+            ["date-fns", "npm:2.28.0"],\
+            ["lodash", "npm:4.17.21"],\
+            ["rxjs", "npm:6.6.7"],\
+            ["spawn-command", "npm:0.0.2"],\
+            ["supports-color", "npm:8.1.1"],\
+            ["tree-kill", "npm:1.2.2"],\
+            ["yargs", "npm:16.2.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["connect", [\
         ["npm:3.7.0", {\
           "packageLocation": "./.yarn/cache/connect-npm-3.7.0-25ccb085cc-96e1c4effc.zip/node_modules/connect/",\
@@ -9394,6 +9407,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-loader", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#npm:8.2.4"],\
             ["babel-plugin-module-resolver", "npm:4.1.0"],\
             ["babel-plugin-react-native-web", "npm:0.17.7"],\
+            ["concurrently", "npm:7.1.0"],\
             ["html-webpack-plugin", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#npm:5.5.0"],\
             ["lodash", "npm:4.17.21"],\
             ["metro-config", "npm:0.66.2"],\
@@ -9429,6 +9443,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["abab", "npm:2.0.5"],\
             ["whatwg-mimetype", "npm:2.3.0"],\
             ["whatwg-url", "npm:8.7.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["date-fns", [\
+        ["npm:2.28.0", {\
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.28.0-c19c5add1b-a0516b2e4f.zip/node_modules/date-fns/",\
+          "packageDependencies": [\
+            ["date-fns", "npm:2.28.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -17959,6 +17982,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["rxjs", [\
+        ["npm:6.6.7", {\
+          "packageLocation": "./.yarn/cache/rxjs-npm-6.6.7-055046ea3c-bc334edef1.zip/node_modules/rxjs/",\
+          "packageDependencies": [\
+            ["rxjs", "npm:6.6.7"],\
+            ["tslib", "npm:1.14.1"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:7.5.5", {\
           "packageLocation": "./.yarn/cache/rxjs-npm-7.5.5-d0546b1ccb-e034f60805.zip/node_modules/rxjs/",\
           "packageDependencies": [\
@@ -18653,6 +18684,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/source-map-url-npm-0.4.1-747a1f6eba-64c5c2c77a.zip/node_modules/source-map-url/",\
           "packageDependencies": [\
             ["source-map-url", "npm:0.4.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["spawn-command", [\
+        ["npm:0.0.2", {\
+          "packageLocation": "./.yarn/cache/spawn-command-npm-0.0.2-014d4d5d9f-e35c5d2817.zip/node_modules/spawn-command/",\
+          "packageDependencies": [\
+            ["spawn-command", "npm:0.0.2"]\
           ],\
           "linkType": "HARD"\
         }]\
