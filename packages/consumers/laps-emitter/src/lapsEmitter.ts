@@ -9,7 +9,7 @@ export enum LapEvents {
   LapChange = "lapChange",
 }
 
-export class LapConsumer extends iRacingSocketConsumer {
+export class LapsEmitter extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = ["RaceLaps", "SessionFlags"];
 
   private _currentLap = -1;
@@ -103,4 +103,4 @@ export class LapConsumer extends iRacingSocketConsumer {
   };
 }
 
-export default LapConsumer;
+export default LapsEmitter;

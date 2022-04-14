@@ -36,20 +36,20 @@ export enum SimIncidentEvents {
   SimIncidents = "simIncidents",
 }
 
-export interface SimIncidentConsumerConfig {
+export interface SimIncidentEmitterConfig {
   maxSimIncidentWeight: number;
 }
 
-export const DEFAULT_CONFIG: SimIncidentConsumerConfig = {
+export const DEFAULT_CONFIG: SimIncidentEmitterConfig = {
   maxSimIncidentWeight: 2,
 };
 
-export interface SimIncidentConsumerOptions {
+export interface SimIncidentEmitterOptions {
   socket: iRacingSocket;
-  config?: SimIncidentConsumerConfig;
+  config?: SimIncidentEmitterConfig;
 }
 
-export class SimIncidentConsumer extends iRacingSocketConsumer {
+export class SimIncidentEmitter extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = [
     "DriverInfo",
     "CarIdxLapDistPct",
@@ -64,20 +64,20 @@ export class SimIncidentConsumer extends iRacingSocketConsumer {
     return this._driverIndex;
   }
 
-  private _config: SimIncidentConsumerConfig;
+  private _config: SimIncidentEmitterConfig;
 
-  public get config(): SimIncidentConsumerConfig {
+  public get config(): SimIncidentEmitterConfig {
     return this._config;
   }
 
-  public set config(config: Partial<SimIncidentConsumerConfig>) {
+  public set config(config: Partial<SimIncidentEmitterConfig>) {
     this._config = {
       ...this._config,
       ...config,
     };
   }
 
-  constructor({ socket, config = DEFAULT_CONFIG }: SimIncidentConsumerOptions) {
+  constructor({ socket, config = DEFAULT_CONFIG }: SimIncidentEmitterOptions) {
     super(socket);
     this.config = config;
   }
@@ -143,4 +143,4 @@ export class SimIncidentConsumer extends iRacingSocketConsumer {
   };
 }
 
-export default SimIncidentConsumer;
+export default SimIncidentEmitter;

@@ -7,7 +7,7 @@ import {
   iRacingSocketConnectionEvents,
 } from "@racedirector/iracing-socket-js";
 import { createLogger, transports } from "winston";
-import { PitTimingConsumer, PitTimingEvents } from "./pitTimingEmitter";
+import { PitTimingEmitter, PitTimingEvents } from "./pitTimingEmitter";
 
 const { host, fps, output } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-pit-timing [options]")
@@ -66,8 +66,8 @@ const socketMetaLogger = createLogger({
 const socket = new iRacingSocket({
   fps,
   server: host,
-  requestParameters: PitTimingConsumer.requestParameters,
-  requestParametersOnce: PitTimingConsumer.requestParametersOnce,
+  requestParameters: PitTimingEmitter.requestParameters,
+  requestParametersOnce: PitTimingEmitter.requestParametersOnce,
 });
 
 socketMetaLogger.info("Successfully set up socket!");
@@ -93,7 +93,7 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-const pitTimingEmitter = new PitTimingConsumer(socket);
+const pitTimingEmitter = new PitTimingEmitter(socket);
 
 pitTimingEmitter
   .on(PitTimingEvents.PitEntry, (timestamp) => {

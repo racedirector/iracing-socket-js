@@ -7,7 +7,7 @@ import {
   iRacingSocketConnectionEvents,
 } from "@racedirector/iracing-socket-js";
 import { createLogger, transports } from "winston";
-import { LapConsumer, LapEvents } from "./lapsEmitter";
+import { LapsEmitter, LapEvents } from "./lapsEmitter";
 
 const { host, fps, output, verbose } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-laps [options]")
@@ -73,8 +73,8 @@ const socketMetaLogger = createLogger({
 const socket = new iRacingSocket({
   fps,
   server: host,
-  requestParameters: LapConsumer.requestParameters,
-  requestParametersOnce: LapConsumer.requestParametersOnce,
+  requestParameters: LapsEmitter.requestParameters,
+  requestParametersOnce: LapsEmitter.requestParametersOnce,
 });
 
 socketMetaLogger.info("Successfully set up socket!");
@@ -100,7 +100,7 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-const consumer = new LapConsumer(socket);
+const consumer = new LapsEmitter(socket);
 consumer.on(
   LapEvents.LapChange,
   (currentLap, greenLaps, cautionLaps, restartLaps) => {

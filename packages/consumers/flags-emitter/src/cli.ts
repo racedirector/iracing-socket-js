@@ -7,7 +7,7 @@ import {
   iRacingSocketConnectionEvents,
 } from "@racedirector/iracing-socket-js";
 import { createLogger, transports } from "winston";
-import { FlagsConsumer, FlagsEvents } from "./flagsEmitter";
+import { FlagsEmitter, FlagsEvents } from "./flagsEmitter";
 
 const { host, fps, output } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-flags [options]")
@@ -66,8 +66,8 @@ const socketMetaLogger = createLogger({
 const socket = new iRacingSocket({
   fps,
   server: host,
-  requestParameters: FlagsConsumer.requestParameters,
-  requestParametersOnce: FlagsConsumer.requestParametersOnce,
+  requestParameters: FlagsEmitter.requestParameters,
+  requestParametersOnce: FlagsEmitter.requestParametersOnce,
 });
 
 socketMetaLogger.info("Successfully set up socket!");
@@ -93,8 +93,8 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-const flagsConsumer = new FlagsConsumer(socket);
-flagsConsumer.on(
+const flagsEmFlagsEmitter = new FlagsEmitter(socket);
+flagsEmFlagsEmitter.on(
   FlagsEvents.FlagChange,
   (previousFlags, nextFlags, sessionTime, sessionTimeOfDay) => {
     socketUpdateLogger.info({

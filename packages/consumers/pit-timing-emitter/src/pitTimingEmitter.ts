@@ -30,7 +30,7 @@ export enum PitTimingEvents {
 
 // TODO: FieldPitTimingConsumer that consumes the pit data for the field and makes
 // it actionable
-export class PitTimingConsumer extends iRacingSocketConsumer {
+export class PitTimingEmitter extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = [
     "OnPitRoad",
     "PitstopActive",
@@ -166,3 +166,5 @@ export class PitTimingConsumer extends iRacingSocketConsumer {
     this.isPitStopActive = isPitStopActive;
   };
 }
+
+export default PitTimingEmitter;

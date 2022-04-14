@@ -7,7 +7,7 @@ import {
   iRacingSocketConnectionEvents,
 } from "@racedirector/iracing-socket-js";
 import { createLogger, transports } from "winston";
-import { SimIncidentConsumer, SimIncidentEvents } from "./simIncidentEmitter";
+import { SimIncidentEmitter, SimIncidentEvents } from "./simIncidentEmitter";
 
 const { host, fps, output } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-sim-incidents [options]")
@@ -66,8 +66,8 @@ const socketMetaLogger = createLogger({
 const socket = new iRacingSocket({
   fps,
   server: host,
-  requestParameters: SimIncidentConsumer.requestParameters,
-  requestParametersOnce: SimIncidentConsumer.requestParametersOnce,
+  requestParameters: SimIncidentEmitter.requestParameters,
+  requestParametersOnce: SimIncidentEmitter.requestParametersOnce,
 });
 
 socketMetaLogger.info("Successfully set up socket!");
@@ -93,7 +93,7 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-const incidentConsumer = new SimIncidentConsumer({ socket });
+const incidentConsumer = new SimIncidentEmitter({ socket });
 incidentConsumer.on(SimIncidentEvents.SimIncidents, (incidents) => {
   socketUpdateLogger.info({ incidents });
 });

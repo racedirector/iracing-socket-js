@@ -16,7 +16,7 @@ export enum DriverSwapEvents {
   DriverSwaps = "driverSwaps",
 }
 
-export class DriverSwapConsumer extends iRacingSocketConsumer {
+export class DriverSwapEmitter extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = ["DriverInfo"];
 
   private _driverIndex: Record<string, Driver>;
@@ -72,3 +72,5 @@ export class DriverSwapConsumer extends iRacingSocketConsumer {
     this._driverIndex = nextIndex;
   };
 }
+
+export default DriverSwapEmitter;

@@ -7,7 +7,7 @@ import {
   iRacingSocketConnectionEvents,
 } from "@racedirector/iracing-socket-js";
 import { createLogger, transports } from "winston";
-import { DriverSwapConsumer, DriverSwapEvents } from "./driverSwapEmitter";
+import { DriverSwapEmitter, DriverSwapEvents } from "./driverSwapEmitter";
 
 const { host, fps, output } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-driver-swaps [options]")
@@ -66,8 +66,8 @@ const socketMetaLogger = createLogger({
 const socket = new iRacingSocket({
   fps,
   server: host,
-  requestParameters: DriverSwapConsumer.requestParameters,
-  requestParametersOnce: DriverSwapConsumer.requestParametersOnce,
+  requestParameters: DriverSwapEmitter.requestParameters,
+  requestParametersOnce: DriverSwapEmitter.requestParametersOnce,
 });
 
 socketMetaLogger.info("Successfully set up socket!");
@@ -93,7 +93,7 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-const consumer = new DriverSwapConsumer(socket);
+const consumer = new DriverSwapEmitter(socket);
 
 consumer.on(DriverSwapEvents.DriverSwaps, (driverSwaps) => {
   socketUpdateLogger.info({
