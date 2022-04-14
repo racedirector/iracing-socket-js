@@ -17,9 +17,12 @@
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx}\"",
+    "release": "build && changeset publish",
+    "release:canary": "node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha",
     "types:check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@changesets/cli": "2.22.0",
     "@types/jest": "^27",
     "@types/lodash": "^4",
     "@types/node": "^17",
