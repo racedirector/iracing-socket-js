@@ -93,11 +93,10 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-new DriverSwapConsumer(socket).on(
-  DriverSwapEvents.DriverSwaps,
-  (driverSwaps) => {
-    socketUpdateLogger.info({
-      driverSwaps,
-    });
-  },
-);
+const consumer = new DriverSwapConsumer(socket);
+
+consumer.on(DriverSwapEvents.DriverSwaps, (driverSwaps) => {
+  socketUpdateLogger.info({
+    driverSwaps,
+  });
+});

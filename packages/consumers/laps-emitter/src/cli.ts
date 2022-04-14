@@ -100,7 +100,8 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-new LapConsumer(socket).on(
+const consumer = new LapConsumer(socket);
+consumer.on(
   LapEvents.LapChange,
   (currentLap, greenLaps, cautionLaps, restartLaps) => {
     socketUpdateLogger.info({
