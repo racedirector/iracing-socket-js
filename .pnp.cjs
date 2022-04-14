@@ -92,7 +92,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["husky", "npm:7.0.4"],\
             ["jest", "virtual:6120135a24e65ecc1f130ba5611980e03000f210baa02d2f16d00d3e12108fbfa35ae89a9388b4e834ad28e440dc65df8ba1831ec84ad074542cfa0e45f6bdf1#npm:27.5.1"],\
             ["lint-staged", "npm:12.3.7"],\
-            ["lodash", "npm:4.17.21"],\
             ["prettier", "npm:2.6.2"],\
             ["rimraf", "npm:3.0.2"],\
             ["ts-jest", "virtual:6120135a24e65ecc1f130ba5611980e03000f210baa02d2f16d00d3e12108fbfa35ae89a9388b4e834ad28e440dc65df8ba1831ec84ad074542cfa0e45f6bdf1#npm:27.1.4"],\
@@ -12662,7 +12661,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["husky", "npm:7.0.4"],\
             ["jest", "virtual:6120135a24e65ecc1f130ba5611980e03000f210baa02d2f16d00d3e12108fbfa35ae89a9388b4e834ad28e440dc65df8ba1831ec84ad074542cfa0e45f6bdf1#npm:27.5.1"],\
             ["lint-staged", "npm:12.3.7"],\
-            ["lodash", "npm:4.17.21"],\
             ["prettier", "npm:2.6.2"],\
             ["rimraf", "npm:3.0.2"],\
             ["ts-jest", "virtual:6120135a24e65ecc1f130ba5611980e03000f210baa02d2f16d00d3e12108fbfa35ae89a9388b4e834ad28e440dc65df8ba1831ec84ad074542cfa0e45f6bdf1#npm:27.1.4"],\
