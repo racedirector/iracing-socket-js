@@ -26,8 +26,6 @@
     "lodash": "^4"
   },
   "devDependencies": {
-    "@types/lodash": "^4",
-    "@types/yargs": "^17",
     "jest-websocket-mock": "^2.3.0",
     "lodash": "^4.17.21"
   },
