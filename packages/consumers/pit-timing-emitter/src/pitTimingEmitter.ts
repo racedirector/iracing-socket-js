@@ -54,6 +54,8 @@ export class PitTimingEmitter extends iRacingSocketConsumer {
     return this._fuelAmount;
   }
 
+  private playerServiceStatus: PitServiceFlags = 0x0;
+
   onUpdate = (keys) => {
     const {
       OnPitRoad: currentOnPitRoad,
@@ -65,7 +67,10 @@ export class PitTimingEmitter extends iRacingSocketConsumer {
     } = this.socket.data;
 
     // If the player service status changes (error, service started, completed, etc)
-    if (keys.includes("PlayerCarPitSvStatus")) {
+    if (
+      keys.includes("PlayerCarPitSvStatus") &&
+      playerCarPitServiceStatus !== this.playerServiceStatus
+    ) {
       /**
        * Pit service status change event
        * @event PitTimingConsumer.pitServiceStatus
@@ -77,6 +82,8 @@ export class PitTimingEmitter extends iRacingSocketConsumer {
         playerCarPitServiceStatus,
         new Date(),
       );
+
+      this.playerServiceStatus = playerCarPitServiceStatus;
     }
 
     // If the pit service flags change and are different than the previous,
