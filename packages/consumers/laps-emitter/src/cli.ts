@@ -43,8 +43,6 @@ const { host, fps, output, verbose } = yargs(hideBin(process.argv))
   .alias("h", "help")
   .parseSync();
 
-console.log(host, fps, output, verbose);
-
 const consoleTransport = new transports.Console();
 
 // All socket updates will go here. By default, they will go to the console.
