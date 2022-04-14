@@ -1,18 +1,18 @@
-import React, {useEffect, useRef, useState} from 'react';
-import invariant from 'ts-invariant';
-import {iRacingSocket} from '@racedirector/iracing-socket-js';
+import React, { useEffect, useRef, useState } from "react";
+import invariant from "ts-invariant";
+import { iRacingSocket } from "@racedirector/iracing-socket-js";
 import {
   DriverSwapConsumer,
   DriverSwapEvents,
-} from '@racedirector/iracing-driver-swap-emitter';
-import {DriverSwaps as DriverSwapsUI} from '../../components/DriverSwaps';
-import {useIRacingServerContext} from '../../context/iRacingServer/iRacingServerContext';
+} from "@racedirector/iracing-driver-swap-emitter";
+import { DriverSwaps as DriverSwapsUI } from "../../components/DriverSwaps";
+import { useIRacingServerContext } from "../../context/iRacingServer/iRacingServerContext";
 
 export interface DriverSwapsProps {}
 
-export const DriverSwaps: React.FC<DriverSwapsProps> = ({children}) => {
-  const {host} = useIRacingServerContext();
-  invariant(!!host, 'host must be set');
+export const DriverSwaps: React.FC<DriverSwapsProps> = ({ children }) => {
+  const { host } = useIRacingServerContext();
+  invariant(!!host, "host must be set");
 
   const [driverSwaps, setDriverSwaps] = useState([]);
 
@@ -30,8 +30,8 @@ export const DriverSwaps: React.FC<DriverSwapsProps> = ({children}) => {
 
   useEffect(() => {
     const consumer = driverSwapsConsumerRef.current;
-    consumer.on(DriverSwapEvents.DriverSwaps, newDriverSwaps => {
-      setDriverSwaps(previous => [
+    consumer.on(DriverSwapEvents.DriverSwaps, (newDriverSwaps) => {
+      setDriverSwaps((previous) => [
         ...previous,
         ...Object.values(newDriverSwaps),
       ]);

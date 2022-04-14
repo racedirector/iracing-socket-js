@@ -9,7 +9,7 @@ import {
 import { createLogger, transports } from "winston";
 import { LapsEmitter, LapEvents } from "./lapsEmitter";
 
-const { host, fps, output, verbose } = yargs(hideBin(process.argv))
+const { host, fps, output } = yargs(hideBin(process.argv))
   .usage("Usage: iracing-laps [options]")
   .example(
     "iracing-laps --host 192.168.4.33:8182 --fps 1 --output output.txt",

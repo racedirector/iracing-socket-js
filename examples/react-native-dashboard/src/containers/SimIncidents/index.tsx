@@ -1,25 +1,25 @@
-import React, {useEffect, useRef, useState} from 'react';
-import invariant from 'ts-invariant';
-import {iRacingSocket} from '@racedirector/iracing-socket-js';
+import React, { useEffect, useRef, useState } from "react";
+import invariant from "ts-invariant";
+import { iRacingSocket } from "@racedirector/iracing-socket-js";
 import {
   SimIncidentConsumer,
   SimIncidentIndex,
   SimIncidentEvents,
-} from '@racedirector/iracing-sim-incident-emitter';
+} from "@racedirector/iracing-sim-incident-emitter";
 import {
   Incidents as IncidentsUI,
   IncidentsProps,
-} from '../../components/Incidents';
-import {useIRacingServerContext} from '../../context/iRacingServer/iRacingServerContext';
-import {IncidentRowProps} from '../../components/IncidentRow';
+} from "../../components/Incidents";
+import { useIRacingServerContext } from "../../context/iRacingServer/iRacingServerContext";
+import { IncidentRowProps } from "../../components/IncidentRow";
 
 export interface SimIncidentsProps {}
 
-export const SimIncidents: React.FC<SimIncidentsProps> = ({children}) => {
-  const {host} = useIRacingServerContext();
-  invariant(!!host, 'host must be set');
+export const SimIncidents: React.FC<SimIncidentsProps> = ({ children }) => {
+  const { host } = useIRacingServerContext();
+  invariant(!!host, "host must be set");
 
-  const [incidents, setIncidents] = useState<IncidentsProps['data']>([]);
+  const [incidents, setIncidents] = useState<IncidentsProps["data"]>([]);
 
   const socketRef = useRef(
     new iRacingSocket({
@@ -31,7 +31,7 @@ export const SimIncidents: React.FC<SimIncidentsProps> = ({children}) => {
   );
 
   const incidentsConsumerRef = useRef(
-    new SimIncidentConsumer({socket: socketRef.current}),
+    new SimIncidentConsumer({ socket: socketRef.current }),
   );
 
   useEffect(() => {
@@ -39,13 +39,13 @@ export const SimIncidents: React.FC<SimIncidentsProps> = ({children}) => {
     consumer.on(SimIncidentEvents.SimIncidents, (index: SimIncidentIndex) => {
       const driverIndex = consumer.driverIndex;
       const newIncidents: IncidentRowProps[] = Object.entries(index).map(
-        ([carIndex, {sessionTimeOfDay, ...incident}]) => ({
+        ([carIndex, { sessionTimeOfDay, ...incident }]) => ({
           ...incident,
           simTime: sessionTimeOfDay,
           driverName: driverIndex[carIndex].UserName,
         }),
       );
-      setIncidents(oldIncidents => [...oldIncidents, ...newIncidents]);
+      setIncidents((oldIncidents) => [...oldIncidents, ...newIncidents]);
     });
 
     return () => {

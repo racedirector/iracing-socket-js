@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react';
+import { createContext, useContext } from "react";
 
 export interface iRacingServerContextType {
   host: string | null;
@@ -12,6 +12,6 @@ const DEFAULT_CONTEXT: iRacingServerContextType = {
 
 export const iRacingServerContext =
   createContext<iRacingServerContextType>(DEFAULT_CONTEXT);
-iRacingServerContext.displayName = 'iRacingServerContext';
+iRacingServerContext.displayName = "iRacingServerContext";
 
 export const useIRacingServerContext = () => useContext(iRacingServerContext);

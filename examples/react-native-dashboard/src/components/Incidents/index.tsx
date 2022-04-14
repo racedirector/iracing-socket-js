@@ -1,6 +1,6 @@
-import React, {useCallback} from 'react';
-import {FlatList, FlatListProps, Pressable, StyleSheet} from 'react-native';
-import {IncidentRow, IncidentRowProps} from '../IncidentRow';
+import React, { useCallback } from "react";
+import { FlatList, FlatListProps, Pressable, StyleSheet } from "react-native";
+import { IncidentRow, IncidentRowProps } from "../IncidentRow";
 
 const styles = StyleSheet.create({
   container: {
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 });
 
 export interface IncidentsProps
-  extends Omit<FlatListProps<IncidentRowProps>, 'renderItem'> {
+  extends Omit<FlatListProps<IncidentRowProps>, "renderItem"> {
   onSelectItem?: (item: IncidentRowProps, index: number) => void;
 }
 
@@ -22,7 +22,7 @@ export const Incidents: React.FC<IncidentsProps> = ({
   ...props
 }) => {
   const renderItem = useCallback(
-    ({item, index}) => (
+    ({ item, index }) => (
       <Pressable
         onPress={() => {
           onSelectItem(item, index);

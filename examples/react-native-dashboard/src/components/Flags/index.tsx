@@ -1,17 +1,20 @@
-import React from 'react';
-import {View, Text, ViewProps, StyleSheet} from 'react-native';
-import {Flags} from '@racedirector/iracing-socket-js';
-import {flagsHasFlag, flagsHasSomeFlags} from '@racedirector/iracing-utilities';
+import React from "react";
+import { View, Text, ViewProps, StyleSheet } from "react-native";
+import { Flags } from "@racedirector/iracing-socket-js";
+import {
+  flagsHasFlag,
+  flagsHasSomeFlags,
+} from "@racedirector/iracing-utilities";
 
 const styles = StyleSheet.create({
   container: {
-    borderColor: 'green',
+    borderColor: "green",
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   caution: {
-    backgroundColor: 'yellow',
+    backgroundColor: "yellow",
   },
 });
 
@@ -19,7 +22,7 @@ export interface FlagIndicatorProps extends ViewProps {
   value: number;
 }
 
-const FlagIndicator: React.FC<FlagIndicatorProps> = ({value}) => {
+const FlagIndicator: React.FC<FlagIndicatorProps> = ({ value }) => {
   const underCaution = flagsHasSomeFlags(
     value,
     Flags.Caution,
@@ -56,6 +59,6 @@ const FlagIndicator: React.FC<FlagIndicatorProps> = ({value}) => {
   );
 };
 
-export {FlagIndicator as Flags};
+export { FlagIndicator as Flags };
 
 export default FlagIndicator;

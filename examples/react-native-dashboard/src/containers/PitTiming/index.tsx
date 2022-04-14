@@ -1,16 +1,16 @@
-import React, {useEffect, useRef, useState} from 'react';
-import invariant from 'ts-invariant';
+import React, { useEffect, useRef, useState } from "react";
+import invariant from "ts-invariant";
 import {
   iRacingSocket,
   PitServiceStatus,
   PitServiceFlags,
-} from '@racedirector/iracing-socket-js';
+} from "@racedirector/iracing-socket-js";
 import {
   PitTimingConsumer,
   PitTimingEvents,
-} from '@racedirector/iracing-pit-timing-emitter';
-import {PitTiming as PitTimingUI} from '../../components/PitTiming';
-import {useIRacingServerContext} from '../../context/iRacingServer/iRacingServerContext';
+} from "@racedirector/iracing-pit-timing-emitter";
+import { PitTiming as PitTimingUI } from "../../components/PitTiming";
+import { useIRacingServerContext } from "../../context/iRacingServer/iRacingServerContext";
 
 interface RequestedService {
   serviceFlags: PitServiceFlags;
@@ -19,9 +19,9 @@ interface RequestedService {
 
 export interface PitTimingProps {}
 
-export const PitTiming: React.FC<PitTimingProps> = ({children}) => {
-  const {host} = useIRacingServerContext();
-  invariant(!!host, 'host must be set');
+export const PitTiming: React.FC<PitTimingProps> = ({ children }) => {
+  const { host } = useIRacingServerContext();
+  invariant(!!host, "host must be set");
 
   const [pitEntryDate, setPitEntryDate] = useState<Date>(null);
   const [pitExitDate, setPitExitDate] = useState<Date>(null);
@@ -30,7 +30,7 @@ export const PitTiming: React.FC<PitTimingProps> = ({children}) => {
   const [pitServiceStartDate, setPitServiceStartDate] = useState<Date>(null);
   const [pitServiceEndDate, setPitServiceEndDate] = useState<Date>(null);
   const [serviceStatus, setServiceStatus] = useState<PitServiceStatus>(null);
-  const [{serviceFlags, fuelAmount}, setRequestedService] =
+  const [{ serviceFlags, fuelAmount }, setRequestedService] =
     useState<RequestedService>({
       serviceFlags: 0x0,
       fuelAmount: 0,
@@ -56,14 +56,14 @@ export const PitTiming: React.FC<PitTimingProps> = ({children}) => {
       .on(PitTimingEvents.PitServiceStart, setPitServiceStartDate)
       .on(PitTimingEvents.PitServiceEnd, setPitServiceEndDate)
       .on(PitTimingEvents.PitServiceStatus, setServiceStatus)
-      .on(PitTimingEvents.PitServiceRequest, newServiceFlags =>
-        setRequestedService(previous => ({
+      .on(PitTimingEvents.PitServiceRequest, (newServiceFlags) =>
+        setRequestedService((previous) => ({
           ...previous,
           serviceFlags: newServiceFlags,
         })),
       )
-      .on(PitTimingEvents.PitServiceFuelLevelRequest, newFuelAmount =>
-        setRequestedService(previous => ({
+      .on(PitTimingEvents.PitServiceFuelLevelRequest, (newFuelAmount) =>
+        setRequestedService((previous) => ({
           ...previous,
           fuelAmount: newFuelAmount,
         })),

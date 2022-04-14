@@ -56,11 +56,9 @@ buck-out/
 # CocoaPods
 Pods/
 
-.npmrc
 .DS_Store
 .bob
 .cache
-.yarn
 
 build
 coverage
@@ -71,7 +69,7 @@ dist
 lib
 *.tsbuildinfo
 
-# Yarn 2
+# Yarn Modern
 .yarn/*
 !.yarn/cache
 !.yarn/patches

@@ -1,6 +1,6 @@
-import React from 'react';
-import {FlatList, FlatListProps, Pressable, StyleSheet} from 'react-native';
-import {DriverSwapRow, DriverSwapRowProps} from '../DriverSwapRow';
+import React from "react";
+import { FlatList, FlatListProps, Pressable, StyleSheet } from "react-native";
+import { DriverSwapRow, DriverSwapRowProps } from "../DriverSwapRow";
 
 const styles = StyleSheet.create({
   container: {
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 });
 
 export interface DriverSwapsProps
-  extends Omit<FlatListProps<DriverSwapRowProps>, 'renderItem'> {
+  extends Omit<FlatListProps<DriverSwapRowProps>, "renderItem"> {
   onSelectItem?: (item: DriverSwapRowProps, index: number) => void;
 }
 
@@ -25,7 +25,7 @@ export const DriverSwaps: React.FC<DriverSwapsProps> = ({
     {...props}
     inverted
     ListFooterComponentStyle={styles.header}
-    renderItem={({item, index}) => {
+    renderItem={({ item, index }) => {
       return (
         <Pressable
           onPress={() => {

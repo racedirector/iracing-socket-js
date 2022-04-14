@@ -1,1 +1,1 @@
-export * from './iRacingServer';
+export * from "./iRacingServer";

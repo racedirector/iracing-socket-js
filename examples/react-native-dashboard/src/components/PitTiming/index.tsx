@@ -1,61 +1,61 @@
-import React, {useEffect, useState} from 'react';
-import moment from 'moment';
-import {Text} from 'react-native';
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import { Text } from "react-native";
 import {
   PitServiceFlags,
   PitServiceStatus,
-} from '@racedirector/iracing-socket-js';
-import {isEmpty} from 'lodash';
+} from "@racedirector/iracing-socket-js";
+import { isEmpty } from "lodash";
 
 const secondsDifference = (start: Date, end: Date) =>
-  moment(end).diff(moment(start), 'seconds');
+  moment(end).diff(moment(start), "seconds");
 
 const secondsDuration = (start: Date, end: Date) =>
-  moment.duration(secondsDifference(start, end), 'seconds');
+  moment.duration(secondsDifference(start, end), "seconds");
 
 const stringForPitServiceStatus = (serviceStatus: PitServiceStatus): string => {
   switch (serviceStatus) {
     case PitServiceStatus.InProgress:
-      return 'In progress';
+      return "In progress";
     case PitServiceStatus.Complete:
-      return 'Complete';
+      return "Complete";
     case PitServiceStatus.TooFarLeft:
-      return 'Too far left';
+      return "Too far left";
     case PitServiceStatus.TooFarRight:
-      return 'Too far right';
+      return "Too far right";
     case PitServiceStatus.TooFarForward:
-      return 'Too far forward';
+      return "Too far forward";
     case PitServiceStatus.TooFarBack:
-      return 'Too far back';
+      return "Too far back";
     case PitServiceStatus.BadAngle:
-      return 'Bad angle';
+      return "Bad angle";
     case PitServiceStatus.CantFixThat:
       return "Can't fix that";
     default:
-      return 'None';
+      return "None";
   }
 };
 
 const stringForTireService = (serviceFlags: PitServiceFlags) => {
   const tireService = [
     (serviceFlags & PitServiceFlags.LFChange) === PitServiceFlags.LFChange
-      ? 'LF'
+      ? "LF"
       : null,
     (serviceFlags & PitServiceFlags.RFChange) === PitServiceFlags.RFChange
-      ? 'RF'
+      ? "RF"
       : null,
     (serviceFlags & PitServiceFlags.LRChange) === PitServiceFlags.LRChange
-      ? 'LR'
+      ? "LR"
       : null,
     (serviceFlags & PitServiceFlags.RRChange) === PitServiceFlags.RRChange
-      ? 'RR'
+      ? "RR"
       : null,
   ].filter(Boolean);
 
   if (isEmpty(tireService)) {
-    return 'None';
+    return "None";
   } else {
-    return tireService.join(', ');
+    return tireService.join(", ");
   }
 };
 
@@ -67,24 +67,24 @@ const stringForNextService = (
   const fuelServiceString =
     (serviceFlags & PitServiceFlags.Fuel) === PitServiceFlags.Fuel
       ? `${fuelAmount} fuel`
-      : 'None';
+      : "None";
   const tearoffServiceString =
     (serviceFlags & PitServiceFlags.WindshieldTearoff) ===
     PitServiceFlags.WindshieldTearoff
-      ? 'Yes'
-      : 'No';
+      ? "Yes"
+      : "No";
 
   const fastRepairServiceString =
     (serviceFlags & PitServiceFlags.FastRepair) === PitServiceFlags.FastRepair
-      ? 'Yes'
-      : 'No';
+      ? "Yes"
+      : "No";
 
   return [
     `Tires: ${tireServiceString}`,
     `Fuel: ${fuelServiceString}`,
     `Tearoff: ${tearoffServiceString}`,
     `Fast repair: ${fastRepairServiceString}`,
-  ].join('\n');
+  ].join("\n");
 };
 
 export interface PitTimingProps {
@@ -195,31 +195,31 @@ export const PitTiming: React.FC<PitTimingProps> = ({
 
       {stationaryDuration ? (
         <Text>{`Stationary duration: ${stationaryDuration.format(
-          'hh:mm:ss.sss',
+          "hh:mm:ss.sss",
         )}`}</Text>
       ) : null}
 
       {serviceDuration ? (
         <Text>{`Service duration: ${serviceDuration.format(
-          'hh:mm:ss.sss',
+          "hh:mm:ss.sss",
         )}`}</Text>
       ) : null}
 
       {entryToServiceStart ? (
         <Text>{`Entry -> Service start duration: ${entryToServiceStart.format(
-          'hh:mm:ss.sss',
+          "hh:mm:ss.sss",
         )}`}</Text>
       ) : null}
 
       {entryToServiceEnd ? (
         <Text>{`Entry -> Service end duration: ${entryToServiceEnd.format(
-          'hh:mm:ss.sss',
+          "hh:mm:ss.sss",
         )}`}</Text>
       ) : null}
 
       {totalPitDuration ? (
         <Text>{`Total pit duration: ${totalPitDuration.format(
-          'hh:mm:ss.sss',
+          "hh:mm:ss.sss",
         )}`}</Text>
       ) : null}
 

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {iRacingServerContext} from './iRacingServerContext';
+import React, { useEffect, useState } from "react";
+import { iRacingServerContext } from "./iRacingServerContext";
 
 export interface IRacingServerProviderProps {
   host: string;
@@ -26,5 +26,5 @@ const IRacingServerProvider: React.FC<IRacingServerProviderProps> = ({
     </iRacingServerContext.Provider>
   );
 };
-export {IRacingServerProvider as iRacingServerProvider};
+export { IRacingServerProvider as iRacingServerProvider };
 export default IRacingServerProvider;
