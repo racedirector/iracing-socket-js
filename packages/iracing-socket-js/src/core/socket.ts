@@ -101,8 +101,6 @@ export class iRacingSocket extends EventEmitter {
   }: iRacingSocketOptions) {
     super();
 
-    console.log(server, requestParameters, requestParametersOnce, desiredFps);
-
     invariant(
       requestParameters.length > 0 || requestParametersOnce.length > 0,
       "Request parameters must be provided and cannot be empty.",

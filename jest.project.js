@@ -19,7 +19,6 @@ function testEnvironmentForPackage(packageName) {
 module.exports = ({ dirName, projectMode = true }) => {
   const package = require(resolve(dirName, "package.json"));
   const packageDisplayName = package.name.replace("@racedirector/", "");
-  const cacheDirectory = `${CI ? "" : "node_modules/"}.cache/jest`;
 
   return {
     ...baseConfig,
@@ -28,6 +27,6 @@ module.exports = ({ dirName, projectMode = true }) => {
     restoreMocks: true,
     reporters: ["default"],
     modulePathIgnorePatterns: ["dist"],
-    cacheDirectory: resolve(ROOT_DIR, cacheDirectory),
+    cacheDirectory: resolve(ROOT_DIR, ".cache/jest", packageDisplayName),
   };
 };
