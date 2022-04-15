@@ -1,6 +1,6 @@
 {
   "name": "@racedirector/iracing-laps-emitter",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "description": "EventEmitter that emits events when lap changes are detected from iRacing.",
   "repository": {
     "type": "git",
@@ -17,8 +17,8 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@racedirector/iracing-socket-js": "0.1.0",
-    "@racedirector/iracing-utilities": "0.0.1",
+    "@racedirector/iracing-socket-js": "^1",
+    "@racedirector/iracing-utilities": "^1",
     "websocket-polyfill": "^0.0.3",
     "winston": "^3.6.0",
     "yargs": "^17.4.0"

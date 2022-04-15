@@ -2235,11 +2235,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@racedirector/iracing-driver-swap-emitter@^0.0.1, @racedirector/iracing-driver-swap-emitter@workspace:packages/consumers/driver-swap-emitter":
+"@racedirector/iracing-driver-swap-emitter@^1, @racedirector/iracing-driver-swap-emitter@workspace:packages/consumers/driver-swap-emitter":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-driver-swap-emitter@workspace:packages/consumers/driver-swap-emitter"
   dependencies:
-    "@racedirector/iracing-socket-js": 0.1.0
+    "@racedirector/iracing-socket-js": ^1
     jest-websocket-mock: ^2.3.0
     lodash: ^4.17.21
     websocket-polyfill: ^0.0.3
@@ -2252,12 +2252,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-flags-emitter@^0.0.1, @racedirector/iracing-flags-emitter@workspace:packages/consumers/flags-emitter":
+"@racedirector/iracing-flags-emitter@^1, @racedirector/iracing-flags-emitter@workspace:packages/consumers/flags-emitter":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-flags-emitter@workspace:packages/consumers/flags-emitter"
   dependencies:
-    "@racedirector/iracing-socket-js": 0.1.0
-    "@racedirector/iracing-utilities": 0.0.1
+    "@racedirector/iracing-socket-js": ^1
+    "@racedirector/iracing-utilities": ^1
     jest-websocket-mock: ^2.3.0
     websocket-polyfill: ^0.0.3
     winston: ^3.6.0
@@ -2267,12 +2267,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-laps-emitter@^0.0.1, @racedirector/iracing-laps-emitter@workspace:packages/consumers/laps-emitter":
+"@racedirector/iracing-laps-emitter@^1, @racedirector/iracing-laps-emitter@workspace:packages/consumers/laps-emitter":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-laps-emitter@workspace:packages/consumers/laps-emitter"
   dependencies:
-    "@racedirector/iracing-socket-js": 0.1.0
-    "@racedirector/iracing-utilities": 0.0.1
+    "@racedirector/iracing-socket-js": ^1
+    "@racedirector/iracing-utilities": ^1
     jest-websocket-mock: ^2.3.0
     websocket-polyfill: ^0.0.3
     winston: ^3.6.0
@@ -2282,11 +2282,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-pit-timing-emitter@^0.0.1, @racedirector/iracing-pit-timing-emitter@workspace:packages/consumers/pit-timing-emitter":
+"@racedirector/iracing-pit-timing-emitter@^1, @racedirector/iracing-pit-timing-emitter@workspace:packages/consumers/pit-timing-emitter":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-pit-timing-emitter@workspace:packages/consumers/pit-timing-emitter"
   dependencies:
-    "@racedirector/iracing-socket-js": 0.1.0
+    "@racedirector/iracing-socket-js": ^1
     jest-websocket-mock: 2.3.0
     timekeeper: 2.2.0
     websocket-polyfill: ^0.0.3
@@ -2297,11 +2297,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-sim-incident-emitter@^0.0.1, @racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter":
+"@racedirector/iracing-sim-incident-emitter@^1, @racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter"
   dependencies:
-    "@racedirector/iracing-socket-js": 0.1.0
+    "@racedirector/iracing-socket-js": ^1
     jest-websocket-mock: ^2.3.0
     lodash: ^4.17.21
     websocket-polyfill: ^0.0.3
@@ -2314,7 +2314,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-socket-js@0.1.0, @racedirector/iracing-socket-js@^0.1.0, @racedirector/iracing-socket-js@workspace:packages/iracing-socket-js":
+"@racedirector/iracing-socket-js@^1, @racedirector/iracing-socket-js@^1.0.0, @racedirector/iracing-socket-js@workspace:packages/iracing-socket-js":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-socket-js@workspace:packages/iracing-socket-js"
   dependencies:
@@ -2341,11 +2341,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-utilities@0.0.1, @racedirector/iracing-utilities@^0.0.1, @racedirector/iracing-utilities@workspace:packages/iracing-utilities":
+"@racedirector/iracing-utilities@npm:^1":
+  version: 1.0.0
+  resolution: "@racedirector/iracing-utilities@npm:1.0.0"
+  dependencies:
+    "@racedirector/iracing-socket-js": ^1.0.0
+  checksum: 38485fcfe0275769bf2ff7d77f9d4cf91bcecc4834ac58681f883d39465d885e10064fa4ad34cd5b8c0d930f0b3be787d402c22b06f4fd2bbe051dd16e4e6068
+  languageName: node
+  linkType: hard
+
+"@racedirector/iracing-utilities@workspace:packages/iracing-utilities":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-utilities@workspace:packages/iracing-utilities"
   dependencies:
-    "@racedirector/iracing-socket-js": ^0.1.0
+    "@racedirector/iracing-socket-js": ^1
   languageName: unknown
   linkType: soft
 
@@ -5695,13 +5704,13 @@ __metadata:
     "@babel/preset-react": 7.16.7
     "@babel/preset-typescript": 7.16.7
     "@babel/runtime": 7.17.8
-    "@racedirector/iracing-driver-swap-emitter": ^0.0.1
-    "@racedirector/iracing-flags-emitter": ^0.0.1
-    "@racedirector/iracing-laps-emitter": ^0.0.1
-    "@racedirector/iracing-pit-timing-emitter": ^0.0.1
-    "@racedirector/iracing-sim-incident-emitter": ^0.0.1
-    "@racedirector/iracing-socket-js": ^0.1.0
-    "@racedirector/iracing-utilities": ^0.0.1
+    "@racedirector/iracing-driver-swap-emitter": ^1
+    "@racedirector/iracing-flags-emitter": ^1
+    "@racedirector/iracing-laps-emitter": ^1
+    "@racedirector/iracing-pit-timing-emitter": ^1
+    "@racedirector/iracing-sim-incident-emitter": ^1
+    "@racedirector/iracing-socket-js": ^1
+    "@racedirector/iracing-utilities": ^1
     "@react-navigation/drawer": ^6.3.1
     "@react-navigation/native": ^6.0.8
     "@react-navigation/stack": ^6.1.1

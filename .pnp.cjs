@@ -61,7 +61,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@racedirector/iracing-laps-emitter", ["workspace:packages/consumers/laps-emitter"]],\
       ["@racedirector/iracing-pit-timing-emitter", ["workspace:packages/consumers/pit-timing-emitter"]],\
       ["@racedirector/iracing-sim-incident-emitter", ["virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/consumers/sim-incident-emitter", "workspace:packages/consumers/sim-incident-emitter"]],\
-      ["@racedirector/iracing-socket-js", ["virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js", "workspace:packages/iracing-socket-js"]],\
+      ["@racedirector/iracing-socket-js", ["virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js", "workspace:packages/iracing-socket-js"]],\
       ["@racedirector/iracing-utilities", ["workspace:packages/iracing-utilities"]],\
       ["dashboard", ["workspace:examples/react-native-dashboard"]],\
       ["iracing-socket", ["workspace:."]]\
@@ -4705,7 +4705,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@racedirector-iracing-driver-swap-emitter-virtual-b428f86f2e/1/packages/consumers/driver-swap-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-driver-swap-emitter", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/consumers/driver-swap-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
             ["@types/lodash", null],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
@@ -4723,7 +4723,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/consumers/driver-swap-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-driver-swap-emitter", "workspace:packages/consumers/driver-swap-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4738,8 +4738,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/consumers/flags-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-flags-emitter", "workspace:packages/consumers/flags-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
-            ["@racedirector/iracing-utilities", "workspace:packages/iracing-utilities"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
+            ["@racedirector/iracing-utilities", "npm:1.0.0"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["websocket-polyfill", "npm:0.0.3"],\
             ["winston", "npm:3.7.2"],\
@@ -4753,8 +4753,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/consumers/laps-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-laps-emitter", "workspace:packages/consumers/laps-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
-            ["@racedirector/iracing-utilities", "workspace:packages/iracing-utilities"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
+            ["@racedirector/iracing-utilities", "npm:1.0.0"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["websocket-polyfill", "npm:0.0.3"],\
             ["winston", "npm:3.7.2"],\
@@ -4768,7 +4768,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/consumers/pit-timing-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-pit-timing-emitter", "workspace:packages/consumers/pit-timing-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["timekeeper", "npm:2.2.0"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4783,7 +4783,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/__virtual__/@racedirector-iracing-sim-incident-emitter-virtual-6ab1affcce/1/packages/consumers/sim-incident-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-sim-incident-emitter", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/consumers/sim-incident-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
             ["@types/lodash", null],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
@@ -4801,7 +4801,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/consumers/sim-incident-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-sim-incident-emitter", "workspace:packages/consumers/sim-incident-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4837,18 +4837,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js", {\
-          "packageLocation": "./.yarn/__virtual__/@racedirector-iracing-socket-js-virtual-00de4610b1/1/packages/iracing-socket-js/",\
+        ["virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js", {\
+          "packageLocation": "./.yarn/__virtual__/@racedirector-iracing-socket-js-virtual-39402fde20/1/packages/iracing-socket-js/",\
           "packageDependencies": [\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"],\
-            ["@testing-library/react", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:13.0.1"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"],\
+            ["@testing-library/react", "virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:13.0.1"],\
             ["@types/lodash", null],\
             ["@types/react", "npm:18.0.4"],\
             ["@types/react-dom", "npm:18.0.0"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["react", "npm:18.0.0"],\
-            ["react-dom", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:18.0.0"],\
+            ["react-dom", "virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:18.0.0"],\
             ["ts-invariant", "npm:0.9.4"],\
             ["waait", "npm:1.0.5"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4864,13 +4864,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/iracing-socket-js/",\
           "packageDependencies": [\
             ["@racedirector/iracing-socket-js", "workspace:packages/iracing-socket-js"],\
-            ["@testing-library/react", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:13.0.1"],\
+            ["@testing-library/react", "virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:13.0.1"],\
             ["@types/react", "npm:18.0.4"],\
             ["@types/react-dom", "npm:18.0.0"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\
             ["react", "npm:18.0.0"],\
-            ["react-dom", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:18.0.0"],\
+            ["react-dom", "virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:18.0.0"],\
             ["ts-invariant", "npm:0.9.4"],\
             ["waait", "npm:1.0.5"],\
             ["websocket-polyfill", "npm:0.0.3"],\
@@ -4881,11 +4881,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]\
       ]],\
       ["@racedirector/iracing-utilities", [\
+        ["npm:1.0.0", {\
+          "packageLocation": "./.yarn/cache/@racedirector-iracing-utilities-npm-1.0.0-90b2941959-38485fcfe0.zip/node_modules/@racedirector/iracing-utilities/",\
+          "packageDependencies": [\
+            ["@racedirector/iracing-utilities", "npm:1.0.0"],\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["workspace:packages/iracing-utilities", {\
           "packageLocation": "./packages/iracing-utilities/",\
           "packageDependencies": [\
             ["@racedirector/iracing-utilities", "workspace:packages/iracing-utilities"],\
-            ["@racedirector/iracing-socket-js", "virtual:ecb47c7c9198d94e6999e9c92796d6be309330a28cbdac7e2b214ee7faa1564e0279dc5f97f5425c7e694435aae0c2547a5e43d348de6b478e4fe208c2b86b8a#workspace:packages/iracing-socket-js"]\
+            ["@racedirector/iracing-socket-js", "virtual:90b29419590f707df3927cf53d6d885678ac53b5fbac731bdec2fa2048c1559e1a3d43cabb6577a66a436b6686f7de10eb38edf02dbfcf13eb35ff17202b0e88#workspace:packages/iracing-socket-js"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -5619,16 +5627,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:13.0.1", {\
-          "packageLocation": "./.yarn/__virtual__/@testing-library-react-virtual-c7abec4f7f/0/cache/@testing-library-react-npm-13.0.1-337f0e46ba-fb38255439.zip/node_modules/@testing-library/react/",\
+        ["virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:13.0.1", {\
+          "packageLocation": "./.yarn/__virtual__/@testing-library-react-virtual-a58d733ba1/0/cache/@testing-library-react-npm-13.0.1-337f0e46ba-fb38255439.zip/node_modules/@testing-library/react/",\
           "packageDependencies": [\
-            ["@testing-library/react", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:13.0.1"],\
+            ["@testing-library/react", "virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:13.0.1"],\
             ["@babel/runtime", "npm:7.17.9"],\
             ["@testing-library/dom", "npm:8.13.0"],\
             ["@types/react", "npm:18.0.4"],\
             ["@types/react-dom", "npm:18.0.0"],\
             ["react", "npm:18.0.0"],\
-            ["react-dom", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:18.0.0"]\
+            ["react-dom", "virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:18.0.0"]\
           ],\
           "packagePeers": [\
             "@types/react-dom",\
@@ -9392,7 +9400,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@racedirector/iracing-pit-timing-emitter", "workspace:packages/consumers/pit-timing-emitter"],\
             ["@racedirector/iracing-sim-incident-emitter", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/consumers/sim-incident-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#workspace:packages/iracing-socket-js"],\
-            ["@racedirector/iracing-utilities", "workspace:packages/iracing-utilities"],\
+            ["@racedirector/iracing-utilities", "npm:1.0.0"],\
             ["@react-navigation/drawer", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#npm:6.4.1"],\
             ["@react-navigation/native", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#npm:6.0.10"],\
             ["@react-navigation/stack", "virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#npm:6.2.1"],\
@@ -16915,21 +16923,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "SOFT"\
         }],\
-        ["virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:18.0.0", {\
-          "packageLocation": "./.yarn/__virtual__/react-dom-virtual-a418d4b179/0/cache/react-dom-npm-18.0.0-d6a12fba32-dd0ba9f2f3.zip/node_modules/react-dom/",\
-          "packageDependencies": [\
-            ["react-dom", "virtual:00de4610b196458c6f06ee94e9d8b39e3a9b1b2c2db72b1191f03f264046c3c4458b8070ea65e5ae3fe62609d62566bb96f97e7c14f92432cf81601084a90305#npm:18.0.0"],\
-            ["@types/react", "npm:18.0.4"],\
-            ["loose-envify", "npm:1.4.0"],\
-            ["react", "npm:18.0.0"],\
-            ["scheduler", "npm:0.21.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }],\
         ["virtual:1df98d49dbbf0a550dcb926eb92ac392c1cd4c8f58d079d081717a47e950c4f5a23a390860c9bee0a06b8d7c23d5f588ab53a9c976292c5418b143cd7569cbcc#npm:17.0.2", {\
           "packageLocation": "./.yarn/__virtual__/react-dom-virtual-6a6920dd31/0/cache/react-dom-npm-17.0.2-f551215af1-1c1eaa3bca.zip/node_modules/react-dom/",\
           "packageDependencies": [\
@@ -16939,6 +16932,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["object-assign", "npm:4.1.1"],\
             ["react", "npm:17.0.2"],\
             ["scheduler", "npm:0.20.2"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:18.0.0", {\
+          "packageLocation": "./.yarn/__virtual__/react-dom-virtual-39c982e7c2/0/cache/react-dom-npm-18.0.0-d6a12fba32-dd0ba9f2f3.zip/node_modules/react-dom/",\
+          "packageDependencies": [\
+            ["react-dom", "virtual:39402fde203e38f283e2c9254183ff37cb037e5eb1ae2b1b9299ff6edd7743291fd175b2121e9807ac9dcec618eb463d76bbb03631e657e800552a15b4418729#npm:18.0.0"],\
+            ["@types/react", "npm:18.0.4"],\
+            ["loose-envify", "npm:1.4.0"],\
+            ["react", "npm:18.0.0"],\
+            ["scheduler", "npm:0.21.0"]\
           ],\
           "packagePeers": [\
             "@types/react",\
