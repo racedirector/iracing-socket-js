@@ -17,7 +17,7 @@
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx}\"",
-    "release": "build && changeset publish",
+    "release": "yarn build && changeset publish",
     "release:canary": "node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha",
     "types:check": "tsc --noEmit"
   },
