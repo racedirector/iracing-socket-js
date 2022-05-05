@@ -21,7 +21,7 @@ export enum FlagsEvents {
   Meatball = "meatball",
   // Event fired with an index of all drivers receiving a DQ
   DQ = "disqualify",
-  // Event fired with an index of all drivers receiving a servicible flag
+  // Event fired with an index of all drivers receiving a serviceable flag
   Serviceible = "serviceible",
   // Event fired with an index of all drivers receiving a furled black flag
   Furled = "furled",
@@ -207,7 +207,7 @@ export class FlagsEmitter extends iRacingSocketConsumer {
     // Check for service
     const serviceibleDrivers: number[] = updateEntries.reduce(
       (carIndexes, [carIndex, { nextFlag }]) =>
-        flagsHasFlag(nextFlag, Flags.Servicible)
+        flagsHasFlag(nextFlag, Flags.Serviceable)
           ? [...carIndexes, carIndex]
           : carIndexes,
       [],

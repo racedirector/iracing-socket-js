@@ -128,7 +128,7 @@ export interface Driver {
   TeamIncidentCount: number;
 }
 
-interface DriverInfo {
+export interface DriverInfo {
   DriverCarIdx: number;
   DriverHeadPosX: number;
   DriverHeadPosY: number;
@@ -151,7 +151,7 @@ interface DriverInfo {
   Drivers: Driver[];
 }
 
-interface WeekendOptions {
+export interface WeekendOptions {
   NumStarters: number;
   StartingGrid: string;
   QualifyScoring: string;
@@ -174,7 +174,7 @@ interface WeekendOptions {
   HardcoreLevel: number;
 }
 
-interface WeekendInfo {
+export interface WeekendInfo {
   TrackName: string;
   TrackID: number;
   // meters
@@ -304,7 +304,7 @@ export enum Flags {
   // drivers black flags
   Black = 0x010000,
   Disqualify = 0x020000,
-  Servicible = 0x040000, // car is allowed service (not a flag)
+  Serviceable = 0x040000, // car is allowed service (not a flag)
   Furled = 0x080000,
   Repair = 0x100000,
 
