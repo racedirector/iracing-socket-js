@@ -50,6 +50,10 @@ export class FlagsEmitter extends iRacingSocketConsumer {
 
   private _driverIndex: Record<string, Driver> = {};
 
+  get driverIndex(): Record<string, Driver> {
+    return this._driverIndex;
+  }
+
   private _previousFlags: Flags;
 
   get flags(): Flags {
