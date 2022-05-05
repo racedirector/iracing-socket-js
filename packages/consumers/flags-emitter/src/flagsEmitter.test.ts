@@ -93,36 +93,4 @@ describe("Flags Consumer", () => {
     expect(mockFlagChange).toBeCalledWith(undefined, Flags.StartGo, 10, 1000);
     expect(flagsConsumer.flags).toBe(Flags.StartGo);
   });
-
-  it.only("emits cool shit", () => {
-    const firstFlags = [Flags.GreenHeld, Flags.GreenHeld];
-    const nextFlags: Flags[] = [
-      Flags.GreenHeld,
-      Flags.GreenHeld & Flags.Yellow,
-      Flags.GreenHeld,
-      0x0,
-      0x0,
-      0x0,
-      0x0,
-      Flags.GreenHeld,
-    ];
-
-    console.log(firstFlags);
-    console.log(nextFlags);
-    const knownDiff = difference(nextFlags, firstFlags);
-    console.log(knownDiff);
-    expect(knownDiff).toEqual([]);
-
-    const firstIndex = {
-      0: Flags.GreenHeld,
-      1: Flags.GreenHeld,
-    };
-
-    const updateIndex = {
-      0: Flags.GreenHeld,
-      1: Flags.GreenHeld & Flags.Yellow,
-      2: Flags.GreenHeld,
-      42: Flags.GreenHeld,
-    };
-  });
 });
