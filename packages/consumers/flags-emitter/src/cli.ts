@@ -93,15 +93,28 @@ socket.iRacingConnectionEmitter
     socketMetaLogger.info("iRacing disconnected");
   });
 
-const flagsEmFlagsEmitter = new FlagsEmitter(socket);
-flagsEmFlagsEmitter.on(
-  FlagsEvents.FlagChange,
-  (previousFlags, nextFlags, sessionTime, sessionTimeOfDay) => {
-    socketUpdateLogger.info({
-      previousFlags,
-      nextFlags,
-      sessionTime,
-      sessionTimeOfDay,
-    });
-  },
-);
+const flagsEmitter = new FlagsEmitter(socket);
+flagsEmitter
+  .on(
+    FlagsEvents.FlagChange,
+    (previousFlags, nextFlags, sessionTime, sessionTimeOfDay) => {
+      socketUpdateLogger.info({
+        event: FlagsEvents.FlagChange,
+        previousFlags,
+        nextFlags,
+        sessionTime,
+        sessionTimeOfDay,
+      });
+    },
+  )
+  .on(
+    FlagsEvents.FlagIndexChange,
+    (updateIndex, sessionTime, sessionTimeOfDay) => {
+      socketUpdateLogger.info({
+        event: FlagsEvents.FlagIndexChange,
+        updateIndex,
+        sessionTime,
+        sessionTimeOfDay,
+      });
+    },
+  );

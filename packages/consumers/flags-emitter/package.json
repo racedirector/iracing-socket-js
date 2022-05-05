@@ -22,9 +22,14 @@
     "winston": "^3.6.0",
     "yargs": "^17.4.0"
   },
+  "peerDependencies": {
+    "lodash": "*"
+  },
   "devDependencies": {
     "@racedirector/iracing-utilities": "^1",
-    "jest-websocket-mock": "^2.3.0"
+    "@types/lodash": "^4",
+    "jest-websocket-mock": "^2.3.0",
+    "lodash": "^4.17.21"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",

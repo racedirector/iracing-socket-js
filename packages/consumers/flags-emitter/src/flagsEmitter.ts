@@ -1,14 +1,19 @@
 import {
   iRacingSocketConsumer,
+  Driver,
   Flags,
   iRacingDataKey,
 } from "@racedirector/iracing-socket-js";
+import chain from "lodash/chain";
 
 /**
  * All events that `FlagsConsumer` can emit.
  */
 export enum FlagsEvents {
+  // Event fired when the session flags change
   FlagChange = "flagChange",
+  // Event fired with an index of updates to flags by car index
+  FlagIndexChange = "flagIndexChange",
 }
 
 /**
@@ -17,15 +22,24 @@ export enum FlagsEvents {
  */
 export class FlagsEmitter extends iRacingSocketConsumer {
   static requestParameters: iRacingDataKey[] = [
+    "DriverInfo",
     "SessionFlags",
     "SessionTime",
     "SessionTimeOfDay",
+    "CarIdxSessionFlags",
   ];
+
+  private _driverIndex: Record<string, Driver>;
 
   private _previousFlags: Flags;
 
   get flags(): Flags {
     return this._previousFlags;
+  }
+
+  private _flagIndex: Record<string, Flags>;
+  get flagIndex(): Record<string, Flags> {
+    return this._flagIndex;
   }
 
   /**
@@ -34,17 +48,40 @@ export class FlagsEmitter extends iRacingSocketConsumer {
    * @fires FlagsConsumer.flagChange
    */
   onUpdate = (keys: string[]) => {
-    if (!keys.includes("SessionFlags")) {
-      return;
-    }
-
     const {
-      SessionFlags: flags = -1,
+      SessionFlags: sessionFlags,
       SessionTime: sessionTime,
       SessionTimeOfDay: sessionTimeOfDay,
+      CarIdxSessionFlags: carIdxSessionFlags = [],
+      DriverInfo: driverInfo,
     } = this.socket.data;
 
-    if (flags !== this._previousFlags) {
+    if (keys.includes("DriverInfo")) {
+      this.updateDriverIndex(driverInfo.Drivers || []);
+    }
+
+    if (keys.includes("SessionFlags")) {
+      this.updateSessionFlags(sessionFlags, sessionTime, sessionTimeOfDay);
+    }
+
+    if (keys.includes("CarIdxSessionFlags")) {
+      this.updateFlagIndex(carIdxSessionFlags, sessionTime, sessionTimeOfDay);
+    }
+  };
+
+  private updateDriverIndex = (drivers: Driver[]) => {
+    this._driverIndex = chain(drivers)
+      .filter(({ CarIsPaceCar }) => !CarIsPaceCar)
+      .keyBy("CarIdx")
+      .value();
+  };
+
+  private updateSessionFlags = (
+    nextFlags: Flags,
+    sessionTime: number,
+    sessionTimeOfDay: number,
+  ) => {
+    if (nextFlags !== this._previousFlags) {
       /**
        * Flag change event
        * @event FlagsConsumer.flagChange
@@ -56,13 +93,55 @@ export class FlagsEmitter extends iRacingSocketConsumer {
       this.emit(
         FlagsEvents.FlagChange,
         this._previousFlags,
-        flags,
+        nextFlags,
         sessionTime,
         sessionTimeOfDay,
       );
 
-      this._previousFlags = flags as Flags;
+      this._previousFlags = nextFlags;
     }
+  };
+
+  private updateFlagIndex = (
+    flags: Flags[],
+    sessionTime: number,
+    sessionTimeOfDay: number,
+  ) => {
+    // Iterate through the known drivers and get the flags they're currently shown
+    const flagIndex = Object.keys(this._driverIndex).reduce(
+      (flagIndex, carIndex) => ({
+        ...flagIndex,
+        [carIndex]: flags[carIndex],
+      }),
+      {},
+    );
+
+    const updateIndex = Object.entries(flagIndex).reduce(
+      (index, [carIndex, flag]) => {
+        const previousFlag = this._flagIndex[carIndex] || -1;
+
+        if (previousFlag !== flag) {
+          return {
+            ...index,
+            [carIndex]: {
+              previousFlag,
+              nextFlag: flag,
+            },
+          };
+        }
+
+        return index;
+      },
+      {},
+    );
+
+    this._flagIndex = flagIndex;
+    this.emit(
+      FlagsEvents.FlagIndexChange,
+      updateIndex,
+      sessionTime,
+      sessionTimeOfDay,
+    );
   };
 }
 
