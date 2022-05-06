@@ -9,6 +9,7 @@ const fps = (desiredFps: number): number =>
   Math.min(Math.max(desiredFps, MIN_FPS), MAX_FPS);
 
 export enum iRacingSocketConnectionEvents {
+  Connecting = "connecting",
   Connect = "connect",
   Disconnect = "disconnect",
   Error = "connectionError",
@@ -76,6 +77,14 @@ export class iRacingSocket extends EventEmitter {
   reconnectTimeoutInterval: number;
 
   private _connecting: boolean;
+  get connecting(): boolean {
+    return this._connecting;
+  }
+
+  private set connecting(connecting: boolean) {
+    this._connecting = connecting;
+    this.emit(iRacingSocketConnectionEvents.Connecting, connecting);
+  }
 
   private _connected: boolean;
   get connected(): boolean {
@@ -83,8 +92,8 @@ export class iRacingSocket extends EventEmitter {
   }
 
   private set connected(isConnected: boolean) {
-    if (this._connecting) {
-      this._connecting = false;
+    if (this.connecting) {
+      this.connecting = false;
     }
 
     this._connected = isConnected;
@@ -121,13 +130,13 @@ export class iRacingSocket extends EventEmitter {
   }
 
   open = () => {
-    if (!this._connecting) {
+    if (!this.connecting) {
       this.socket = new WebSocket(`ws://${this.server}/ws`);
       this.socket.addEventListener("open", this.onOpen);
       this.socket.addEventListener("message", this.onMessage);
       this.socket.addEventListener("close", this.onClose);
       this.socket.addEventListener("error", this.onError);
-      this._connecting = true;
+      this.connecting = true;
     }
   };
 
@@ -164,7 +173,7 @@ export class iRacingSocket extends EventEmitter {
   }
 
   private onError = (event: any) => {
-    const connectionError = !this.connected && this._connecting;
+    const connectionError = !this.connected && this.connecting;
     if (connectionError) {
       this.socketConnectionEmitter.emit(
         iRacingSocketConnectionEvents.Error,

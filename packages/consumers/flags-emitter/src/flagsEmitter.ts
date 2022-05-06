@@ -6,16 +6,7 @@ import {
   TrackLocation,
   iRacingDataKey,
 } from "@racedirector/iracing-socket-js";
-// import { flagsHasFlags } from "@racedirector/iracing-utilities";
 import { chain, isEmpty } from "lodash";
-
-// const BLACK_FLAGS: Flags[] = [
-//   Flags.Disqualify,
-//   Flags.Repair,
-//   Flags.Serviceable,
-//   Flags.Furled,
-//   Flags.Black,
-// ];
 
 /**
  * All events that `FlagsConsumer` can emit.
@@ -29,17 +20,19 @@ export enum FlagsEvents {
   PaceFlagIndexChange = "paceFlagIndexChange",
 }
 
-// type FlagChangeEvent = {
-//   previousFlags?: Flags;
-//   nextFlags: Flags;
-//   trackLocation: TrackLocation;
-//   lapPercentage: number;
-// };
+export type FlagChangeEvent = {
+  previousFlags?: Flags;
+  nextFlags: Flags;
+  trackLocation: TrackLocation;
+  lapPercentage: number;
+};
 
-// type PaceFlagChangeEvent = {
-//   previousPaceFlags?: PaceFlags;
-//   nextPaceFlags: PaceFlags;
-// };
+export type PaceFlagChangeEvent = {
+  previousPaceFlags?: PaceFlags;
+  nextPaceFlags: PaceFlags;
+  trackLocation: TrackLocation;
+  lapPercentage: number;
+};
 
 /**
  * A `FlagsConsumer` is a derived implementation of `iRacingSocketConsumer` to
@@ -55,8 +48,6 @@ export class FlagsEmitter extends iRacingSocketConsumer {
     "CarIdxLapDistPct",
     "CarIdxTrackSurface",
     "CarIdxPaceFlags",
-    "CarIdxPaceLine",
-    "CarIdxPaceRow",
   ];
 
   // Tracks the drivers in the session
@@ -246,63 +237,6 @@ export class FlagsEmitter extends iRacingSocketConsumer {
       );
     }
   };
-
-  // private updateBlackFlags = (
-  //   updateIndex: Record<string, FlagChangeEvent>,
-  //   sessionTime: number,
-  //   sessionTimeOfDay: number,
-  // ) => {
-  //   const updateEntries = Object.entries(updateIndex).filter(
-  //     ([carIndex, { previousFlags, nextFlags }]) => {
-  //       const [
-  //         isPreviouslyDisqualified,
-  //         isPreviouslyMeatballed,
-  //         isPreviouslyServiceable,
-  //         isPreviouslyWarned,
-  //         isPreviouslyPenalized,
-  //       ] = flagsHasFlags(previousFlags, ...BLACK_FLAGS);
-
-  //       const [
-  //         isDisqualified,
-  //         isMeatballed,
-  //         isServiceable,
-  //         isWarned,
-  //         isPenalized,
-  //       ] = flagsHasFlags(nextFlags, ...BLACK_FLAGS);
-
-  //       const isNewlyDisqualified = !isPreviouslyDisqualified && isDisqualified;
-  //       const isNewlyMeatballed = !isPreviouslyMeatballed && isMeatballed;
-  //       const isNewlyServiceable = !isPreviouslyServiceable && isServiceable;
-  //       const isNewlyWarned = !isPreviouslyWarned && isWarned;
-  //       const isNewlyPenalized = !isPreviouslyPenalized && isPenalized;
-
-  //       const hasClearedDisqualification =
-  //         isPreviouslyDisqualified && !isDisqualified;
-  //       const hasClearedMeatball = isPreviouslyMeatballed && !isMeatballed;
-  //       const hasClearedService = isPreviouslyServiceable && !isServiceable;
-  //       const hasClearedWarning = isPreviouslyWarned && !isWarned;
-  //       const hasClearedPenalty = isPreviouslyPenalized && !isPenalized;
-
-  //       // We have a new black flag if we didn't previously have one and now we do
-  //       const hasNewBlackFlag =
-  //         isNewlyDisqualified ||
-  //         isNewlyMeatballed ||
-  //         isNewlyServiceable ||
-  //         isNewlyWarned ||
-  //         isNewlyPenalized;
-
-  //       // We have cleared a black flag if we previously had one and now we don't
-  //       const clearedBlackFlag =
-  //         hasClearedDisqualification ||
-  //         hasClearedMeatball ||
-  //         hasClearedService ||
-  //         hasClearedWarning ||
-  //         hasClearedPenalty;
-
-  //       return hasNewBlackFlag || clearedBlackFlag;
-  //     },
-  //   );
-  // };
 }
 
 export default FlagsEmitter;
