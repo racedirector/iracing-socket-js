@@ -4,8 +4,7 @@
   "workspaces": {
     "packages": [
       "packages/iracing-*",
-      "packages/consumers/*",
-      "examples/*"
+      "packages/consumers/*"
     ]
   },
   "scripts": {
@@ -29,7 +28,7 @@
     "@types/yargs": "^17",
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
-    "bob-the-bundler": "1.6.1",
+    "bob-the-bundler": "1.7.3",
     "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",
@@ -41,6 +40,7 @@
     "husky": "7.0.4",
     "jest": "27.5.1",
     "lint-staged": "12.3.7",
+    "lodash": "^4.17.21",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.1.4",

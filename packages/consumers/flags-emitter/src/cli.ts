@@ -118,33 +118,14 @@ flagsEmitter
       });
     },
   )
-  .on(FlagsEvents.BlackFlag, (carIndexes) => {
-    socketUpdateLogger.info({
-      event: FlagsEvents.BlackFlag,
-      carIndexes,
-    });
-  })
-  .on(FlagsEvents.Meatball, (carIndexes) => {
-    socketUpdateLogger.info({
-      event: FlagsEvents.Meatball,
-      carIndexes,
-    });
-  })
-  .on(FlagsEvents.DQ, (carIndexes) => {
-    socketUpdateLogger.info({
-      event: FlagsEvents.DQ,
-      carIndexes,
-    });
-  })
-  .on(FlagsEvents.Serviceible, (carIndexes) => {
-    socketUpdateLogger.info({
-      event: FlagsEvents.Serviceible,
-      carIndexes,
-    });
-  })
-  .on(FlagsEvents.Furled, (carIndexes) => {
-    socketUpdateLogger.info({
-      event: FlagsEvents.Furled,
-      carIndexes,
-    });
-  });
+  .on(
+    FlagsEvents.PaceFlagIndexChange,
+    (updateIndex, sessionTime, sessionTimeOfDay) => {
+      socketUpdateLogger.info({
+        event: FlagsEvents.PaceFlagIndexChange,
+        updateIndex,
+        sessionTime,
+        sessionTimeOfDay,
+      });
+    },
+  );
