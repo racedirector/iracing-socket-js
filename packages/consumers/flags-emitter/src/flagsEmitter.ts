@@ -2,10 +2,20 @@ import {
   iRacingSocketConsumer,
   Driver,
   Flags,
+  PaceFlags,
+  TrackLocation,
   iRacingDataKey,
 } from "@racedirector/iracing-socket-js";
-import { flagsHasFlag } from "@racedirector/iracing-utilities";
+// import { flagsHasFlags } from "@racedirector/iracing-utilities";
 import { chain, isEmpty } from "lodash";
+
+// const BLACK_FLAGS: Flags[] = [
+//   Flags.Disqualify,
+//   Flags.Repair,
+//   Flags.Serviceable,
+//   Flags.Furled,
+//   Flags.Black,
+// ];
 
 /**
  * All events that `FlagsConsumer` can emit.
@@ -15,24 +25,21 @@ export enum FlagsEvents {
   FlagChange = "flagChange",
   // Event fired with an index of updates to flags by car index
   FlagIndexChange = "flagIndexChange",
-  // Event fired with an index of all drivers recieving a black flag
-  BlackFlag = "blackFlag",
-  // Event fired with an index of all drivers receiving a meatball
-  Meatball = "meatball",
-  // Event fired with an index of all drivers receiving a DQ
-  DQ = "disqualify",
-  // Event fired with an index of all drivers receiving a serviceable flag
-  Serviceible = "serviceible",
-  // Event fired with an index of all drivers receiving a furled black flag
-  Furled = "furled",
+  // Event fired with an index of updates to pace flags by car index
+  PaceFlagIndexChange = "paceFlagIndexChange",
 }
 
-type FlagChangeEvent = {
-  previousFlag?: Flags;
-  nextFlag: Flags;
-};
+// type FlagChangeEvent = {
+//   previousFlags?: Flags;
+//   nextFlags: Flags;
+//   trackLocation: TrackLocation;
+//   lapPercentage: number;
+// };
 
-type FlagChangeIndex = Record<string, FlagChangeEvent>;
+// type PaceFlagChangeEvent = {
+//   previousPaceFlags?: PaceFlags;
+//   nextPaceFlags: PaceFlags;
+// };
 
 /**
  * A `FlagsConsumer` is a derived implementation of `iRacingSocketConsumer` to
@@ -46,23 +53,34 @@ export class FlagsEmitter extends iRacingSocketConsumer {
     "SessionTimeOfDay",
     "CarIdxSessionFlags",
     "CarIdxLapDistPct",
+    "CarIdxTrackSurface",
+    "CarIdxPaceFlags",
+    "CarIdxPaceLine",
+    "CarIdxPaceRow",
   ];
 
+  // Tracks the drivers in the session
   private _driverIndex: Record<string, Driver> = {};
-
   get driverIndex(): Record<string, Driver> {
     return this._driverIndex;
   }
 
+  // Tracks the session flags
   private _previousFlags: Flags;
-
   get flags(): Flags {
     return this._previousFlags;
   }
 
+  // Tracks the flags by car index
   private _flagIndex: Record<string, Flags> = {};
   get flagIndex(): Record<string, Flags> {
     return this._flagIndex;
+  }
+
+  // Tracks the pace flags by car index
+  private _paceFlagIndex: Record<string, PaceFlags> = {};
+  get paceFlagIndex(): Record<string, PaceFlags> {
+    return this._paceFlagIndex;
   }
 
   /**
@@ -77,21 +95,38 @@ export class FlagsEmitter extends iRacingSocketConsumer {
       SessionTimeOfDay: sessionTimeOfDay,
       CarIdxSessionFlags: carIdxSessionFlags = [],
       CarIdxLapDistPct: carIdxLapDistPct = [],
-      DriverInfo: driverInfo,
+      CarIdxTrackSurface: carIdxTrackSurface = [],
+      CarIdxPaceFlags: carIdxPaceFlags = [],
+      DriverInfo: { Drivers: drivers = [] },
     } = this.socket.data;
 
+    // !!!: Ensure the driver index is updated first.
     if (keys.includes("DriverInfo")) {
-      this.updateDriverIndex(driverInfo?.Drivers || []);
+      this.updateDriverIndex(drivers);
     }
 
+    // Check for updates to the session flags, if necessary.
     if (keys.includes("SessionFlags")) {
       this.updateSessionFlags(sessionFlags, sessionTime, sessionTimeOfDay);
     }
 
+    // Check for updates to the flags for a car index, if necessary.
     if (keys.includes("CarIdxSessionFlags")) {
       this.updateFlagIndex(
         carIdxSessionFlags,
         carIdxLapDistPct,
+        carIdxTrackSurface,
+        sessionTime,
+        sessionTimeOfDay,
+      );
+    }
+
+    // Check for updates to the pace flags for a car index, if necessary.
+    if (keys.includes("CarIdxPaceFlags")) {
+      this.updatePaceFlagIndex(
+        carIdxPaceFlags,
+        carIdxLapDistPct,
+        carIdxTrackSurface,
         sessionTime,
         sessionTimeOfDay,
       );
@@ -134,119 +169,140 @@ export class FlagsEmitter extends iRacingSocketConsumer {
   private updateFlagIndex = (
     flags: Flags[],
     lapPercentages: number[],
+    trackSurfaces: TrackLocation[],
     sessionTime: number,
     sessionTimeOfDay: number,
   ) => {
-    // Iterate through the known drivers and get the flags they're currently shown
-    const flagIndex = Object.keys(this._driverIndex).reduce(
-      (flagIndex, carIndex) => ({
-        ...flagIndex,
-        [carIndex]: flags[carIndex],
-      }),
-      {},
-    );
+    const updateIndex = Object.keys(this._driverIndex).reduce(
+      (flagIndex, carIndex) => {
+        const nextFlags = flags[carIndex];
+        const previousFlags = this._flagIndex[carIndex];
 
-    const updateIndex: FlagChangeIndex = Object.entries(flagIndex).reduce(
-      (index, [carIndex, flag]) => {
-        const previousFlag = this._flagIndex[carIndex] || -1;
-
-        if (previousFlag !== flag) {
+        if (previousFlags !== nextFlags) {
+          this._flagIndex[carIndex] = nextFlags;
           return {
-            ...index,
+            ...flagIndex,
             [carIndex]: {
-              previousFlag,
-              nextFlag: flag,
+              previousFlags,
+              nextFlags,
               lapPercentage: lapPercentages[carIndex],
+              trackLocation: trackSurfaces[carIndex],
             },
           };
         }
 
-        return index;
+        return flagIndex;
       },
       {},
     );
 
     if (!isEmpty(updateIndex)) {
-      this._flagIndex = flagIndex;
       this.emit(
         FlagsEvents.FlagIndexChange,
         updateIndex,
         sessionTime,
         sessionTimeOfDay,
       );
-
-      this.updateBlackFlags(updateIndex);
     }
   };
 
-  private updateBlackFlags = (updateIndex: FlagChangeIndex) => {
-    const updateEntries = Object.entries(updateIndex);
+  private updatePaceFlagIndex = (
+    paceFlags: PaceFlags[],
+    lapPercentages: number[],
+    trackSurfaces: TrackLocation[],
+    sessionTime: number,
+    sessionTimeOfDay: number,
+  ) => {
+    // Iterate through the known drivers and get the flags they're currently shown
+    const updateIndex = Object.keys(this._driverIndex).reduce(
+      (flagIndex, carIndex) => {
+        const nextPaceFlags = paceFlags[carIndex];
+        const previousPaceFlags = this._paceFlagIndex[carIndex];
 
-    // Check for DQ
-    const disqualifiedDrivers: number[] = updateEntries.reduce(
-      (carIndexes, [carIndex, { nextFlag }]) =>
-        flagsHasFlag(nextFlag, Flags.Disqualify)
-          ? [...carIndexes, carIndex]
-          : carIndexes,
-      [],
+        if (previousPaceFlags !== nextPaceFlags) {
+          this._paceFlagIndex[carIndex] = nextPaceFlags;
+          return {
+            ...flagIndex,
+            [carIndex]: {
+              previousPaceFlags,
+              nextPaceFlags,
+              lapPercentage: lapPercentages[carIndex],
+              trackLocation: trackSurfaces[carIndex],
+            },
+          };
+        }
+
+        return flagIndex;
+      },
+      {},
     );
 
-    if (!isEmpty(disqualifiedDrivers)) {
-      this.emit(FlagsEvents.DQ, disqualifiedDrivers);
-    }
-
-    // Check for meatball
-    const meatballedDrivers: number[] = updateEntries.reduce(
-      (carIndexes, [carIndex, { nextFlag }]) =>
-        flagsHasFlag(nextFlag, Flags.Repair)
-          ? [...carIndexes, carIndex]
-          : carIndexes,
-      [],
-    );
-
-    if (!isEmpty(meatballedDrivers)) {
-      this.emit(FlagsEvents.Meatball, meatballedDrivers);
-    }
-
-    // Check for service
-    const serviceibleDrivers: number[] = updateEntries.reduce(
-      (carIndexes, [carIndex, { nextFlag }]) =>
-        flagsHasFlag(nextFlag, Flags.Serviceable)
-          ? [...carIndexes, carIndex]
-          : carIndexes,
-      [],
-    );
-
-    if (!isEmpty(serviceibleDrivers)) {
-      this.emit(FlagsEvents.Serviceible, serviceibleDrivers);
-    }
-
-    // Check for furled
-    const warnedDrivers: number[] = updateEntries.reduce(
-      (carIndexes, [carIndex, { nextFlag }]) =>
-        flagsHasFlag(nextFlag, Flags.Furled)
-          ? [...carIndexes, carIndex]
-          : carIndexes,
-      [],
-    );
-
-    if (!isEmpty(warnedDrivers)) {
-      this.emit(FlagsEvents.Furled, warnedDrivers);
-    }
-
-    // Check for penalty
-    const penalizedDrivers: number[] = updateEntries.reduce(
-      (carIndexes, [carIndex, { nextFlag }]) =>
-        flagsHasFlag(nextFlag, Flags.Black)
-          ? [...carIndexes, carIndex]
-          : carIndexes,
-      [],
-    );
-
-    if (!isEmpty(penalizedDrivers)) {
-      this.emit(FlagsEvents.BlackFlag, penalizedDrivers);
+    if (!isEmpty(updateIndex)) {
+      this.emit(
+        FlagsEvents.PaceFlagIndexChange,
+        updateIndex,
+        sessionTime,
+        sessionTimeOfDay,
+      );
     }
   };
+
+  // private updateBlackFlags = (
+  //   updateIndex: Record<string, FlagChangeEvent>,
+  //   sessionTime: number,
+  //   sessionTimeOfDay: number,
+  // ) => {
+  //   const updateEntries = Object.entries(updateIndex).filter(
+  //     ([carIndex, { previousFlags, nextFlags }]) => {
+  //       const [
+  //         isPreviouslyDisqualified,
+  //         isPreviouslyMeatballed,
+  //         isPreviouslyServiceable,
+  //         isPreviouslyWarned,
+  //         isPreviouslyPenalized,
+  //       ] = flagsHasFlags(previousFlags, ...BLACK_FLAGS);
+
+  //       const [
+  //         isDisqualified,
+  //         isMeatballed,
+  //         isServiceable,
+  //         isWarned,
+  //         isPenalized,
+  //       ] = flagsHasFlags(nextFlags, ...BLACK_FLAGS);
+
+  //       const isNewlyDisqualified = !isPreviouslyDisqualified && isDisqualified;
+  //       const isNewlyMeatballed = !isPreviouslyMeatballed && isMeatballed;
+  //       const isNewlyServiceable = !isPreviouslyServiceable && isServiceable;
+  //       const isNewlyWarned = !isPreviouslyWarned && isWarned;
+  //       const isNewlyPenalized = !isPreviouslyPenalized && isPenalized;
+
+  //       const hasClearedDisqualification =
+  //         isPreviouslyDisqualified && !isDisqualified;
+  //       const hasClearedMeatball = isPreviouslyMeatballed && !isMeatballed;
+  //       const hasClearedService = isPreviouslyServiceable && !isServiceable;
+  //       const hasClearedWarning = isPreviouslyWarned && !isWarned;
+  //       const hasClearedPenalty = isPreviouslyPenalized && !isPenalized;
+
+  //       // We have a new black flag if we didn't previously have one and now we do
+  //       const hasNewBlackFlag =
+  //         isNewlyDisqualified ||
+  //         isNewlyMeatballed ||
+  //         isNewlyServiceable ||
+  //         isNewlyWarned ||
+  //         isNewlyPenalized;
+
+  //       // We have cleared a black flag if we previously had one and now we don't
+  //       const clearedBlackFlag =
+  //         hasClearedDisqualification ||
+  //         hasClearedMeatball ||
+  //         hasClearedService ||
+  //         hasClearedWarning ||
+  //         hasClearedPenalty;
+
+  //       return hasNewBlackFlag || clearedBlackFlag;
+  //     },
+  //   );
+  // };
 }
 
 export default FlagsEmitter;
