@@ -7,6 +7,9 @@
       "packages/consumers/*"
     ]
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
     "clean": "rimraf node_modules packages/{*,consumers/*}/node_modules",
     "prebuild": "rimraf packages/*/dist packages/consumers/*/dist",
