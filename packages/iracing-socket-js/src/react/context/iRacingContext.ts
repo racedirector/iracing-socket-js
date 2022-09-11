@@ -1,15 +1,16 @@
 import * as React from "react";
-import { iRacingSocket } from "../../core";
+import { iRacingData } from "../../types";
 
 export interface iRacingContextType {
   isSocketConnected: boolean;
   isIRacingConnected: boolean;
-  socket?: iRacingSocket;
+  data?: iRacingData;
 }
 
 const DEFAULT_CONTEXT: iRacingContextType = {
   isSocketConnected: false,
   isIRacingConnected: false,
+  data: undefined,
 };
 
 export const iRacingContext =

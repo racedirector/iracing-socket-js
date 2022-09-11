@@ -25,10 +25,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/consumers/driver-swap-emitter"\
       },\
       {\
-        "name": "@racedirector/iracing-fast-repair-emitter",\
-        "reference": "workspace:packages/consumers/fast-repair-emitter"\
-      },\
-      {\
         "name": "@racedirector/iracing-flags-emitter",\
         "reference": "workspace:packages/consumers/flags-emitter"\
       },\
@@ -57,7 +53,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
       ["@racedirector/iracing-driver-swap-emitter", ["workspace:packages/consumers/driver-swap-emitter"]],\
-      ["@racedirector/iracing-fast-repair-emitter", ["workspace:packages/consumers/fast-repair-emitter"]],\
       ["@racedirector/iracing-flags-emitter", ["workspace:packages/consumers/flags-emitter"]],\
       ["@racedirector/iracing-laps-emitter", ["workspace:packages/consumers/laps-emitter"]],\
       ["@racedirector/iracing-pit-timing-emitter", ["workspace:packages/consumers/pit-timing-emitter"]],\
@@ -1576,21 +1571,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/consumers/driver-swap-emitter/",\
           "packageDependencies": [\
             ["@racedirector/iracing-driver-swap-emitter", "workspace:packages/consumers/driver-swap-emitter"],\
-            ["@racedirector/iracing-socket-js", "virtual:bd74e81e539a4f0d3ea0725fbe279d29bde132213171d1b29ebc494b48e49b3503c65c2e8b86486e6a4b3749fbd11634cc43ea72038d7e5e02780b92c9195fbf#workspace:packages/iracing-socket-js"],\
-            ["jest-websocket-mock", "npm:2.3.0"],\
-            ["lodash", "npm:4.17.21"],\
-            ["websocket-polyfill", "npm:0.0.3"],\
-            ["winston", "npm:3.7.2"],\
-            ["yargs", "npm:17.5.1"]\
-          ],\
-          "linkType": "SOFT"\
-        }]\
-      ]],\
-      ["@racedirector/iracing-fast-repair-emitter", [\
-        ["workspace:packages/consumers/fast-repair-emitter", {\
-          "packageLocation": "./packages/consumers/fast-repair-emitter/",\
-          "packageDependencies": [\
-            ["@racedirector/iracing-fast-repair-emitter", "workspace:packages/consumers/fast-repair-emitter"],\
             ["@racedirector/iracing-socket-js", "virtual:bd74e81e539a4f0d3ea0725fbe279d29bde132213171d1b29ebc494b48e49b3503c65c2e8b86486e6a4b3749fbd11634cc43ea72038d7e5e02780b92c9195fbf#workspace:packages/iracing-socket-js"],\
             ["jest-websocket-mock", "npm:2.3.0"],\
             ["lodash", "npm:4.17.21"],\

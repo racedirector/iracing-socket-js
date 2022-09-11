@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import * as React from "react";
-import { invariant } from "ts-invariant";
 import {
   iRacingClientConnectionEvents,
   iRacingSocket,
   iRacingSocketConnectionEvents,
+  iRacingSocketEvents,
 } from "../../core";
-import { iRacingContext } from "./iRacingContext";
+import { iRacingContext, iRacingContextType } from "./iRacingContext";
+import { iRacingData } from "../../types";
 
 export interface iRacingProviderProps {
   socket: iRacingSocket;
@@ -19,6 +20,7 @@ export const IRacingProvider: React.FC<iRacingProviderProps> = ({
 }) => {
   const [isSocketConnected, setSocketConnected] = useState(false);
   const [isIRacingConnected, setIRacingConnected] = useState(false);
+  const [data, setData] = useState<iRacingData>(null);
 
   useEffect(() => {
     socket.socketConnectionEmitter
@@ -35,39 +37,25 @@ export const IRacingProvider: React.FC<iRacingProviderProps> = ({
         setIRacingConnected(false),
       );
 
+    socket.on(iRacingSocketEvents.Update, (data) => {
+      setData((previousData) => ({ ...previousData, ...data }));
+    });
+
     return () => {
       socket.close();
       socket.removeAllListeners();
     };
   }, [socket]);
 
+  const socketState = useMemo<iRacingContextType>(
+    () => ({ data, isIRacingConnected, isSocketConnected }),
+    [data, isIRacingConnected, isSocketConnected],
+  );
+
   return (
-    <iRacingContext.Consumer>
-      {(context: any = {}) => {
-        if (socket && context.socket !== socket) {
-          // eslint-disable-next-line no-param-reassign
-          context = { ...context, socket };
-        }
-
-        invariant(
-          context.socket,
-          "iRacingProvider was not passed a iRacingSocket instance. Make " +
-            'sure you pass in your socket via the "socket" prop.',
-        );
-
-        return (
-          <iRacingContext.Provider
-            value={{
-              ...context,
-              isSocketConnected,
-              isIRacingConnected,
-            }}
-          >
-            {children}
-          </iRacingContext.Provider>
-        );
-      }}
-    </iRacingContext.Consumer>
+    <iRacingContext.Provider value={socketState}>
+      {children}
+    </iRacingContext.Provider>
   );
 };
 
