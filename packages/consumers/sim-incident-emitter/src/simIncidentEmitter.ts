@@ -4,6 +4,7 @@ import {
   iRacingDataKey,
   Driver,
   Flags,
+  iRacingData,
 } from "@racedirector/iracing-socket-js";
 import { chain, isEmpty } from "lodash";
 
@@ -42,6 +43,47 @@ export interface SimIncidentEmitterConfig {
 
 export const DEFAULT_CONFIG: SimIncidentEmitterConfig = {
   maxSimIncidentWeight: 2,
+};
+
+export const incidentsForDriverIndexUpdate = (
+  previousIndex: Record<string, Driver>,
+  nextIndex: Record<string, Driver>,
+  data: iRacingData,
+  weightForIncidentValue: (value: number) => number,
+) => {
+  return Object.entries(nextIndex).reduce(
+    (incidentIndex, [carIndex, driver]) => {
+      const existingDriver = previousIndex?.[carIndex] || undefined;
+
+      // Check for incidents for the existing driver
+      if (existingDriver && existingDriver.UserID === driver.UserID) {
+        const incidentCount =
+          driver.CurDriverIncidentCount - existingDriver.CurDriverIncidentCount;
+
+        if (incidentCount > 0) {
+          return {
+            ...incidentIndex,
+            [carIndex]: {
+              carIndex,
+              value: incidentCount,
+              weight: weightForIncidentValue(incidentCount),
+              sessionFlags: data.CarIdxSessionFlags[carIndex] || 0x0,
+              lapPercentage: data.CarIdxLapDistPct[carIndex],
+              sessionNumber: data.SessionNum || -1,
+              sessionTime: data.SessionTime || -1,
+              sessionTimeOfDay: data.SessionTimeOfDay || -1,
+              driverId: driver.UserID,
+            },
+          };
+        }
+      }
+
+      // TODO: Check for new meatballs and DQs
+
+      return incidentIndex;
+    },
+    {} as SimIncidentIndex,
+  );
 };
 
 export interface SimIncidentEmitterOptions {
@@ -99,35 +141,11 @@ export class SimIncidentEmitter extends iRacingSocketConsumer {
       .value();
 
     if (this.driverIndex) {
-      const incidents: SimIncidentIndex = Object.entries(nextIndex).reduce(
-        (incidentIndex, [carIndex, driver]) => {
-          const existingDriver = this._driverIndex?.[carIndex] || undefined;
-          if (existingDriver && existingDriver.UserID === driver.UserID) {
-            const incidentCount =
-              driver.CurDriverIncidentCount -
-              existingDriver.CurDriverIncidentCount;
-
-            if (incidentCount > 0) {
-              return {
-                ...incidentIndex,
-                [carIndex]: {
-                  carIndex,
-                  value: incidentCount,
-                  weight: this.weightForIncidentValue(incidentCount),
-                  sessionNumber: nextData.SessionNum || -1,
-                  sessionTime: nextData.SessionTime || -1,
-                  sessionTimeOfDay: nextData.SessionTimeOfDay || -1,
-                  sessionFlags: nextData.CarIdxSessionFlags[carIndex] || 0x0,
-                  lapPercentage: nextData.CarIdxLapDistPct[carIndex],
-                  driverId: driver.UserID,
-                },
-              };
-            }
-          }
-
-          return incidentIndex;
-        },
-        {} as SimIncidentIndex,
+      const incidents = incidentsForDriverIndexUpdate(
+        this.driverIndex,
+        nextIndex,
+        nextData,
+        this.weightForIncidentValue,
       );
 
       if (!isEmpty(incidents)) {
