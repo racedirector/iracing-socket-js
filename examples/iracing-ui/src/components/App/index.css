@@ -16,3 +16,8 @@
 .Code-block {
   display: flex;
 }
+
+.Flags {
+  display: flex;
+  background-color: aqua;
+}

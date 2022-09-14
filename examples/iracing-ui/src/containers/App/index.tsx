@@ -18,6 +18,7 @@ export const App: React.FC<Record<string, never>> = () => {
         "SessionInfo",
         "SplitTimeInfo",
         "WeekendInfo",
+        "SessionFlags",
       ]}
     >
       <AppUI />
