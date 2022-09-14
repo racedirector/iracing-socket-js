@@ -1,5 +1,5 @@
 import { iRacingContext } from "./iRacingContext";
 
-export const iRacingConsumer = iRacingContext.Consumer;
+export const IRacingConsumer = iRacingContext.Consumer;
 
-export default iRacingConsumer;
+export default IRacingConsumer;

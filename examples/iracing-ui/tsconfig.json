@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "target": "es2018",
+    "module": "esnext",
+    "lib": [
+      "es6", "ESNext", "DOM"
+    ],
+    "jsx": "react"
+  }
+}
