@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": {
     "packages": [
+      "examples/iracing-ui",
       "packages/iracing-*",
       "packages/consumers/*"
     ]
@@ -38,6 +39,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react-app": "^6.2.2",
     "eslint-plugin-react-hooks": "^4.4.0",
     "get-yarn-workspaces": "1.0.2",
     "husky": "7.0.4",
@@ -62,5 +64,5 @@
       "npx yarn-deduplicate"
     ]
   },
-  "packageManager": "yarn@3.2.0"
+  "packageManager": "yarn@3.2.3"
 }
