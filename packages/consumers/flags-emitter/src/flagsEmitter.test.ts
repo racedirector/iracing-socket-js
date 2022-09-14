@@ -1,7 +1,6 @@
 import { iRacingSocket, Flags } from "@racedirector/iracing-socket-js";
 import { flagsHasFlag } from "@racedirector/iracing-utilities";
 import WS from "jest-websocket-mock";
-import _, { difference } from "lodash";
 import { FlagsConsumer, FlagsEvents } from "./";
 
 describe("Flags Consumer", () => {

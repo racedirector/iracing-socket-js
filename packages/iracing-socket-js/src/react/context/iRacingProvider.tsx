@@ -1,26 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import * as React from "react";
-import { invariant } from "ts-invariant";
 import {
   iRacingClientConnectionEvents,
   iRacingSocket,
   iRacingSocketConnectionEvents,
+  iRacingSocketEvents,
+  iRacingSocketOptions,
 } from "../../core";
-import { iRacingContext } from "./iRacingContext";
+import { iRacingContext, iRacingContextType } from "./iRacingContext";
+import { iRacingData } from "../../types";
 
-export interface iRacingProviderProps {
-  socket: iRacingSocket;
+export interface iRacingProviderProps extends iRacingSocketOptions {
   children?: React.ReactNode;
 }
 
 export const IRacingProvider: React.FC<iRacingProviderProps> = ({
-  socket,
   children,
+  ...socketProps
 }) => {
+  const socketRef = useRef<iRacingSocket>(null);
   const [isSocketConnected, setSocketConnected] = useState(false);
   const [isIRacingConnected, setIRacingConnected] = useState(false);
+  const [data, setData] = useState<iRacingData>(undefined);
 
   useEffect(() => {
+    const socket = new iRacingSocket(socketProps);
+    socketRef.current = socket;
+
     socket.socketConnectionEmitter
       .on(iRacingSocketConnectionEvents.Connect, () => setSocketConnected(true))
       .on(iRacingSocketConnectionEvents.Disconnect, () =>
@@ -35,39 +41,37 @@ export const IRacingProvider: React.FC<iRacingProviderProps> = ({
         setIRacingConnected(false),
       );
 
+    socket.on(iRacingSocketEvents.Update, () => {
+      setData((previousData) => ({ ...previousData, ...socket.data }));
+    });
+
     return () => {
       socket.close();
       socket.removeAllListeners();
     };
-  }, [socket]);
+  }, []);
+
+  const sendCommandCallback = useCallback<iRacingSocket["sendCommand"]>(
+    (...params) => {
+      socketRef.current.sendCommand(...params);
+    },
+    [socketRef],
+  );
+
+  const socketState = useMemo<iRacingContextType>(
+    () => ({
+      data,
+      isIRacingConnected,
+      isSocketConnected,
+      sendCommand: sendCommandCallback,
+    }),
+    [data, isIRacingConnected, isSocketConnected, sendCommandCallback],
+  );
 
   return (
-    <iRacingContext.Consumer>
-      {(context: any = {}) => {
-        if (socket && context.socket !== socket) {
-          // eslint-disable-next-line no-param-reassign
-          context = { ...context, socket };
-        }
-
-        invariant(
-          context.socket,
-          "iRacingProvider was not passed a iRacingSocket instance. Make " +
-            'sure you pass in your socket via the "socket" prop.',
-        );
-
-        return (
-          <iRacingContext.Provider
-            value={{
-              ...context,
-              isSocketConnected,
-              isIRacingConnected,
-            }}
-          >
-            {children}
-          </iRacingContext.Provider>
-        );
-      }}
-    </iRacingContext.Consumer>
+    <iRacingContext.Provider value={socketState}>
+      {children}
+    </iRacingContext.Provider>
   );
 };
 
