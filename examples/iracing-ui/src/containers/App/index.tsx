@@ -10,7 +10,7 @@ export const App: React.FC<Record<string, never>> = () => {
     <IRacingProvider
       server={`${host}:${port}`}
       requestParameters={[
-        // "CameraInfo",
+        "CameraInfo",
         // "CarSetup",
         "DriverInfo",
         "QualifyResultsInfo",

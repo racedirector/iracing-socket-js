@@ -1,19 +1,14 @@
+import { Driver } from "@racedirector/iracing-socket-js";
 import React from "react";
 
-interface DriverRowProps {
-  userName: string;
-  teamName?: string;
-  carNumber: string;
-  currentDriverIncidentCount: number;
-  teamIncidentCount: number;
-}
+interface DriverRowProps extends Driver {}
 
 const DriverRow: React.FC<DriverRowProps> = ({
-  userName,
-  teamName,
-  carNumber,
-  currentDriverIncidentCount,
-  teamIncidentCount,
+  UserName: userName,
+  TeamName: teamName,
+  CarNumber: carNumber,
+  CurDriverIncidentCount: currentDriverIncidentCount,
+  TeamIncidentCount: teamIncidentCount,
 }) => (
   <div>
     <p>{`#${carNumber}`}</p>
@@ -29,10 +24,10 @@ export interface DriversProps {
   drivers: DriverRowProps[];
 }
 
-export const Drivers: React.FC<DriversProps> = ({ drivers }) => (
+export const Drivers: React.FC<DriversProps> = ({ drivers = [] }) => (
   <div>
     {drivers.map((props) => (
-      <DriverRow {...props} />
+      <DriverRow {...props} key={props.UserID} />
     ))}
   </div>
 );

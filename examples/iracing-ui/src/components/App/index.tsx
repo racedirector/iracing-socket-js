@@ -1,8 +1,9 @@
 import React from "react";
 import { useIRacingContext } from "@racedirector/iracing-socket-js";
 import "./index.css";
-import FlagIndicator from "../../containers/FlagIndicator";
-import { Drivers } from "src/containers/Drivers";
+import { FlagIndicator } from "../../containers/FlagIndicator";
+import { Drivers } from "../../containers/Drivers";
+import { Cameras } from "../../containers/Cameras";
 
 const App: React.FC<Record<string, never>> = () => {
   const { data, isIRacingConnected, isSocketConnected } = useIRacingContext();
@@ -16,6 +17,7 @@ const App: React.FC<Record<string, never>> = () => {
       </header>
 
       <body>
+        <Cameras />
         <FlagIndicator />
         <Drivers />
         {data && (

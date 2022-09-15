@@ -229,8 +229,19 @@ interface QualifyResultsInfo {
   [key: string]: any;
 }
 
-interface CameraInfo {
-  [key: string]: any;
+export interface Camera {
+  CameraName: string;
+  CameraNum: number;
+}
+
+export interface CameraGroup {
+  Cameras: Camera[];
+  GroupName: string;
+  GroupNum: number;
+}
+
+export interface CameraInfo {
+  Groups: CameraGroup[];
 }
 
 interface RadioFrequency {
