@@ -82,7 +82,7 @@ export const incidentsForDriverIndexUpdate = (
 
       return incidentIndex;
     },
-    {} as SimIncidentIndex,
+    {},
   );
 };
 

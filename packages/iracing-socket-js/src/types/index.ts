@@ -233,8 +233,32 @@ interface CameraInfo {
   [key: string]: any;
 }
 
+interface RadioFrequency {
+  FrequencyNum: number;
+  FrequencyName: string;
+  Priority: number;
+  CarIdx: number;
+  EntryIdx: number;
+  ClubID: number;
+  CanScan: boolean;
+  CanSqawk: boolean;
+  Muted: boolean;
+  IsMutable: boolean;
+  IsDeletable: boolean;
+}
+
+interface Radio {
+  RadioNum: number;
+  HopCount: number;
+  NumFrequencies: number;
+  TunedToFrequencyNum: number;
+  ScanningIsOn: boolean;
+  Frequencies: RadioFrequency[];
+}
+
 interface RadioInfo {
-  [key: string]: any;
+  SelectedRadioNum: number;
+  Radios: Radio[];
 }
 
 interface Sector {
@@ -246,6 +270,29 @@ interface SplitTimeInfo {
   Sectors: Sector[];
 }
 
+interface SessionResultsPosition {
+  Position: number;
+  ClassPosition: number;
+  CarIdx: number;
+  Lap: number;
+  Time: number;
+  FastestLap: number;
+  FastestTime: number;
+  LapsLed: number;
+  LapsComplete: number;
+  JokerLapsComplete: number;
+  LapsDriven: number;
+  Incidents: number;
+  ReasonOutId: number;
+  ReasonOutStr: string;
+}
+
+interface SessionFastestLap {
+  CarIdx: number;
+  FastestLap: number;
+  FastestTime: number;
+}
+
 interface Session {
   SessionNum: number;
   SessionLaps: number;
@@ -253,6 +300,17 @@ interface Session {
   SessionNumLapsToAvg: number;
   SessionType: string;
   SessionTrackRubberState: string;
+  SessionName: string;
+  SessionSkipped: boolean;
+  SessionRunGroupsUsed: boolean;
+  SessionEnforceTireCompoundChange: boolean;
+  ResultsPositions: SessionResultsPosition[];
+  ResultsFastestLap: SessionFastestLap[];
+  ResultsAverageLapTime: number;
+  ResultsNumCautionFlags: number;
+  ResultsNumLeadChanges: number;
+  ResultsLapsComplete: number;
+  ResultsOfficial: boolean;
 }
 
 interface SessionInfo {

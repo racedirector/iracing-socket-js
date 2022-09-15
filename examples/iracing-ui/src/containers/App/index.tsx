@@ -10,15 +10,13 @@ export const App: React.FC<Record<string, never>> = () => {
     <IRacingProvider
       server={`${host}:${port}`}
       requestParameters={[
-        "CameraInfo",
-        "CarSetup",
+        // "CameraInfo",
+        // "CarSetup",
         "DriverInfo",
         "QualifyResultsInfo",
-        "RadioInfo",
-        "SessionInfo",
         "SplitTimeInfo",
-        "WeekendInfo",
         "SessionFlags",
+        // "WeekendInfo",
       ]}
     >
       <AppUI />
