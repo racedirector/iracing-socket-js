@@ -4,6 +4,7 @@ import "./index.css";
 import { FlagIndicator } from "../../containers/FlagIndicator";
 import { Drivers } from "../../containers/Drivers";
 import { Cameras } from "../../containers/Cameras";
+import { ChatMacros } from "../../containers/ChatMacros";
 
 const App: React.FC<Record<string, never>> = () => {
   const { data, isIRacingConnected, isSocketConnected } = useIRacingContext();
@@ -17,6 +18,7 @@ const App: React.FC<Record<string, never>> = () => {
       </header>
 
       <body>
+        <ChatMacros />
         <Cameras />
         <FlagIndicator />
         <Drivers />
