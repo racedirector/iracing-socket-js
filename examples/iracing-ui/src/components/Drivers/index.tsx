@@ -20,8 +20,9 @@ const DriverRow: React.FC<DriverRowProps> = ({
   CarNumber: carNumber,
   CurDriverIncidentCount: currentDriverIncidentCount,
   TeamIncidentCount: teamIncidentCount,
+  onPress,
 }) => (
-  <Tr>
+  <Tr onClick={onPress}>
     <Td>{`#${carNumber}`}</Td>
     <Td>{userName}</Td>
     <Td isNumeric>{currentDriverIncidentCount}</Td>
@@ -51,7 +52,10 @@ export const Drivers: React.FC<DriversProps> = ({
       </Thead>
       <Tbody>
         {drivers.map((props) => (
-          <DriverRow {...props} onPress={() => onPressDriver(props.CarIdx)} />
+          <DriverRow
+            {...props}
+            onPress={() => onPressDriver(props.CarNumberRaw)}
+          />
         ))}
       </Tbody>
     </Table>
