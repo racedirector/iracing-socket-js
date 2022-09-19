@@ -3,7 +3,7 @@ import {
   iRacingSocketCommands,
   useIRacingContext,
 } from "@racedirector/iracing-socket-js";
-import { Drivers as DriversUI } from "src/components/Drivers";
+import { Drivers as DriversUI } from "src/components/DriversTable";
 
 export interface DriversProps {}
 

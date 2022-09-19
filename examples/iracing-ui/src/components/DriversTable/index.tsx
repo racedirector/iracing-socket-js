@@ -40,7 +40,7 @@ export const Drivers: React.FC<DriversProps> = ({
   onPressDriver,
 }) => (
   <TableContainer>
-    <Table variant="striped" colorScheme="teal">
+    <Table variant="striped">
       <TableCaption>Drivers Currently In Cars/On Track</TableCaption>
       <Thead>
         <Tr>
