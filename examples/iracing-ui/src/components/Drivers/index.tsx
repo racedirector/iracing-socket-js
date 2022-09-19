@@ -1,3 +1,13 @@
+import {
+  Table,
+  Thead,
+  Th,
+  Tr,
+  Td,
+  Tbody,
+  TableCaption,
+  TableContainer,
+} from "@chakra-ui/react";
 import { Driver } from "@racedirector/iracing-socket-js";
 import React from "react";
 
@@ -7,19 +17,16 @@ interface DriverRowProps extends Driver {
 
 const DriverRow: React.FC<DriverRowProps> = ({
   UserName: userName,
-  TeamName: teamName,
   CarNumber: carNumber,
   CurDriverIncidentCount: currentDriverIncidentCount,
   TeamIncidentCount: teamIncidentCount,
 }) => (
-  <div>
-    <p>{`#${carNumber}`}</p>
-    <p>{userName}</p>
-    {teamName && <p>({teamName})</p>}
-    <p>
-      {teamIncidentCount} ({currentDriverIncidentCount})
-    </p>
-  </div>
+  <Tr>
+    <Td>{`#${carNumber}`}</Td>
+    <Td>{userName}</Td>
+    <Td isNumeric>{currentDriverIncidentCount}</Td>
+    <Td isNumeric>{teamIncidentCount}</Td>
+  </Tr>
 );
 
 export interface DriversProps {
@@ -31,17 +38,24 @@ export const Drivers: React.FC<DriversProps> = ({
   drivers = [],
   onPressDriver,
 }) => (
-  <div>
-    {drivers.map((props) => (
-      <DriverRow
-        {...props}
-        key={props.UserID}
-        onPress={() => {
-          onPressDriver(props.CarIdx);
-        }}
-      />
-    ))}
-  </div>
+  <TableContainer>
+    <Table variant="striped" colorScheme="teal">
+      <TableCaption>Drivers Currently In Cars/On Track</TableCaption>
+      <Thead>
+        <Tr>
+          <Th>Car number</Th>
+          <Th>Driver name</Th>
+          <Th isNumeric>Driver incidents</Th>
+          <Th isNumeric>Team incidents</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {drivers.map((props) => (
+          <DriverRow {...props} onPress={() => onPressDriver(props.CarIdx)} />
+        ))}
+      </Tbody>
+    </Table>
+  </TableContainer>
 );
 
 export default Drivers;

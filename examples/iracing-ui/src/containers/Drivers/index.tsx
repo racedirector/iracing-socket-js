@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   iRacingSocketCommands,
   useIRacingContext,
@@ -10,20 +10,23 @@ export interface DriversProps {}
 export const Drivers: React.FC<DriversProps> = () => {
   const {
     sendCommand,
-    data: { DriverInfo: { Drivers: drivers = [] } = {} } = {},
+    data: {
+      DriverInfo: { Drivers: drivers = [] } = {},
+      CamCameraNumber: cameraNumber = -1,
+      CamGroupNumber: cameraGroupNumber = -1,
+    } = {},
   } = useIRacingContext();
 
-  return (
-    <DriversUI
-      drivers={drivers}
-      onPressDriver={(carIndex) => {
-        console.log("Did press car index", carIndex);
-        sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
-          carIndex.toString(),
-          0,
-          0,
-        ]);
-      }}
-    />
+  const onPressDriverCallback = useCallback(
+    (carIndex) => {
+      sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
+        carIndex.toString(),
+        cameraGroupNumber,
+        cameraNumber,
+      ]);
+    },
+    [cameraGroupNumber, cameraNumber, sendCommand],
   );
+
+  return <DriversUI drivers={drivers} onPressDriver={onPressDriverCallback} />;
 };

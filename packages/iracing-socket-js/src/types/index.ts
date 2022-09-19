@@ -90,6 +90,13 @@ interface LiveCarData {
   OnPitRoad: boolean;
 }
 
+interface LiveCameraData {
+  CamCameraNumber: number;
+  CamCameraState: number;
+  CamCarIdx: number;
+  CamGroupNumber: number;
+}
+
 export interface Driver {
   CarIdx: number;
   UserID: number;
@@ -345,6 +352,7 @@ export interface iRacingData
   extends Partial<LiveData>,
     Partial<LiveSensorData>,
     Partial<LiveCarData>,
+    Partial<LiveCameraData>,
     Partial<SessionStringData> {}
 
 export type iRacingDataKey = keyof iRacingData;
