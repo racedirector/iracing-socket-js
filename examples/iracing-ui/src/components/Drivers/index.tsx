@@ -1,7 +1,9 @@
 import { Driver } from "@racedirector/iracing-socket-js";
 import React from "react";
 
-interface DriverRowProps extends Driver {}
+interface DriverRowProps extends Driver {
+  onPress: () => void;
+}
 
 const DriverRow: React.FC<DriverRowProps> = ({
   UserName: userName,
@@ -21,13 +23,23 @@ const DriverRow: React.FC<DriverRowProps> = ({
 );
 
 export interface DriversProps {
-  drivers: DriverRowProps[];
+  drivers: Omit<DriverRowProps, "onPress">[];
+  onPressDriver: (carIndex: number) => void;
 }
 
-export const Drivers: React.FC<DriversProps> = ({ drivers = [] }) => (
+export const Drivers: React.FC<DriversProps> = ({
+  drivers = [],
+  onPressDriver,
+}) => (
   <div>
     {drivers.map((props) => (
-      <DriverRow {...props} key={props.UserID} />
+      <DriverRow
+        {...props}
+        key={props.UserID}
+        onPress={() => {
+          onPressDriver(props.CarIdx);
+        }}
+      />
     ))}
   </div>
 );

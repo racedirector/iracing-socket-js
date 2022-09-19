@@ -18,7 +18,7 @@ module.exports = {
   ignorePatterns: ["dist", "node_modules"],
   rules: {
     "no-empty": "off",
-    "no-console": "error",
+    "no-console": "warn",
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-var-requires": "off",

@@ -8,9 +8,9 @@ import React from "react";
 interface CameraProps extends Pick<CameraType, "CameraName"> {}
 
 const Camera: React.FC<CameraProps> = ({ CameraName: name }) => (
-  <div>
+  <>
     <p>{`Name: ${name}`}</p>
-  </div>
+  </>
 );
 
 interface CameraGroupProps extends CameraGroupType {}
@@ -31,12 +31,12 @@ export interface CamerasProps extends Partial<CameraInfoType> {}
 
 export const Cameras: React.FC<CamerasProps> = ({ Groups: groups = [] }) => {
   return (
-    <div>
+    <>
       <h1>Cameras</h1>
       {groups.map((props) => (
         <CameraGroup {...props} />
       ))}
-    </div>
+    </>
   );
 };
 
