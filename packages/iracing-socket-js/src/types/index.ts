@@ -40,6 +40,11 @@ interface LiveSensorData {
   CRshockVel: number;
 }
 
+interface LiveWeatherData {
+  WindDir: number;
+  WindVel: number;
+}
+
 interface LiveCarData {
   // Cars class position in race by car index (int)
   CarIdxClassPosition: number[];
@@ -69,6 +74,7 @@ interface LiveCarData {
   CarIdxTrackSurfaceMaterial: TrackSurface[];
   // Best lap time by car index (float, seconds)
   CarIdxBestLapTime: number[];
+  CarIdxLastLapTime: number[];
   // Fast repairs used by car index (int)
   CarIdxFastRepairsUsed: number[];
   // Pace flags by car index (int, `PaceFlags`)
@@ -79,7 +85,6 @@ interface LiveCarData {
   CarIdxPaceRow: number[];
   // Session flags by car index
   CarIdxSessionFlags: Flags[];
-
   // Track surface type of current player (int, `TrackLocation`)
   PlayerTrackSurface: TrackLocation;
   // Track surface material of current palyer (int, `TrackSurface`)
@@ -168,7 +173,7 @@ export interface WeekendOptions {
   WeatherType: string;
   Skies: string;
   WindDirection: string;
-  WindSpeed: number;
+  WindSpeed: string;
   WeatherTemp: number;
   RelativeHumidity: number;
   FogLevel: number;
@@ -232,8 +237,15 @@ export interface WeekendInfo {
   WeekendOptions: WeekendOptions;
 }
 
-interface QualifyResultsInfo {
-  [key: string]: any;
+export interface QualifyResultsInfoResult {
+  Position: number;
+  ClassPosition: number;
+  CarIdx: number;
+  FastestLap: number;
+  FastestTime: number;
+}
+export interface QualifyResultsInfo {
+  Results: QualifyResultsInfoResult[];
 }
 
 export interface Camera {
@@ -353,6 +365,7 @@ export interface iRacingData
     Partial<LiveSensorData>,
     Partial<LiveCarData>,
     Partial<LiveCameraData>,
+    Partial<LiveWeatherData>,
     Partial<SessionStringData> {}
 
 export type iRacingDataKey = keyof iRacingData;

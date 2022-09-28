@@ -5,25 +5,33 @@ import { IRacingProvider } from "@racedirector/iracing-socket-js";
 
 const host = "192.168.4.52";
 const port = "8182";
+const server = `${host}:${port}`;
 
 export const App: React.FC<Record<string, never>> = () => {
   return (
     <ChakraProvider>
       <IRacingProvider
-        server={`${host}:${port}`}
+        server={server}
         requestParameters={[
-          "CameraInfo",
           "CamCameraNumber",
           "CamCameraState",
           "CamCarIdx",
+          "CameraInfo",
           "CamGroupNumber",
-          // "CarSetup",
+          "CarIdxLapDistPct",
+          "CarIdxOnPitRoad",
+          "CarIdxTrackSurface",
           "DriverInfo",
+          "IsReplayPlaying",
           "QualifyResultsInfo",
-          "SplitTimeInfo",
+          "ReplayFrameNumEnd",
           "SessionFlags",
-          // "WeekendInfo",
+          "SessionInfo",
+          "SessionNum",
+          "WindDir",
+          "WindVel",
         ]}
+        requestParametersOnce={["WeekendInfo", "SplitTimeInfo"]}
       >
         <AppUI />
       </IRacingProvider>

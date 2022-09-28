@@ -1,5 +1,10 @@
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import * as React from "react";
+import React, {
+  useEffect,
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 import {
   iRacingClientConnectionEvents,
   iRacingSocket,

@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useContext, createContext } from "react";
 import { iRacingSocket } from "../../core";
 import { iRacingData } from "../../types";
 
@@ -17,7 +17,7 @@ const DEFAULT_CONTEXT: iRacingContextType = {
 };
 
 export const iRacingContext =
-  React.createContext<iRacingContextType>(DEFAULT_CONTEXT);
+  createContext<iRacingContextType>(DEFAULT_CONTEXT);
 iRacingContext.displayName = "iRacingContext";
 
-export const useIRacingContext = () => React.useContext(iRacingContext);
+export const useIRacingContext = () => useContext(iRacingContext);

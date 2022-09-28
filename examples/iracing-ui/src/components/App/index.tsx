@@ -1,10 +1,13 @@
 import React from "react";
 import { useIRacingContext } from "@racedirector/iracing-socket-js";
+import { Box, Grid, GridItem } from "@chakra-ui/react";
 import "./index.css";
 import { FlagIndicator } from "../../containers/FlagIndicator";
 import { Drivers } from "../../containers/Drivers";
 import { Cameras } from "../../containers/Cameras";
 import { ChatMacros } from "../../containers/ChatMacros";
+import { TrackMap } from "../../containers/TrackMap";
+import WeatherConditions from "../../containers/WeatherConditions";
 
 const App: React.FC<Record<string, never>> = () => {
   const { data, isIRacingConnected, isSocketConnected } = useIRacingContext();
@@ -18,10 +21,24 @@ const App: React.FC<Record<string, never>> = () => {
       </header>
 
       <body>
+        <TrackMap />
+        {/* <Grid templateColumns="repeat(3, 1fr)" templateRows="repeat(1, 1fr)">
+          <GridItem bg="tomato">
+            <WeatherConditions />
+          </GridItem>
+
+          <GridItem>
+            <TrackMap />
+          </GridItem>
+
+          <GridItem>
+            <FlagIndicator />
+          </GridItem>
+        </Grid>
+
         <ChatMacros />
         <Cameras />
-        <FlagIndicator />
-        <Drivers />
+        <Drivers /> */}
         {data && (
           <div className="Code-block">
             <pre>{JSON.stringify(data, null, 2)}</pre>
