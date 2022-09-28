@@ -1,5 +1,10 @@
+import { isEmpty } from "lodash";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import tracks from "./tracks.json";
+
+const getLinePath = (startX, startY, endX, endY) => {
+  return `M${startX} ${startY} L${endX} ${endY}`;
+};
 
 const getLineAngle = (x1, y1, x2, y2) => {
   const x = x1 - x2;
@@ -16,10 +21,18 @@ interface TrackMapIndicator {
   lapPercentage: number;
 }
 
+interface StartFinishLineIndicator {
+  path: string;
+  rotation: number;
+}
+
+interface SectorIndicator extends TrackMapIndicator {}
+
 export interface TrackMapProps {
   trackId: number;
   drawSectorLines: boolean;
   indicators: TrackMapIndicator[];
+  sectors: SectorIndicator[];
   startFinishLineColor?: string;
   startFinishLineWidth?: number;
   sectorLineColor?: string;
@@ -33,6 +46,8 @@ export interface TrackMapProps {
 
 export const TrackMap: React.FC<TrackMapProps> = ({
   trackId,
+  indicators = [],
+  sectors = [],
   drawSectorLines: shouldDrawSectorLines = true,
   trackLineColor = "black",
   trackLineWidth = 10,
@@ -43,8 +58,13 @@ export const TrackMap: React.FC<TrackMapProps> = ({
   const containerRef = useRef<SVGSVGElement>(null);
   const trackPathRef = useRef<SVGPathElement>(null);
   const [paths, setPaths] = useState([]);
-  const [sectorLinePaths, setSectorLinePaths] = useState([]);
-  const [startFinishLinePath, setStartFinishLinePath] = useState(null);
+  const [sectorLinePaths, setSectorLinePaths] = useState<
+    StartFinishLineIndicator[]
+  >([]);
+  const [
+    { path: startFinishLinePath, rotation: startFinishLineRotation },
+    setStartFinishLinePath,
+  ] = useState<StartFinishLineIndicator>(null);
 
   const drawStartFinishLine = useCallback(
     (point) => {
@@ -67,16 +87,53 @@ export const TrackMap: React.FC<TrackMapProps> = ({
 
       const halfWidth = startFinishLineWidth / 2;
 
-      setStartFinishLinePath(
-        `M ${startCoordinates.x} ${startCoordinates.y - halfWidth} L ${
-          startCoordinates.x
-        } ${startCoordinates.y + halfWidth}`,
-      );
+      setStartFinishLinePath({
+        path: getLinePath(
+          startCoordinates.x,
+          startCoordinates.y - halfWidth,
+          startCoordinates.x,
+          startCoordinates.y + halfWidth,
+        ),
+        rotation: rotateAngle,
+      });
     },
     [trackPathRef],
   );
 
-  const drawSectorLines = useCallback(() => {}, [trackPathRef]);
+  const drawSectorLines = useCallback(() => {
+    const halfWidth = sectorLineWidth / 2;
+    const currentTrackPathLength = trackPathRef.current.getTotalLength();
+
+    sectors.map(({ lapPercentage }) => {
+      const sectorCoordinates = trackPathRef.current.getPointAtLength(
+        lapPercentage * currentTrackPathLength,
+      );
+
+      const sectorAngle = trackPathRef.current.getPointAtLength(
+        lapPercentage * currentTrackPathLength + 0.1,
+      );
+
+      const sectorRotation = getLineAngle(
+        sectorCoordinates.x,
+        sectorCoordinates.y,
+        sectorAngle.x,
+        sectorAngle.y,
+      );
+
+      setSectorLinePaths((paths) => [
+        ...paths,
+        {
+          path: getLinePath(
+            sectorCoordinates.x,
+            sectorCoordinates.y - halfWidth,
+            sectorCoordinates.x,
+            sectorCoordinates.y + halfWidth,
+          ),
+          rotation: sectorRotation,
+        },
+      ]);
+    });
+  }, [trackPathRef, sectors]);
 
   useEffect(() => {
     if (trackPathRef.current) {
@@ -87,10 +144,6 @@ export const TrackMap: React.FC<TrackMapProps> = ({
       }
     }
   }, [trackPathRef]);
-
-  useEffect(() => {
-    console.log(containerRef.current);
-  }, [containerRef]);
 
   useEffect(() => {
     if (trackId && tracks[trackId]) {
@@ -122,7 +175,13 @@ export const TrackMap: React.FC<TrackMapProps> = ({
         );
       })}
 
-      {startFinishLinePath && <path d={startFinishLinePath} />}
+      {startFinishLinePath && (
+        <path d={startFinishLinePath} rotate={startFinishLineRotation} />
+      )}
+
+      {sectorLinePaths.map(({ path: pathString, rotation }) => (
+        <path d={pathString} rotate={rotation} />
+      ))}
     </svg>
   );
 };
