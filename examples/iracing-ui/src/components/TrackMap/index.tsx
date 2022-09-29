@@ -1,6 +1,7 @@
-import { isEmpty } from "lodash";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import tracks from "./tracks.json";
+
+const GAP = 1;
 
 const getLinePath = (startX, startY, endX, endY) => {
   return `M${startX} ${startY} L${endX} ${endY}`;
@@ -23,7 +24,7 @@ interface TrackMapIndicator {
 
 interface StartFinishLineIndicator {
   path: string;
-  rotation: number;
+  transform: string;
 }
 
 interface SectorIndicator extends TrackMapIndicator {}
@@ -33,6 +34,7 @@ export interface TrackMapProps {
   drawSectorLines: boolean;
   indicators: TrackMapIndicator[];
   sectors: SectorIndicator[];
+
   startFinishLineColor?: string;
   startFinishLineWidth?: number;
   sectorLineColor?: string;
@@ -46,25 +48,25 @@ export interface TrackMapProps {
 
 export const TrackMap: React.FC<TrackMapProps> = ({
   trackId,
-  indicators = [],
   sectors = [],
   drawSectorLines: shouldDrawSectorLines = true,
   trackLineColor = "black",
   trackLineWidth = 10,
+  startFinishLineColor = "white",
   startFinishLineWidth = trackLineWidth * 3,
+  sectorLineColor = "yellow",
   sectorLineWidth = trackLineWidth * 2,
   style,
 }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const trackPathRef = useRef<SVGPathElement>(null);
+  const [trackViewBox, setTrackViewBox] = useState("0 0 0 0");
   const [paths, setPaths] = useState([]);
   const [sectorLinePaths, setSectorLinePaths] = useState<
     StartFinishLineIndicator[]
   >([]);
-  const [
-    { path: startFinishLinePath, rotation: startFinishLineRotation },
-    setStartFinishLinePath,
-  ] = useState<StartFinishLineIndicator>(null);
+  const [startFinishLine, setStartFinishLinePath] =
+    useState<StartFinishLineIndicator>(null);
 
   const drawStartFinishLine = useCallback(
     (point) => {
@@ -94,17 +96,17 @@ export const TrackMap: React.FC<TrackMapProps> = ({
           startCoordinates.x,
           startCoordinates.y + halfWidth,
         ),
-        rotation: rotateAngle,
+        transform: `rotate(${rotateAngle} ${startCoordinates.x} ${startCoordinates.y})`,
       });
     },
-    [trackPathRef],
+    [startFinishLineWidth],
   );
 
   const drawSectorLines = useCallback(() => {
     const halfWidth = sectorLineWidth / 2;
     const currentTrackPathLength = trackPathRef.current.getTotalLength();
 
-    sectors.map(({ lapPercentage }) => {
+    sectors.forEach(({ lapPercentage }, index) => {
       const sectorCoordinates = trackPathRef.current.getPointAtLength(
         lapPercentage * currentTrackPathLength,
       );
@@ -129,21 +131,38 @@ export const TrackMap: React.FC<TrackMapProps> = ({
             sectorCoordinates.x,
             sectorCoordinates.y + halfWidth,
           ),
-          rotation: sectorRotation,
+          transform: `rotate(${sectorRotation} ${sectorCoordinates.x} ${sectorCoordinates.y})`,
         },
       ]);
     });
-  }, [trackPathRef, sectors]);
+  }, [sectorLineWidth, sectors]);
 
   useEffect(() => {
     if (trackPathRef.current) {
+      const trackDimensions = trackPathRef.current.getBBox();
+      const largestRadius = startFinishLineWidth / 2;
+      const constant = largestRadius + GAP;
+
+      setTrackViewBox(
+        `${trackDimensions.x - constant} ${trackDimensions.y - constant} ${
+          trackDimensions.width + constant * 2
+        } ${trackDimensions.height + constant * 2}`,
+      );
+
       drawStartFinishLine(0);
 
       if (shouldDrawSectorLines) {
+        console.log("Draw sector");
         drawSectorLines();
       }
     }
-  }, [trackPathRef]);
+  }, [
+    drawSectorLines,
+    drawStartFinishLine,
+    shouldDrawSectorLines,
+    startFinishLineWidth,
+    trackPathRef,
+  ]);
 
   useEffect(() => {
     if (trackId && tracks[trackId]) {
@@ -154,9 +173,8 @@ export const TrackMap: React.FC<TrackMapProps> = ({
   return (
     <svg
       ref={containerRef}
-      style={style}
+      viewBox={trackViewBox}
       xmlns="<http://www.w3.org/2000/svg>"
-      preserveAspectRatio="meet"
     >
       {paths.map((pathString, index) => {
         const isTrackOutline = index === 0;
@@ -170,17 +188,27 @@ export const TrackMap: React.FC<TrackMapProps> = ({
             fillOpacity={0}
             stroke={trackLineColor}
             strokeWidth={isTrackOutline ? trackLineWidth : trackLineWidth * 0.7}
-            viewBox={isTrackOutline ? "" : undefined}
           />
         );
       })}
 
-      {startFinishLinePath && (
-        <path d={startFinishLinePath} rotate={startFinishLineRotation} />
+      {startFinishLine && (
+        <path
+          d={startFinishLine.path}
+          transform={startFinishLine.transform}
+          strokeWidth={trackLineWidth * 0.5}
+          stroke={startFinishLineColor}
+        />
       )}
 
-      {sectorLinePaths.map(({ path: pathString, rotation }) => (
-        <path d={pathString} rotate={rotation} />
+      {sectorLinePaths.map(({ path: pathString, transform }, index) => (
+        <path
+          key={`sector-${index}`}
+          d={pathString}
+          transform={transform}
+          strokeWidth={trackLineWidth * 0.5}
+          stroke={sectorLineColor}
+        />
       ))}
     </svg>
   );
