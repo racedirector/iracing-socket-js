@@ -8,7 +8,7 @@ import { TrackMap } from "../../containers/TrackMap";
 import { ConnectionStatus } from "../../containers/ConnectionStatus";
 
 const App: React.FC<Record<string, never>> = () => (
-  <div style={{ flex: 1 }}>
+  <div style={{ flex: 1, backgroundColor: "gray" }}>
     <header className="App-header">
       <ConnectionStatus />
     </header>
