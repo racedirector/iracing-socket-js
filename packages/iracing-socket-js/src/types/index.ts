@@ -3,6 +3,27 @@
 export const PACE_CAR_CLASS_ID = 11;
 
 interface LiveData {
+  CpuUsageFG: number;
+  CpuUsageBG: number;
+  GpuUsage: number;
+  ChanAvgLatency: number;
+  ChanClockSkew: number;
+  ChanLatency: number;
+  MemSoftPageFaultSec: number;
+  MemPageFaultSec: number;
+  FrameRate: number;
+  EnterExitReset: number;
+
+  OkToReloadTextures: boolean;
+
+  Lap: number;
+  LoadNumTextures: boolean;
+  FastRepairUsed: number;
+  LapDeltaToBestLap_OK: boolean;
+  LapCompleted: number;
+  ManualBoost: boolean;
+  ManualNoBoost: boolean;
+  ShiftPowerPct: number;
   // Laps completed in race (int)
   RaceLaps: number;
   // Session number (int)
@@ -11,19 +32,120 @@ interface LiveData {
   SessionFlags: Flags;
   // Seconds since session start
   SessionTime: number;
+  SessionTimeTotal: number;
+  SessionTimeRemain: number;
   // Time of day in seconds
   SessionTimeOfDay: number;
+  // Session state (see enum)
+  SessionState: SessionState;
+  SessionTick: number;
+  SessionLapsTotal: number;
+  SessionUniqueID: number;
+  SessionLapsRemain: number;
+  SessionLapsRemainEx: number;
+  SessionOnJokerLap: boolean;
+  SessionJokerLapsRemain: number;
+
+  CarLeftRight: number;
+
+  PitsOpen: boolean;
+
+  PitRepairLeft: number;
+  PitOptRepairLeft: number;
+
   // Bitfield of pit service checkboxes
   PitSvFlags: PitServiceFlags;
   // Pit service fuel add amount
   PitSvFuel: number;
-  // ???: Not officially documented :)
+  PitSvTireCompound: number;
+  PitSvRFP: number;
+  PitSvLFP: number;
+  PitSvLRP: number;
+  PitSvRRP: number;
+
+  PlayerCarDryTireSetLimit: number;
+  PlayerCarClass: number;
+  PlayerCarClassPosition: number;
   PlayerCarPitSvStatus: PitServiceFlags;
+  PlayerCarTeamIncidentCount: number;
+  PlayerCarDriverIncidentCount: number;
+  PlayerCarIdx: number;
+  PlayerCarMyIncidentCount: number;
+  PlayerCarPosition: number;
+  PlayerCarInPitStall: boolean;
+  PlayerCarPowerAdjust: number;
+  PlayerCarWeightPenalty: number;
+  PlayerTireCompound: number;
+
   // Pit stop active boolean
   PitstopActive: boolean;
+  DisplayUnits: number;
+  IsDiskLoggingEnabled: boolean;
+  IsDiskLoggingActive: boolean;
+  VidCapActive: boolean;
+  VidCapEnabled: boolean;
+  IsInGarage: boolean;
+  LapLastLapTime: number;
+
+  RadioTransmitCarIdx: number;
+
+  IsReplayPlaying: boolean;
+  ReplayPlaySlowMotion: boolean;
+  ReplaySessionNum: number;
+  ReplayPlaySpeed: number;
+  ReplayFrameNum: number;
+  ReplayFrameNumEnd: number;
+  ReplaySessionTime: number;
+
+  SteeringWheelAngle: number;
+  SteeringWheelAngleMax: number;
+  SteeringWheelPctTorqueSign: number;
+  SteeringWheelPeakForceNm: number;
+  SteeringWheelMaxForceNm: number;
+  SteeringWheelLimiter: number;
+  SteeringWheelTorque: number[];
+  SteeringWheelUseLinear: boolean;
+  SteeringWheelPctTorque: number;
+  SteeringWheelPctTorqueSignStops: number;
+  SteeringWheelTorque_ST: number[];
+  SteeringWheelPctDamper: number;
+
+  TireRR_RumblePitch: number;
+  TireRF_RumblePitch: number;
+  TireLR_RumblePitch: number;
+  TireLF_RumblePitch: number;
+
+  LapBestLap: number;
+  LapBestLapTime: number;
+  LapBestNLapLap: number;
+  LapBestNLapTime: number;
+  LapDeltaToBestLap_DD: number;
+  LapDeltaToBestLap: number;
+  LapDeltaToOptimalLap_DD: number;
+  LapDeltaToOptimalLap_OK: boolean;
+  LapDeltaToOptimalLap: number;
+  LapDeltaToSessionBestLap_OK: boolean;
+  LapDeltaToSessionBestLap: number;
+  LapDeltaToSessionBestLap_DD: number;
+  LapDeltaToSessionLastlLap_OK: boolean;
+  LapDeltaToSessionLastlLap_DD: number;
+  LapDeltaToSessionLastlLap: number;
+  LapDeltaToSessionOptimalLap_DD: number;
+  LapDeltaToSessionOptimalLap_OK: boolean;
+  LapDeltaToSessionOptimalLap: number;
+  LapDist: number;
+  LapLasNLapSeq: number;
+  LapLastNLapTime: number;
+
+  PaceMode: PaceMode;
+
+  DriverMarker: boolean;
+  DCLapStatus: number;
+  DCDriversSoFar: number;
 }
 
 interface LiveSensorData {
+  EngineWarnings: number;
   // CF ride height (float, m)
   CFrideHeight: number;
   // CF shock deflection (float, m)
@@ -38,14 +160,206 @@ interface LiveSensorData {
   CRshockDefl: number;
   // CR shock velocity (float, m/s)
   CRshockVel: number;
+
+  ManifoldPress: number;
+
+  LRbrakeLinePress: number;
+  LFbrakeLinePress: number;
+  RRbrakeLinePress: number;
+  RFbrakeLinePress: number;
+
+  LFcoldPressure: number;
+  LRcoldPressure: number;
+  RFcoldPressure: number;
+  RRcoldPressure: number;
+
+  LapCurrentLapTime: number;
+  ChanPartnerQuality: number;
+  ChanQuality: number;
+
+  OilTemp: number;
+  OilPress: number;
+  Speed: number;
+  RPM: number;
+  Engine0_RPM: number;
+  ShiftGrindRPM: number;
+
+  Gear: number;
+  Clutch: number;
+  Brake: number;
+  BrakeRaw: number;
+  Throttle: number;
+  ThrottleRaw: number;
+  HandbrakeRaw: number;
+  Voltage: number;
+  ShiftIndicatorPct: number;
+
+  FuelLevel: number;
+  FuelLevelPct: number;
+  FuelPress: number;
+  FuelUsePerHour: number;
+  OilLevel: number;
+  WaterLevel: number;
+
+  Yaw: number;
+  YawNorth: number;
+  YawRate: number[];
+  YawRate_ST: number[];
+  Roll: number;
+  RollRate: number[];
+  RollRate_ST: number[];
+  Pitch: number;
+  PitchRate: number[];
+  PitchRate_ST: number[];
+
+  LatAccel: number[];
+  LatAccel_ST: number[];
+  LongAccel: number[];
+  LongAccel_ST: number[];
+  VertAccel: number[];
+  VertAccel_ST: number[];
+
+  VelocityX: number[];
+  VelocityX_ST: number[];
+  VelocityZ: number[];
+  VelocityZ_ST: number[];
+  VelocityY: number[];
+  VelocityY_ST: number[];
+
+  LFshockVel: number[];
+  LFshockVel_ST: number[];
+  LRshockVel: number[];
+  LRshockVel_ST: number[];
+  RFshockVel: number[];
+  RFshockVel_ST: number[];
+  RRshockVel: number[];
+  RRshockVel_ST: number[];
+
+  LFshockDefl: number[];
+  LFshockDefl_ST: number[];
+  LRshockDefl: number[];
+  LRshockDefl_ST: number[];
+  RFshockDefl: number[];
+  RFshockDefl_ST: number[];
+  RRshockDefl: number[];
+  RRshockDefl_ST: number[];
+
+  // Tire temp
+  // LR
+  LRtempCR: number;
+  LRtempCM: number;
+  LRtempCL: number;
+  // LF
+  LFtempCR: number;
+  LFtempCM: number;
+  LFtempCL: number;
+  // RF
+  RFtempCR: number;
+  RFtempCM: number;
+  RFtempCL: number;
+  // RR
+  RRtempCR: number;
+  RRtempCM: number;
+  RRtempCL: number;
+
+  // Tire wear
+  // LR
+  LRwearR: number;
+  LRwearM: number;
+  LRwearL: number;
+  // LF
+  LFwearR: number;
+  LFwearM: number;
+  LFwearL: number;
+  // RF
+  RFwearR: number;
+  RFwearM: number;
+  RFwearL: number;
+  // RR
+  RRwearR: number;
+  RRwearM: number;
+  RRwearL: number;
+
+  TireSetsUsed: number;
+  FrontTireSetsUsed: number;
+  RightTireSetsUsed: number;
+  LeftTireSetsUsed: number;
+  RearTireSetsUsed: number;
+
+  TireSetsAvailable: number;
+  LRTiresAvailable: number;
+  LFTiresAvailable: number;
+  RRTiresAvailable: number;
+  RFTiresAvailable: number;
+  LeftTireSetsAvailable: number;
+  RightTireSetsAvailable: number;
+  FrontTireSetsAvailable: number;
+  RearTireSetsAvailable: number;
+
+  LFTiresUsed: number;
+  LRTiresUsed: number;
+  RFTiresUsed: number;
+  RRTiresUsed: number;
+
+  FastRepairAvailable: number;
+
+  RadioTransmitRadioIdx: number;
+  RadioTransmitFrequencyIdx: number;
+  WaterTemp: number;
+
+  // Driver car values
+  dcABS: number;
+  dcFuelMixture: number;
+  dcHeadlightFlash: boolean;
+  dcStarter: boolean;
+  dcBrakeBias: number;
+  dcTractionControlToggle: boolean;
+  dcPitSpeedLimiterToggle: boolean;
+  dcTractionControl: number;
+
+  // Driver pit stop options
+  dpFuelFill: number;
+  dpFuelAddKg: number;
+  dpFastRepair: number;
+  dpWindshieldTearoff: number;
+  // Pit stop cold pressure
+  dpRFTireColdPress: number;
+  dpLFTireColdPress: number;
+  dpRRTireColdPress: number;
+  dpLRTireColdPress: number;
+  // Pit stop tire change
+  dpLRTireChange: number;
+  dpLFTireChange: number;
+  dpRRTireChange: number;
+  dpRFTireChange: number;
+
+  PushToPass: boolean;
+  BrakeABSactive: boolean;
 }
 
 interface LiveWeatherData {
+  AirDensity: number;
+  AirPressure: number;
+  AirTemp: number;
+  FogLevel: number;
+  RelativeHumidity: number;
+  Skies: number;
+  SolarAltitude: number;
+  SolarAzimuth: number;
+  TrackTemp: number;
+  TrackTempCrew: number;
+  WeatherType: number;
   WindDir: number;
   WindVel: number;
 }
 
 interface LiveCarData {
+  CarIdxQualTireCompoundLocked: boolean[];
+  CarIdxQualTireCompound: number[];
+  CarIdxP2P_Status: boolean[];
+  CarIdxBestLapNum: number[];
+  CarIdxClass: number[];
+  CarIdxTireCompound: number[];
   // Cars class position in race by car index (int)
   CarIdxClassPosition: number[];
   // Estimated time to reach current location on track (float, seconds)
@@ -61,7 +375,7 @@ interface LiveCarData {
   // Percentage distance around lap by car index (float, percentage)
   CarIdxLapDistPct: number[];
   // On pit road between the cones by car index (int, boolean)
-  CarIdxOnPitRoad: number[];
+  CarIdxOnPitRoad: boolean[];
   // Cars position in race by car index (int)
   CarIdxPosition: number[];
   // Engine rpm by car index (float, revs/min)
@@ -85,6 +399,7 @@ interface LiveCarData {
   CarIdxPaceRow: number[];
   // Session flags by car index
   CarIdxSessionFlags: Flags[];
+  CarIdxP2P_Count: number[];
   // Track surface type of current player (int, `TrackLocation`)
   PlayerTrackSurface: TrackLocation;
   // Track surface material of current palyer (int, `TrackSurface`)
@@ -93,6 +408,9 @@ interface LiveCarData {
   // Number of fast repairs used
   PlayerFastRepairsUsed: number;
   OnPitRoad: boolean;
+  IsOnTrack: boolean;
+  IsOnTrackCar: boolean;
+  LapDistPct: number;
 }
 
 interface LiveCameraData {
@@ -103,87 +421,113 @@ interface LiveCameraData {
 }
 
 export interface Driver {
-  CarIdx: number;
-  UserID: number;
-  UserName: string;
   AbbrevName: string;
-  TeamID: number;
-  TeamName: string;
-  CarNumber: string;
-  CarNumberRaw: number;
-  CurDriverIncidentCount: number;
+  CarClassColor: number;
+  CarClassDryTireSetLimit: string;
+  CarClassEstLapTime: number;
   CarClassID: number;
-  CarID: number;
-  CarIsPaceCar: number;
-  CarIsAI: number;
-  CarScreenName: string;
-  CarScreenNameShort: string;
-  CarClassShortName: string | null;
-  CarClassRelSpeed: number;
   CarClassLicenseLevel: number;
   CarClassMaxFuelPct: string;
-  CarClassWeightPenalty: string;
   CarClassPowerAdjust: string;
-  CarClassDryTireSetLimit: string;
-  CarClassColor: number;
-  CarClassEstLapTime: number;
-  IRating: number;
-  LicLevel: number;
-  LicSubLevel: number;
-  LicString: string;
-  LicColor: string;
-  IsSpectator: number;
+  CarClassRelSpeed: number;
+  CarClassShortName: string | null;
+  CarClassWeightPenalty: string;
   CarDesignStr: string;
-  HelmetDesignStr: string;
-  SuitDesignStr: string;
+  CarID: number;
+  CarIdx: number;
+  CarIsAI: number;
+  CarIsElectric: number;
+  CarIsPaceCar: number;
+  CarNumber: string;
   CarNumberDesignStr: string;
+  CarNumberRaw: number;
+  CarPath: string;
+  CarScreenName: string;
+  CarScreenNameShort: string;
+  CarSponsor_1: number;
+  CarSponsor_2: number;
+  ClubName: string;
+  ClubID: number;
+  CurDriverIncidentCount: number;
+  DivisionName: string;
+  DivisionID: number;
+  HelmetDesignStr: string;
+  Initials: string;
+  IRating: number;
+  IsSpectator: number;
+  LicColor: number;
+  LicLevel: number;
+  LicString: string;
+  LicSubLevel: number;
+  SuitDesignStr: string;
+  TeamID: number;
   TeamIncidentCount: number;
+  TeamName: string;
+  UserID: number;
+  UserName: string;
 }
 
 export interface DriverInfo {
+  DriverCarEngCylinderCount: number;
+  DriverCarEstLapTime: number;
+  DriverCarFuelKgPerLtr: number;
+  DriverCarFuelMaxLtr: number;
+  DriverCarGearNeutral: number;
+  DriverCarGearNumForward: number;
+  DriverCarGearReverse: number;
+  DriverCarIdleRPM: number;
   DriverCarIdx: number;
+  DriverCarIsElectric: number;
+  DriverCarMaxFuelPct: number;
+  DriverCarRedLine: number;
+  DriverCarSLBlinkRPM: number;
+  DriverCarSLFirstRPM: number;
+  DriverCarSLLastRPM: number;
+  DriverCarSLShiftRPM: number;
+  DriverCarVersion: string;
   DriverHeadPosX: number;
   DriverHeadPosY: number;
   DriverHeadPosZ: number;
-  DriverCarIdleRPM: number;
-  DriverCarRedLine: number;
-  DriverCarFuelKgPerLtr: number;
-  DriverCarFuelMaxLtr: number;
-  DriverCarMaxFuelPct: number;
-  DriverCarSLFirstRPM: number;
-  DriverCarSLShiftRPM: number;
-  DriverCarSLLastRPM: number;
-  DriverCarSLBlinkRPM: number;
+  DriverIncidentCount: number;
   DriverPitTrkPct: number;
-  DriverCarEstLapTime: number;
-  DriverSetupName: string;
+  Drivers: Driver[];
   DriverSetupIsModified: number;
   DriverSetupLoadTypeName: string;
+  DriverSetupName: string;
   DriverSetupPassedTech: number;
-  Drivers: Driver[];
+  DriverUserID: number;
+  PaceCarIdx: number;
 }
 
 export interface WeekendOptions {
-  NumStarters: number;
-  StartingGrid: string;
-  QualifyScoring: string;
+  CommercialMode: string;
   CourseCautions: string;
-  StandingStart: number;
+  Date: string;
+  EarthRotationSpeedupFactor: number;
+  FogLevel: string;
+  HardcoreLevel: number;
+  HasOpenRegistration: number;
+  IsFixedSetup: number;
+  NightMode: string;
+  NumStarters: number;
+  QualifyScoring: string;
+  RelativeHumidity: string;
   Restarts: string;
-  WeatherType: string;
+  ShortParadeLap: number;
   Skies: string;
+  StandingStart: number;
+  StartingGrid: string;
+  StrictLapsChecking: string;
+  TimeOfDay: string;
+  Unofficial: number;
+  WeatherTemp: string;
+  WeatherType: string;
   WindDirection: string;
   WindSpeed: string;
-  WeatherTemp: number;
-  RelativeHumidity: number;
-  FogLevel: number;
-  Unofficial: number;
-  CommercialMode: string;
-  NightMode: number;
-  IsFixedSetup: number;
-  StrictLapsChecking: string;
-  HasOpenRegistration: number;
-  HardcoreLevel: number;
+  NumJokerLaps: number;
+  IncidentLimit: string;
+  FastRepairsLimit: string;
+  GreenWhiteCheckeredLimit: number;
 }
 
 export interface WeekendInfo {
@@ -191,30 +535,37 @@ export interface WeekendInfo {
   TrackID: number;
   // meters
   TrackLength: string;
+  TrackLengthOfficial: string;
   TrackDisplayName: string;
+  TrackDirection: string;
+  TrackVersion: string;
   TrackDisplayShortName: string;
   TrackConfigName: string;
   TrackCity: string;
   TrackCountry: string;
-  TrackAltitude: number;
+  TrackAltitude: string;
+  HeatRacing: number;
+  BuildType: string;
+  BuildTarget: string;
+  BuildVersion: string;
   // 6 decimal places, meters
-  TrackLatitude: number;
+  TrackLatitude: string;
   // 6 decimal places, meters
-  TrackLongitude: number;
+  TrackLongitude: string;
   // 4 decimal places, radians
-  TrackNorthOffset: number;
+  TrackNorthOffset: string;
   TrackNumTurns: number;
-  TrackPitSpeedLimit: number;
+  TrackPitSpeedLimit: string;
   TrackType: string;
   TrackWeatherType: string;
   TrackSkies: string;
-  TrackSurfaceTemp: number;
-  TrackAirTemp: number;
-  TrackAirPressure: number;
-  TrackWindVel: number;
-  TrackWindDir: number;
-  TrackRelativeHumidity: number;
-  TrackFogLevel: number;
+  TrackSurfaceTemp: string;
+  TrackAirTemp: string;
+  TrackAirPressure: string;
+  TrackWindVel: string;
+  TrackWindDir: string;
+  TrackRelativeHumidity: string;
+  TrackFogLevel: string;
   TrackCleanup: number;
   TrackDynamicTrack: number;
   SeriesID: number;
@@ -235,6 +586,9 @@ export interface WeekendInfo {
   NumCarClasses: number;
   NumCarTypes: number;
   WeekendOptions: WeekendOptions;
+  TelemetryOptions?: {
+    TelemetryDiskFile?: string;
+  };
 }
 
 export interface QualifyResultsInfoResult {
@@ -257,6 +611,7 @@ export interface CameraGroup {
   Cameras: Camera[];
   GroupName: string;
   GroupNum: number;
+  IsScenic?: boolean;
 }
 
 export interface CameraInfo {
@@ -270,11 +625,11 @@ interface RadioFrequency {
   CarIdx: number;
   EntryIdx: number;
   ClubID: number;
-  CanScan: boolean;
-  CanSqawk: boolean;
-  Muted: boolean;
-  IsMutable: boolean;
-  IsDeletable: boolean;
+  CanScan: number;
+  CanSquawk: number;
+  Muted: number;
+  IsMutable: number;
+  IsDeletable: number;
 }
 
 interface Radio {
@@ -282,7 +637,7 @@ interface Radio {
   HopCount: number;
   NumFrequencies: number;
   TunedToFrequencyNum: number;
-  ScanningIsOn: boolean;
+  ScanningIsOn: number;
   Frequencies: RadioFrequency[];
 }
 
@@ -300,50 +655,53 @@ interface SplitTimeInfo {
   Sectors: Sector[];
 }
 
-interface SessionResultsPosition {
-  Position: number;
-  ClassPosition: number;
+export interface SessionResultsPosition {
   CarIdx: number;
-  Lap: number;
-  Time: number;
+  ClassPosition: number;
   FastestLap: number;
   FastestTime: number;
-  LapsLed: number;
-  LapsComplete: number;
-  JokerLapsComplete: number;
-  LapsDriven: number;
   Incidents: number;
+  JokerLapsComplete: number;
+  Lap: number;
+  LapsComplete: number;
+  LapsDriven: number;
+  LapsLed: number;
+  LastTime: number;
+  Position: number;
   ReasonOutId: number;
   ReasonOutStr: string;
+  Time: number;
 }
 
-interface SessionFastestLap {
+export interface SessionFastestLap {
   CarIdx: number;
   FastestLap: number;
   FastestTime: number;
 }
 
-interface Session {
-  SessionNum: number;
-  SessionLaps: number;
-  SessionTime: number;
-  SessionNumLapsToAvg: number;
-  SessionType: string;
-  SessionTrackRubberState: string;
-  SessionName: string;
-  SessionSkipped: boolean;
-  SessionRunGroupsUsed: boolean;
-  SessionEnforceTireCompoundChange: boolean;
-  ResultsPositions: SessionResultsPosition[];
-  ResultsFastestLap: SessionFastestLap[];
+export interface Session {
   ResultsAverageLapTime: number;
-  ResultsNumCautionFlags: number;
-  ResultsNumLeadChanges: number;
+  ResultsFastestLap: SessionFastestLap[];
   ResultsLapsComplete: number;
-  ResultsOfficial: boolean;
+  ResultsNumCautionFlags: number;
+  ResultsNumCautionLaps: number;
+  ResultsNumLeadChanges: number;
+  ResultsOfficial: number;
+  ResultsPositions: SessionResultsPosition[];
+  SessionEnforceTireCompoundChange: number;
+  SessionLaps: string;
+  SessionName: string;
+  SessionNum: number;
+  SessionNumLapsToAvg: number;
+  SessionRunGroupsUsed: number;
+  SessionSkipped: number;
+  SessionSubType: string;
+  SessionTime: string;
+  SessionTrackRubberState: string;
+  SessionType: string;
 }
 
-interface SessionInfo {
+export interface SessionInfo {
   NumSessions: number;
   Sessions: Session[];
 }
@@ -366,7 +724,10 @@ export interface iRacingData
     Partial<LiveCarData>,
     Partial<LiveCameraData>,
     Partial<LiveWeatherData>,
-    Partial<SessionStringData> {}
+    Partial<SessionStringData> {
+  // !!!: This is horrible please don't look at it
+  CarSetup: any;
+}
 
 export type iRacingDataKey = keyof iRacingData;
 

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useIRacingContext } from "../context";
 
 export interface CarClassDetail {
@@ -14,12 +14,11 @@ export interface CarClassDetail {
   weightPenalty: string;
 }
 
-export const useCarClasses: () => CarClassDetail[] = () => {
+export const useCarClasses: () => Record<number, CarClassDetail> = () => {
   const { data: { DriverInfo: { Drivers: results = [] } = {} } = {} } =
     useIRacingContext();
 
-  const classes = useMemo<CarClassDetail[]>(() => {
-    console.log("Drivers did change from the top:", results);
+  const classes = useMemo<Record<number, CarClassDetail>>(() => {
     const index = results
       .filter(({ CarIsPaceCar }) => !CarIsPaceCar)
       .reduce(
@@ -58,10 +57,25 @@ export const useCarClasses: () => CarClassDetail[] = () => {
         {},
       );
 
-    return Object.values(index);
+    return index;
   }, [results]);
 
   return classes;
+};
+
+export const useIsMulticlass: () => boolean = () => {
+  const [isMulticlass, setIsMulticlass] = useState(null);
+  const carClasses = useCarClasses();
+
+  useEffect(() => {
+    const classCount = Object.keys(carClasses).length;
+    const nextIsMulticlass = classCount > 1;
+    if (isMulticlass !== nextIsMulticlass) {
+      setIsMulticlass(nextIsMulticlass);
+    }
+  }, [carClasses, isMulticlass]);
+
+  return isMulticlass;
 };
 
 export default useCarClasses;

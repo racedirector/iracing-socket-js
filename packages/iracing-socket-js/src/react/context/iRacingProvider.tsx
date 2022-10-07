@@ -15,6 +15,7 @@ import {
 } from "../../core";
 import { iRacingContext, iRacingContextType } from "./iRacingContext";
 import { iRacingData } from "../../types";
+import mockInitialState from "../../constants/mock";
 
 enum iRacingActionType {
   SOCKET_CONNECT = "SOCKET_CONNECT",
@@ -67,15 +68,20 @@ const reducer: Reducer<iRacingState, iRacingAction> = (
 };
 
 export interface iRacingProviderProps extends iRacingSocketOptions {
+  useMock?: boolean;
   children?: React.ReactNode;
 }
 
 export const IRacingProvider: React.FC<iRacingProviderProps> = ({
   children,
+  useMock = false,
   ...socketProps
 }) => {
   const socketRef = useRef<iRacingSocket>(null);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(
+    reducer,
+    useMock ? mockInitialState : initialState,
+  );
 
   useEffect(() => {
     const socket = new iRacingSocket(socketProps);

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useDriversByCarIndex,
   useIRacingContext,
@@ -14,12 +14,10 @@ export const TrackMap: React.FC<TrackMapProps> = () => {
   const driverIndex = useDriversByCarIndex({
     includePaceCar: false,
   });
+
   const {
     data: {
-      WeekendInfo: {
-        TrackID: trackId = 127,
-        TrackLength: trackLength = "0.0 km",
-      } = {},
+      WeekendInfo: { TrackID: trackId = 127 } = {},
       SplitTimeInfo: { Sectors = [] } = {},
       CarIdxLapDistPct: lapPercentages = [],
       CarIdxOnPitRoad: pitRoadState = [],
@@ -46,15 +44,39 @@ export const TrackMap: React.FC<TrackMapProps> = () => {
     });
   }, [driverIndex]);
 
+  // const [fakeLaps, setFakeLaps] = useState([-1, 0]);
+
+  // console.log(driverIndex);
+  // useEffect(() => {
+  //   const timerRef = setTimeout(() => {
+  //     setFakeLaps([0, 0.2]);
+  //     setTimeout(() => {
+  //       setFakeLaps([0, 0.21]);
+  //       setTimeout(() => {
+  //         setFakeLaps([0, 0.22]);
+  //       }, 500);
+  //     }, 500);
+  //   }, 500);
+
+  //   return () => {
+  //     clearTimeout(timerRef);
+  //   };
+  // }, []);
+
   return (
     <TrackMapUI
       trackId={trackId}
-      trackLength={parseFloat(trackLength)}
-      driverIndicators={driverIndicators}
+      driverIndicators={[
+        {
+          carIndex: 1,
+          classColor: "green",
+          carNumber: "12",
+        },
+      ]}
       sectors={sectors}
-      lapPercentages={lapPercentages}
-      pitRoadState={pitRoadState}
-      onTrackState={trackSurfaces}
+      // lapPercentages={lapPercentages}
+      // pitRoadState={pitRoadState}
+      // onTrackState={trackSurfaces}
       startFinishLineColor="red"
       drawSectorLines
     />

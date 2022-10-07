@@ -2,9 +2,9 @@ import React, { useCallback } from "react";
 import {
   iRacingSocketCommands,
   useIRacingContext,
+  useDriverForCarIndex,
 } from "@racedirector/iracing-socket-js";
 import { Cameras as CamerasUI } from "src/components/Cameras";
-import { useDriverForCarIdx } from "src/hooks/useDriverForCarIdx";
 
 export interface CamerasProps {}
 
@@ -13,7 +13,7 @@ export const Cameras: React.FC<CamerasProps> = () => {
     sendCommand,
     data: { CameraInfo: cameraInfo = {}, CamCarIdx: focusIndex = -1 } = {},
   } = useIRacingContext();
-  const selectedDriver = useDriverForCarIdx(focusIndex);
+  const selectedDriver = useDriverForCarIndex(focusIndex);
 
   const onCameraSelectCallback = useCallback(
     (groupNumber, cameraNumber) => {

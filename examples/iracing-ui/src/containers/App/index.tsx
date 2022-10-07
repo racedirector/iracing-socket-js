@@ -14,25 +14,16 @@ export const App: React.FC<Record<string, never>> = () => {
         server={server}
         fps={1}
         requestParameters={[
-          "CamCameraNumber",
-          "CamCameraState",
-          "CamCarIdx",
           "CameraInfo",
-          "CamGroupNumber",
-          "CarIdxLapDistPct",
-          "CarIdxOnPitRoad",
-          "CarIdxTrackSurface",
+          "CarSetup",
           "DriverInfo",
-          "IsReplayPlaying",
           "QualifyResultsInfo",
-          "ReplayFrameNumEnd",
-          "SessionFlags",
+          "RadioInfo",
           "SessionInfo",
-          "SessionNum",
-          "WindDir",
-          "WindVel",
+          "SplitTimeInfo",
+          "WeekendInfo",
+          "__all_telemetry__",
         ]}
-        requestParametersOnce={["WeekendInfo", "SplitTimeInfo"]}
       >
         <AppUI />
       </IRacingProvider>
