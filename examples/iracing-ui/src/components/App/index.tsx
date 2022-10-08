@@ -7,6 +7,8 @@ import { SessionInformation } from "../../containers/SessionInformation";
 import { FuelCalculator } from "../../containers/FuelCalculator";
 import { FuelProvider } from "src/contexts/FuelProvider";
 import { Cameras } from "../../containers/Cameras";
+import { RepairsRemaining } from "../../containers/RepairsRemaining";
+import { StrengthOfFieldProvider } from "src/contexts/StrengthOfFieldProvider";
 
 const App: React.FC<Record<string, never>> = () => (
   <div style={{ flex: 1, backgroundColor: "gray" }}>
@@ -15,11 +17,14 @@ const App: React.FC<Record<string, never>> = () => (
     </header>
 
     {/* <TrackMap /> */}
-    <SessionInformation />
+    <StrengthOfFieldProvider>
+      <SessionInformation />
+    </StrengthOfFieldProvider>
     <Cameras />
     <FuelProvider>
       <FuelCalculator />
     </FuelProvider>
+    <RepairsRemaining />
     <Standings />
   </div>
 );

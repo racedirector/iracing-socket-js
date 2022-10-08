@@ -5,6 +5,7 @@ import {
   useSessionTotalTime,
 } from "@racedirector/iracing-socket-js";
 import { SessionInformation as SessionInformationUI } from "../../components/SessionInformation";
+import { useStrengthOfFieldContext } from "src/contexts/StrengthOfFieldProvider/context";
 
 export interface SessionInformationProps {}
 
@@ -15,6 +16,7 @@ export const SessionInformation: React.FC<SessionInformationProps> = () => {
       WindVel: liveWindVelocity = 0,
     } = {},
   } = useIRacingContext();
+  const { strengthOfField } = useStrengthOfFieldContext();
   const { SessionName = "Unknown" } = useCurrentSession() || {};
   const totalTime = useSessionTotalTime();
   return (
@@ -23,6 +25,7 @@ export const SessionInformation: React.FC<SessionInformationProps> = () => {
       timeRemaining={totalTime}
       direction={liveWindDirection}
       velocity={liveWindVelocity}
+      strengthOfField={strengthOfField}
     />
   );
 };
