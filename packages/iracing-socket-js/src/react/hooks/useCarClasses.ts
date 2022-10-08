@@ -1,5 +1,7 @@
+import { chain } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useIRacingContext } from "../context";
+import useDriversByCarIndex from "./useDriversByCarIndex";
 
 export interface CarClassDetail {
   id: string;
@@ -15,67 +17,91 @@ export interface CarClassDetail {
 }
 
 export const useCarClasses: () => Record<number, CarClassDetail> = () => {
-  const { data: { DriverInfo: { Drivers: results = [] } = {} } = {} } =
-    useIRacingContext();
+  const driverIndex = useDriversByCarIndex({
+    includePaceCar: false,
+    includeSpectators: false,
+  });
 
   const classes = useMemo<Record<number, CarClassDetail>>(() => {
-    const index = results
-      .filter(({ CarIsPaceCar }) => !CarIsPaceCar)
-      .reduce(
-        (
-          index,
-          {
-            CarClassID,
-            CarClassColor,
-            CarClassDryTireSetLimit,
-            CarClassEstLapTime,
-            CarClassLicenseLevel,
-            CarClassMaxFuelPct,
-            CarClassPowerAdjust,
-            CarClassRelSpeed,
-            CarClassShortName,
-            CarClassWeightPenalty,
-          },
-        ) => {
-          if (!index[CarClassID]) {
-            index[CarClassID] = {
-              id: CarClassID.toString(),
-              color: CarClassColor,
-              dryTireSetLimit: CarClassDryTireSetLimit,
-              estimatedLapTime: CarClassEstLapTime,
-              licenseLevel: CarClassLicenseLevel,
-              maxFuelPercentage: parseInt(CarClassMaxFuelPct),
-              powerAdjustment: CarClassPowerAdjust,
-              relativeSpeed: CarClassRelSpeed,
-              shortName: CarClassShortName,
-              weightPenalty: CarClassWeightPenalty,
-            };
-          }
-
-          return index;
+    const index = Object.values(driverIndex).reduce(
+      (
+        index,
+        {
+          CarClassID,
+          CarClassColor,
+          CarClassDryTireSetLimit,
+          CarClassEstLapTime,
+          CarClassLicenseLevel,
+          CarClassMaxFuelPct,
+          CarClassPowerAdjust,
+          CarClassRelSpeed,
+          CarClassShortName,
+          CarClassWeightPenalty,
         },
-        {},
-      );
+      ) => {
+        if (!index[CarClassID]) {
+          index[CarClassID] = {
+            id: CarClassID.toString(),
+            color: CarClassColor,
+            dryTireSetLimit: CarClassDryTireSetLimit,
+            estimatedLapTime: CarClassEstLapTime,
+            licenseLevel: CarClassLicenseLevel,
+            maxFuelPercentage: parseInt(CarClassMaxFuelPct),
+            powerAdjustment: CarClassPowerAdjust,
+            relativeSpeed: CarClassRelSpeed,
+            shortName: CarClassShortName,
+            weightPenalty: CarClassWeightPenalty,
+          };
+        }
+
+        return index;
+      },
+      {},
+    );
 
     return index;
-  }, [results]);
+  }, [driverIndex]);
 
   return classes;
 };
 
+export const useBoPAdjustments = () => {
+  const driversIndex = useDriversByCarIndex({
+    includePaceCar: false,
+    includeSpectators: false,
+  });
+
+  const adjustments = useMemo(() => {
+    return chain(Object.values(driversIndex))
+      .keyBy("CarID")
+      .map(
+        ({
+          CarID,
+          CarClassID,
+          CarScreenName,
+          CarScreenNameShort,
+          CarClassMaxFuelPct,
+          CarClassPowerAdjust,
+        }) => ({
+          carId: CarID,
+          classId: CarClassID,
+          screenName: CarScreenName,
+          screenNameShort: CarScreenNameShort,
+          maxFuelPercentage: parseInt(CarClassMaxFuelPct),
+          powerAdjustment: CarClassPowerAdjust,
+        }),
+      )
+      .valueOf();
+  }, [driversIndex]);
+
+  return adjustments;
+};
+
 export const useIsMulticlass: () => boolean = () => {
-  const [isMulticlass, setIsMulticlass] = useState(null);
-  const carClasses = useCarClasses();
+  const { data: { WeekendInfo: { NumCarClasses = 0 } = {} } = {} } =
+    useIRacingContext();
 
-  useEffect(() => {
-    const classCount = Object.keys(carClasses).length;
-    const nextIsMulticlass = classCount > 1;
-    if (isMulticlass !== nextIsMulticlass) {
-      setIsMulticlass(nextIsMulticlass);
-    }
-  }, [carClasses, isMulticlass]);
-
-  return isMulticlass;
+  return useMemo(() => NumCarClasses > 1, [NumCarClasses]);
 };
 
 export default useCarClasses;

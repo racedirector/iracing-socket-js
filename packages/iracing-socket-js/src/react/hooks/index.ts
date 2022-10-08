@@ -5,3 +5,4 @@ export * from "./useIRacingSocketConnectionState";
 export * from "./useSession";
 export * from "./useSessionTotalTime";
 export * from "./useStandingsForSession";
+export * from "./useWindDirection";
