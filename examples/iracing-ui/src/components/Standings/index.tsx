@@ -11,12 +11,14 @@ export interface StandingsProps
   extends Pick<SessionStandingsProps, "standings" | "isMulticlass"> {
   sessions: Sessions[];
   onSetSessionNumber: (sessionNumber: number) => void;
+  onPress: (carNumber: number) => void;
 }
 
 export const Standings: React.FC<StandingsProps> = ({
   sessions,
   standings,
   isMulticlass,
+  onPress = () => {},
   onSetSessionNumber,
 }) => {
   return (
@@ -28,7 +30,11 @@ export const Standings: React.FC<StandingsProps> = ({
           ))}
         </TabList>
       </Tabs>
-      <SessionStandings standings={standings} isMulticlass={isMulticlass} />
+      <SessionStandings
+        standings={standings}
+        isMulticlass={isMulticlass}
+        onPress={onPress}
+      />
     </>
   );
 };

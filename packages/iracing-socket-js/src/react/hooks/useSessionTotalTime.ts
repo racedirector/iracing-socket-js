@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { SessionState } from "../../types";
 import { formatTime, formatTimeForSession } from "../../utilities";
 import { useIRacingContext } from "../context";
+import { useCurrentSession } from "./useSession";
 
 export const useSessionTotalTime = () => {
   const [resultsLapsComplete, setResultsLapsComplete] = useState(-1);
@@ -11,25 +12,25 @@ export const useSessionTotalTime = () => {
   const {
     data: {
       SessionInfo: sessionInfo,
-      SessionNum: sessionNumber = -1,
+      SessionNum: sessionNumber,
       SessionTime: sessionTime,
       SessionTimeRemain: sessionTimeRemaining,
       SessionState: sessionState,
-    },
+    } = {},
   } = useIRacingContext();
+  const activeSession = useCurrentSession();
 
   const updateSessionTotalTimeCallback = useCallback(() => {
-    if (!sessionInfo || !(sessionNumber >= 0)) {
+    if (!sessionInfo || !activeSession) {
       return;
     }
 
-    const activeSession = sessionInfo.Sessions[sessionNumber];
-    const time = activeSession.SessionTime;
+    const time = parseInt(activeSession.SessionTime) || null;
 
     if (activeSession.SessionType !== "Race") {
       setSessionTotalTime(time > 0 ? formatTimeForSession(time) : null);
     } else {
-      const raceLaps = activeSession.SessionLaps || null;
+      const raceLaps = parseInt(activeSession.SessionLaps) || null;
       if (raceLaps > 0) {
         let lapTime = null;
         if (activeSession.ResultsLapsComplete < 2) {
@@ -50,8 +51,7 @@ export const useSessionTotalTime = () => {
         ) {
           setResultsLapsComplete(activeSession.ResultsLapsComplete);
           const lapsRemaining =
-            activeSession.SessionLaps -
-            Math.max(0, activeSession.ResultsLapsComplete);
+            raceLaps - Math.max(0, activeSession.ResultsLapsComplete);
           let calculatedTime = sessionTime + lapsRemaining * lapTime;
 
           // Add grid time
@@ -77,9 +77,9 @@ export const useSessionTotalTime = () => {
       }
     }
   }, [
+    activeSession,
     resultsLapsComplete,
     sessionInfo,
-    sessionNumber,
     sessionState,
     sessionTime,
   ]);
@@ -98,10 +98,10 @@ export const useSessionTotalTime = () => {
       sessionTimeRemaining < 604800
     ) {
       setSessionTimeString(
-        `${(formatTime(sessionTimeRemaining), 0, true)}${suffix}`,
+        `${formatTime(sessionTimeRemaining, 0, true)}${suffix}`,
       );
     } else if (sessionTime > 0) {
-      setSessionTimeString(`${(formatTime(sessionTime), 0, true)}${suffix}`);
+      setSessionTimeString(`${formatTime(sessionTime, 0, true)}${suffix}`);
     } else {
       setSessionTimeString(null);
     }

@@ -12,9 +12,9 @@ export const LiveWindDirection: React.FC<LiveWindDirectionProps> = ({
 }) => (
   <div style={styles.container}>
     <h3>Live Wind</h3>
-    <div style={styles.windDirection}>
+    {/* <div style={styles.windDirection}>
       <div style={styles.needle} />
-    </div>
+    </div> */}
     <p>{`Direction: ${direction}`}</p>
     <p>{`Velocity: ${velocity} km/h`}</p>
   </div>

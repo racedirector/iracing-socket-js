@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useIRacingContext } from "../context";
 import { SessionResultsPosition } from "../../types";
+import useSession from "./useSession";
 
 export interface UseStandingsForCurrentSessionProps {}
 
@@ -31,17 +32,14 @@ export const useStandingsForSession: UseStandingsForSessionHook = ({
   sessionNumber,
 }) => {
   const [standings, setStandings] = useState([]);
-  const { data: { SessionInfo: { Sessions: sessions = [] } = {} } = {} } =
-    useIRacingContext();
+  const session = useSession(sessionNumber);
 
   useEffect(() => {
-    if (sessionNumber >= 0) {
-      const { ResultsPositions: currentSessionResults = [] } =
-        sessions?.[sessionNumber] || {};
-
+    if (session) {
+      const { ResultsPositions: currentSessionResults = [] } = session;
       setStandings(currentSessionResults);
     }
-  }, [sessions, sessionNumber]);
+  }, [session]);
 
   return standings;
 };

@@ -10,8 +10,8 @@ export const WeatherConditions: React.FC<WeatherConditionsProps> = () => {
       WindDir,
       WindVel,
       WeekendInfo: {
-        TrackAirTemp = -1,
-        TrackSurfaceTemp = -1,
+        TrackAirTemp = null,
+        TrackSurfaceTemp = null,
         TrackWindDir,
         TrackWindVel,
         WeekendOptions: { WindDirection, WindSpeed } = {},

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import {
   useDriversByCarIndex,
   useIRacingContext,
@@ -6,6 +6,7 @@ import {
   useIsMulticlass,
   SessionResultsPosition,
   SessionState,
+  iRacingSocketCommands,
 } from "@racedirector/iracing-socket-js";
 import { useSessionStandings } from "../../hooks/useStandings";
 import {
@@ -57,13 +58,15 @@ export interface StandingsProps {}
 export const Standings: React.FC<StandingsProps> = () => {
   const [sessionNumber, setSessionNumber] = useState(0);
   const {
+    sendCommand,
     data: {
-      SessionState: sessionState,
+      CamCameraNumber: cameraNumber = -1,
+      CamGroupNumber: cameraGroupNumber = -1,
       SessionInfo: { Sessions = [] } = {},
     } = {},
   } = useIRacingContext();
-  const standingsResult = useSessionStandings({ sessionNumber });
   const driverIndex = useDriversByCarIndex();
+  const standingsResult = useSessionStandings({ sessionNumber });
   const isMulticlass = useIsMulticlass();
 
   const sessions = useMemo(
@@ -75,60 +78,31 @@ export const Standings: React.FC<StandingsProps> = () => {
     [Sessions],
   );
 
-  // const standings = useMemo<StandingsUIProps["standings"]>(() => {
-  //   const sessionLeader = standingsResult?.[0];
-  //   const currentSession = Sessions?.[sessionNumber];
-  //   if (!sessionLeader || !currentSession) {
-  //     return [];
-  //   }
+  const standings: StandingsUIProps["standings"] = useMemo(() => {
+    return standingsResult.map((standingsEntry) => {
+      const driver = driverIndex[standingsEntry.carIndex];
+      return { ...standingsEntry, classColor: driver.CarClassColor };
+    });
+  }, [driverIndex, standingsResult]);
 
-  //   const isRace = currentSession?.SessionName === "RACE";
-
-  //   return standingsResult.map(
-  //     ({
-  //       ClassPosition,
-  //       Position,
-  //       CarIdx,
-  //       FastestTime,
-  //       Time,
-  //       LapsComplete,
-  //     }) => {
-  //       const driver = driverIndex[CarIdx];
-
-  //       let gap = -1;
-  //       if (isRace) {
-  //         gap = Time - sessionLeader.Time;
-  //       } else if (FastestTime > 0) {
-  //         gap = FastestTime - sessionLeader.FastestTime;
-  //       }
-
-  //       const lapDifference = sessionLeader.LapsComplete - LapsComplete;
-
-  //       return {
-  //         gain: 0,
-  //         carNumber: driver.CarNumberRaw,
-  //         classPosition: ClassPosition + 1,
-  //         position: Position,
-  //         interval: "0",
-  //         gap: stringForGap(
-  //           sessionLeader,
-  //           gap,
-  //           lapDifference,
-  //           isRace,
-  //           sessionState,
-  //         ),
-  //         name: driver.UserName,
-  //       };
-  //     },
-  //   );
-  // }, [Sessions, driverIndex, sessionNumber, sessionState, standingsResult]);
+  const onPressCallback = useCallback(
+    (carNumber) => {
+      sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
+        carNumber.toString(),
+        cameraGroupNumber,
+        cameraNumber,
+      ]);
+    },
+    [cameraGroupNumber, cameraNumber, sendCommand],
+  );
 
   return (
     <StandingsUI
       isMulticlass={isMulticlass}
       sessions={sessions}
+      standings={standings}
       onSetSessionNumber={setSessionNumber}
-      standings={standingsResult}
+      onPress={onPressCallback}
     />
   );
 };

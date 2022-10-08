@@ -19,22 +19,32 @@ interface StandingsRowProps {
   interval: string;
 
   isMulticlass: boolean;
+
+  classColor: number;
+
+  onPress: React.MouseEventHandler<HTMLTableRowElement>;
 }
 
 const StandingsRow: React.FC<StandingsRowProps> = ({
   position,
   // gain,
   classPosition,
+  classColor = 0xffda59,
   carNumber,
   name,
   gap,
   interval,
   isMulticlass,
+  onPress = () => {},
 }) => (
-  <Tr>
+  <Tr onClick={onPress}>
     <Td>{position}</Td>
     {/* <Td>{gain}</Td> */}
-    {isMulticlass && <Td>{classPosition}</Td>}
+    {isMulticlass && (
+      <Td style={{ backgroundColor: `#${classColor.toString(16)}` }}>
+        {classPosition + 1}
+      </Td>
+    )}
     <Td>{`#${carNumber}`}</Td>
     <Td>{name}</Td>
     <Td>{gap}</Td>
@@ -44,11 +54,13 @@ const StandingsRow: React.FC<StandingsRowProps> = ({
 
 export interface SessionStandingsProps {
   isMulticlass: boolean;
-  standings: Omit<StandingsRowProps, "isMulticlass">[];
+  onPress: (carNumber: number) => void;
+  standings: Omit<StandingsRowProps, "isMulticlass" | "onPress">[];
 }
 
 export const SessionStandings: React.FC<SessionStandingsProps> = ({
   isMulticlass,
+  onPress,
   standings,
 }) => (
   <TableContainer>
@@ -56,7 +68,7 @@ export const SessionStandings: React.FC<SessionStandingsProps> = ({
       <Thead>
         <Tr>
           <Th>Position</Th>
-          <Th>Gain</Th>
+          {/* <Th>Gain</Th> */}
           {isMulticlass && <Th>Class Position</Th>}
           <Th>Car Number</Th>
           <Th>Name</Th>
@@ -70,6 +82,9 @@ export const SessionStandings: React.FC<SessionStandingsProps> = ({
             key={`${props.carNumber}-${index}`}
             {...props}
             isMulticlass={isMulticlass}
+            onPress={(event) => {
+              onPress(props.carNumber);
+            }}
           />
         ))}
       </Tbody>

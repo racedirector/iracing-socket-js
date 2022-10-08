@@ -21,7 +21,7 @@ export const formatTime = (
   const minutes = ((normalizedTime / 60) | 0) % 60;
   const seconds = normalizedTime % 60;
 
-  let res = "";
+  let response = "";
   const minutesString = minutes < 10 ? `0${minutes}` : minutes.toString();
   const secondsString =
     seconds < 10
@@ -29,20 +29,20 @@ export const formatTime = (
       : seconds.toFixed(precision);
 
   if (hours) {
-    res += `${hours}:`;
+    response += `${hours}:`;
   }
 
   if (minutes || showMinutes) {
-    res += `${minutesString}:${secondsString}`;
+    response += `${minutesString}:${secondsString}`;
   } else {
-    res += seconds.toFixed(precision);
+    response += seconds.toFixed(precision);
   }
 
   if (!sign) {
-    res = `-${res}`;
+    response = `-${response}`;
   }
 
-  return res;
+  return response;
 };
 
 export const formatTimeForSession = (time: number) => {

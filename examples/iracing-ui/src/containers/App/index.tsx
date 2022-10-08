@@ -12,7 +12,7 @@ export const App: React.FC<Record<string, never>> = () => {
     <ChakraProvider>
       <IRacingProvider
         server={server}
-        fps={1}
+        fps={10}
         requestParameters={[
           "CameraInfo",
           "CarSetup",

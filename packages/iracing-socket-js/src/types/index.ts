@@ -724,10 +724,7 @@ export interface iRacingData
     Partial<LiveCarData>,
     Partial<LiveCameraData>,
     Partial<LiveWeatherData>,
-    Partial<SessionStringData> {
-  // !!!: This is horrible please don't look at it
-  CarSetup: any;
-}
+    Partial<SessionStringData> {}
 
 export type iRacingDataKey = keyof iRacingData;
 

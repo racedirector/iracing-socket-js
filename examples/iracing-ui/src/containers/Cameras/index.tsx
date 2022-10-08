@@ -11,12 +11,18 @@ export interface CamerasProps {}
 export const Cameras: React.FC<CamerasProps> = () => {
   const {
     sendCommand,
-    data: { CameraInfo: cameraInfo = {}, CamCarIdx: focusIndex = -1 } = {},
+    data: {
+      CameraInfo: { Groups: groups = [] } = {},
+      CamCarIdx: focusIndex = -1,
+      CamCameraNumber: cameraNumber,
+      CamGroupNumber: groupNumber,
+    } = {},
   } = useIRacingContext();
+
   const selectedDriver = useDriverForCarIndex(focusIndex);
 
   const onCameraSelectCallback = useCallback(
-    (groupNumber, cameraNumber) => {
+    (groupNumber) => {
       if (selectedDriver) {
         sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
           selectedDriver.CarNumber,
@@ -25,10 +31,16 @@ export const Cameras: React.FC<CamerasProps> = () => {
         ]);
       }
     },
-    [selectedDriver, sendCommand],
+    [cameraNumber, selectedDriver, sendCommand],
   );
 
-  return <CamerasUI {...cameraInfo} onCameraSelect={onCameraSelectCallback} />;
+  return (
+    <CamerasUI
+      groups={groups}
+      selectedGroupNumber={groupNumber}
+      onCameraSelect={(groupNumber) => onCameraSelectCallback(groupNumber)}
+    />
+  );
 };
 
 export default Cameras;

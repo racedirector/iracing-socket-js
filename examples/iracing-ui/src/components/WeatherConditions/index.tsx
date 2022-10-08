@@ -2,14 +2,14 @@ import React from "react";
 import LiveWindDirection from "../LiveWindDirection";
 
 export interface WeatherConditionsProps {
-  trackTemperature: number;
-  ambientTemperature: number;
-  liveTrackTemperature?: number;
-  liveAmbientTemperature?: number;
+  trackTemperature: string;
+  ambientTemperature: string;
+  liveTrackTemperature?: string;
+  liveAmbientTemperature?: string;
   windDirection: string;
   windSpeed: string;
-  trackWindDirection?: number;
-  trackWindVelocity?: number;
+  trackWindDirection?: string;
+  trackWindVelocity?: string;
   liveWindDirection?: number;
   liveWindVelocity?: number;
 }
