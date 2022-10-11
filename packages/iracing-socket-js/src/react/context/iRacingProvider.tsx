@@ -14,10 +14,10 @@ import {
   iRacingSocketOptions,
 } from "../../core";
 import { iRacingContext, iRacingContextType } from "./iRacingContext";
-import { iRacingData } from "../../types";
 import mockInitialState from "../../constants/mock";
 
 enum iRacingActionType {
+  SOCKET_CONNECTING = "SOCKET_CONNECTING",
   SOCKET_CONNECT = "SOCKET_CONNECT",
   SOCKET_DISCONNECT = "SOCKET_DISCONNECT",
   IRACING_CONNECT = "IRACING_CONNECT",
@@ -27,16 +27,13 @@ enum iRacingActionType {
 
 interface iRacingAction {
   type: iRacingActionType;
-  payload?: iRacingData;
+  payload?: any;
 }
 
-interface iRacingState {
-  isSocketConnected: boolean;
-  isIRacingConnected: boolean;
-  data?: iRacingData;
-}
+interface iRacingState extends Omit<iRacingContextType, "sendCommand"> {}
 
 const initialState: iRacingState = {
+  connecting: false,
   isSocketConnected: false,
   isIRacingConnected: false,
 };
@@ -46,6 +43,8 @@ const reducer: Reducer<iRacingState, iRacingAction> = (
   { type, payload },
 ) => {
   switch (type) {
+    case iRacingActionType.SOCKET_CONNECTING:
+      return { ...state, connecting: payload };
     case iRacingActionType.SOCKET_CONNECT:
       return { ...state, isSocketConnected: true };
     case iRacingActionType.SOCKET_DISCONNECT:
@@ -88,6 +87,12 @@ export const IRacingProvider: React.FC<iRacingProviderProps> = ({
     socketRef.current = socket;
 
     socket.socketConnectionEmitter
+      .on(iRacingSocketConnectionEvents.Connecting, (connecting) => {
+        dispatch({
+          type: iRacingActionType.SOCKET_CONNECTING,
+          payload: connecting,
+        });
+      })
       .on(iRacingSocketConnectionEvents.Connect, () =>
         dispatch({ type: iRacingActionType.SOCKET_CONNECT }),
       )

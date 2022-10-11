@@ -3,6 +3,7 @@ import { iRacingSocket } from "../../core";
 import { iRacingData } from "../../types";
 
 export interface iRacingContextType {
+  connecting: boolean;
   isSocketConnected: boolean;
   isIRacingConnected: boolean;
   data?: iRacingData;
@@ -10,6 +11,7 @@ export interface iRacingContextType {
 }
 
 const DEFAULT_CONTEXT: iRacingContextType = {
+  connecting: false,
   isSocketConnected: false,
   isIRacingConnected: false,
   data: undefined,
