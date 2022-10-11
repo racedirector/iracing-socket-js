@@ -15,6 +15,7 @@ import {
 } from "../../core";
 import { iRacingContext, iRacingContextType } from "./iRacingContext";
 import mockInitialState from "../../constants/mock";
+import { iRacingData } from "../../types";
 
 enum iRacingActionType {
   SOCKET_CONNECTING = "SOCKET_CONNECTING",
@@ -25,10 +26,42 @@ enum iRacingActionType {
   UPDATE = "UPDATE",
 }
 
-interface iRacingAction {
+interface iRacingActionBase<T> {
   type: iRacingActionType;
-  payload?: any;
+  payload?: T;
 }
+
+interface SocketConnectingAction extends iRacingActionBase<boolean> {
+  type: iRacingActionType.SOCKET_CONNECTING;
+}
+
+interface SocketConnectAction extends iRacingActionBase<undefined> {
+  type: iRacingActionType.SOCKET_CONNECT;
+}
+
+interface SocketDisconnectAction extends iRacingActionBase<undefined> {
+  type: iRacingActionType.SOCKET_DISCONNECT;
+}
+
+interface IRacingConnectAction extends iRacingActionBase<undefined> {
+  type: iRacingActionType.IRACING_CONNECT;
+}
+
+interface IRacingDisconnectAction extends iRacingActionBase<undefined> {
+  type: iRacingActionType.IRACING_DISCONNECT;
+}
+
+interface UpdateAction extends iRacingActionBase<iRacingData> {
+  type: iRacingActionType.UPDATE;
+}
+
+type iRacingAction =
+  | SocketConnectingAction
+  | SocketConnectAction
+  | SocketDisconnectAction
+  | IRacingConnectAction
+  | IRacingDisconnectAction
+  | UpdateAction;
 
 interface iRacingState extends Omit<iRacingContextType, "sendCommand"> {}
 
