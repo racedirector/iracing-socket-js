@@ -1,13 +1,25 @@
 import { useIRacingContext } from "../context";
 
-export interface UseIRacingSocketConnectionStateOptions {}
+export interface UseIRacingSocketConnectionStateHookOptions {}
 
-export const useIRacingSocketConnectionState: (
-  options?: UseIRacingSocketConnectionStateOptions,
-) => { isSocketConnected: boolean; isIRacingConnected: boolean } = () => {
-  const { isSocketConnected, isIRacingConnected } = useIRacingContext();
-  return {
-    isSocketConnected,
-    isIRacingConnected,
+export interface UseIRacingSocketConnectionStateHookResult {
+  isSocketConnected: boolean;
+  isIRacingConnected: boolean;
+  connecting: boolean;
+}
+
+export type UseIRacingSocketConnectionHook = (
+  options?: UseIRacingSocketConnectionStateHookOptions,
+) => UseIRacingSocketConnectionStateHookResult;
+
+export const useIRacingSocketConnectionState: UseIRacingSocketConnectionHook =
+  () => {
+    const { isSocketConnected, isIRacingConnected, connecting } =
+      useIRacingContext();
+
+    return {
+      connecting,
+      isSocketConnected,
+      isIRacingConnected,
+    };
   };
-};

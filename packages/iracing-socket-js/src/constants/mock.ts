@@ -4,6 +4,7 @@ import { iRacingContextType } from "@racedirector/iracing-socket-js";
 export const mockState: Omit<iRacingContextType, "sendCommand"> = {
   isSocketConnected: true,
   isIRacingConnected: true,
+  connecting: false,
   data: {
     LFcoldPressure: 165.38784790039062,
     LapCurrentLapTime: 0,
