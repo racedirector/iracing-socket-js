@@ -9,6 +9,7 @@ interface Sessions {
 
 export interface StandingsProps
   extends Pick<SessionStandingsProps, "standings" | "isMulticlass"> {
+  sessionNumber: number;
   sessions: Sessions[];
   onSetSessionNumber: (sessionNumber: number) => void;
   onPress: (carNumber: number) => void;
@@ -16,6 +17,7 @@ export interface StandingsProps
 
 export const Standings: React.FC<StandingsProps> = ({
   sessions,
+  sessionNumber,
   standings,
   isMulticlass,
   onPress = () => {},
@@ -23,7 +25,10 @@ export const Standings: React.FC<StandingsProps> = ({
 }) => {
   return (
     <>
-      <Tabs onChange={(index) => onSetSessionNumber(index)}>
+      <Tabs
+        index={sessionNumber}
+        onChange={(index) => onSetSessionNumber(index)}
+      >
         <TabList>
           {sessions.map(({ name, number }) => (
             <Tab key={`${name}-${number.toString()}`}>{name}</Tab>

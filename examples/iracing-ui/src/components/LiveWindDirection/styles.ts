@@ -4,7 +4,6 @@ export const styles: Record<string, React.CSSProperties> = {
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "green",
     alignItems: "center",
     justifyContent: "center",
   },

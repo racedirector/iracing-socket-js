@@ -1,6 +1,7 @@
 import { useContext, createContext } from "react";
 
 export interface StrengthOfFieldContextType {
+  totalStrengthOfField: number;
   strengthOfField: {
     [key: string]: number;
   };

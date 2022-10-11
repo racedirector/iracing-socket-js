@@ -33,6 +33,8 @@ export const StrengthOfFieldProvider: React.FC<
       .valueOf();
   }, [driverIndex]);
 
+  const totalStrengthOfField = useMemo(() => {}, [driverIndex]);
+
   return (
     <StrengthOfFieldContext.Provider
       value={{

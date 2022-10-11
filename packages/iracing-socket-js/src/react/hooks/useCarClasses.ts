@@ -1,5 +1,5 @@
 import { chain } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useIRacingContext } from "../context";
 import useDriversByCarIndex from "./useDriversByCarIndex";
 

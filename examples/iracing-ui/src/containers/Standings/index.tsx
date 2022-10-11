@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import {
   useDriversByCarIndex,
   useIRacingContext,
@@ -98,6 +98,7 @@ export const Standings: React.FC<StandingsProps> = () => {
 
   return (
     <StandingsUI
+      sessionNumber={sessionNumber}
       isMulticlass={isMulticlass}
       sessions={sessions}
       standings={standings}
