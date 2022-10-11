@@ -1,14 +1,13 @@
 import React from "react";
 import "./index.css";
-import { TrackMap } from "../../containers/TrackMap";
 import { ConnectionStatus } from "../../containers/ConnectionStatus";
 import { Standings } from "../../containers/Standings";
 import { SessionInformation } from "../../containers/SessionInformation";
 import { FuelCalculator } from "../../containers/FuelCalculator";
-import { FuelProvider } from "src/contexts/FuelProvider";
+import { FuelProvider } from "src/contexts/Fuel";
 import { Cameras } from "../../containers/Cameras";
 import { RepairsRemaining } from "../../containers/RepairsRemaining";
-import { StrengthOfFieldProvider } from "src/contexts/StrengthOfFieldProvider";
+import { StrengthOfFieldProvider } from "src/contexts/StrengthOfField";
 
 const App: React.FC<Record<string, never>> = () => (
   <div style={{ flex: 1, backgroundColor: "gray" }}>
@@ -16,15 +15,18 @@ const App: React.FC<Record<string, never>> = () => (
       <ConnectionStatus />
     </header>
 
-    {/* <TrackMap /> */}
     <StrengthOfFieldProvider>
       <SessionInformation />
     </StrengthOfFieldProvider>
+
     <Cameras />
+
     <FuelProvider>
       <FuelCalculator />
     </FuelProvider>
+
     <RepairsRemaining />
+
     <Standings />
   </div>
 );

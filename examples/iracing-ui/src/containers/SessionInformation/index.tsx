@@ -5,7 +5,7 @@ import {
   useSessionTotalTime,
 } from "@racedirector/iracing-socket-js";
 import { SessionInformation as SessionInformationUI } from "../../components/SessionInformation";
-import { useStrengthOfFieldContext } from "src/contexts/StrengthOfFieldProvider/context";
+import { useStrengthOfFieldContext } from "src/contexts/StrengthOfField/context";
 
 export interface SessionInformationProps {}
 

@@ -15,29 +15,40 @@ export const StrengthOfFieldProvider: React.FC<
     includePaceCar: false,
   });
 
-  const strengthOfField = useMemo(() => {
+  const strengthOfField: Record<string, number> = useMemo(() => {
     return chain(Object.values(driverIndex))
       .groupBy("CarClassShortName")
       .mapValues((drivers) => {
-        const totalStrengthOfField = drivers.reduce(
+        const total = drivers.reduce(
           (totalIRating, { IRating }) =>
             totalIRating + Math.pow(2, -IRating / MAGIC_NUMBER),
           0,
         );
 
-        const strengthOfField =
-          (MAGIC_NUMBER / Math.log(2)) *
-          Math.log(drivers.length / totalStrengthOfField);
-        return strengthOfField / 1000;
+        const strength =
+          (MAGIC_NUMBER / Math.log(2)) * Math.log(drivers.length / total);
+        return strength / 1000;
       })
       .valueOf();
   }, [driverIndex]);
 
-  const totalStrengthOfField = useMemo(() => {}, [driverIndex]);
+  const totalStrengthOfField: number = useMemo(() => {
+    const numberOfClasses = Object.keys(strengthOfField).length;
+    const total = Object.values(strengthOfField).reduce(
+      (aggregation, iRating) => aggregation + iRating,
+      0,
+    );
+
+    const strength =
+      (MAGIC_NUMBER / Math.log(2)) * Math.log(numberOfClasses / total);
+
+    return strength / 1000;
+  }, [strengthOfField]);
 
   return (
     <StrengthOfFieldContext.Provider
       value={{
+        totalStrengthOfField,
         strengthOfField,
       }}
     >

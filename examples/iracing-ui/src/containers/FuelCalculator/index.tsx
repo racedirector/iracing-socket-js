@@ -1,6 +1,6 @@
 import React from "react";
 import { FuelCalculator as FuelCalculatorUI } from "src/components/FuelCalculator";
-import { useFuelContext } from "../../contexts/FuelProvider";
+import { useFuelContext } from "../../contexts/Fuel";
 
 export interface FuelCalculatorProps {}
 
