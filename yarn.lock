@@ -10652,7 +10652,9 @@ __metadata:
     framer-motion: ^6
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-hook-form: 7.37.0
     react-scripts: 5.0.1
+    ts-invariant: ^0.10.3
     web-vitals: ^2.1.4
   languageName: unknown
   linkType: soft
@@ -14633,6 +14635,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-hook-form@npm:7.37.0":
+  version: 7.37.0
+  resolution: "react-hook-form@npm:7.37.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 9dedc9a419c1f4cff35bc4e5d1cc39fa019e2c72401af04ac456dc1d5b87070156ee97070834d7d308293470bac45f652e12ab3cc86f36abd0e0a3ed32e89628
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -16672,6 +16683,15 @@ __metadata:
   version: 0.1.13
   resolution: "ts-interface-checker@npm:0.1.13"
   checksum: 20c29189c2dd6067a8775e07823ddf8d59a33e2ffc47a1bd59a5cb28bb0121a2969a816d5e77eda2ed85b18171aa5d1c4005a6b88ae8499ec7cc49f78571cb5e
+  languageName: node
+  linkType: hard
+
+"ts-invariant@npm:^0.10.3":
+  version: 0.10.3
+  resolution: "ts-invariant@npm:0.10.3"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: bb07d56fe4aae69d8860e0301dfdee2d375281159054bc24bf1e49e513fb0835bf7f70a11351344d213a79199c5e695f37ebbf5a447188a377ce0cd81d91ddb5
   languageName: node
   linkType: hard
 

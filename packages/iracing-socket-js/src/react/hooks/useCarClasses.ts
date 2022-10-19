@@ -1,7 +1,7 @@
 import { chain } from "lodash";
 import { useMemo } from "react";
 import { useIRacingContext } from "../context";
-import useDriversByCarIndex from "./useDriversByCarIndex";
+import { useDriversByCarIndex } from "./useDrivers";
 
 export interface CarClassDetail {
   id: string;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useIRacingContext } from "../context";
 import { SessionResultsPosition } from "../../types";
-import useSession from "./useSession";
+import { useSession } from "./useSession";
 
 export interface UseStandingsForCurrentSessionProps {}
 

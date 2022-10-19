@@ -1,4 +1,5 @@
 import { canUseSymbol } from "./globals";
+export * from "./position";
 
 export { canUseSymbol };
 

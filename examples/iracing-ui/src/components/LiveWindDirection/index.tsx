@@ -1,4 +1,5 @@
 import React from "react";
+import { metersPerSecondToKilometersPerHour } from "../../utils";
 import styles from "./styles";
 
 export interface LiveWindDirectionProps {
@@ -16,7 +17,9 @@ export const LiveWindDirection: React.FC<LiveWindDirectionProps> = ({
       <div style={styles.needle} />
     </div> */}
     <p>{`Direction: ${direction.toFixed(2)}`}</p>
-    <p>{`Velocity: ${velocity.toFixed(2)} m/s (${(velocity * 3.6).toFixed(
+    <p>{`Velocity: ${velocity.toFixed(
+      2,
+    )} m/s (${metersPerSecondToKilometersPerHour(velocity).toFixed(
       2,
     )} km/h)`}</p>
   </div>

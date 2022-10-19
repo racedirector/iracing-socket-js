@@ -5,7 +5,9 @@ import WeatherConditions, {
   WeatherConditionsProps,
 } from "../WeatherConditions";
 
-export interface SessionInformationProps extends WeatherConditionsProps {
+export interface SessionInformationProps
+  extends WeatherConditionsProps,
+    Omit<StrengthOfFieldProps, "index"> {
   name: string;
   timeRemaining: string;
   strengthOfField: StrengthOfFieldProps["index"];
@@ -15,6 +17,7 @@ export const SessionInformation: React.FC<SessionInformationProps> = ({
   name,
   timeRemaining,
   strengthOfField,
+  totalStrengthOfField,
   ...weatherProps
 }) => {
   return (
@@ -22,7 +25,10 @@ export const SessionInformation: React.FC<SessionInformationProps> = ({
       <h1>{`Session "${name}"`}</h1>
       <h2>{`Time Remaining: ${timeRemaining}`}</h2>
       <WeatherConditions {...weatherProps} />
-      <StrengthOfField index={strengthOfField} />
+      <StrengthOfField
+        index={strengthOfField}
+        totalStrengthOfField={totalStrengthOfField}
+      />
     </Box>
   );
 };

@@ -6,6 +6,7 @@ export interface UseIRacingSocketConnectionStateHookResult {
   isSocketConnected: boolean;
   isIRacingConnected: boolean;
   connecting: boolean;
+  connectionError?: Event;
 }
 
 export type UseIRacingSocketConnectionHook = (
@@ -14,12 +15,17 @@ export type UseIRacingSocketConnectionHook = (
 
 export const useIRacingSocketConnectionState: UseIRacingSocketConnectionHook =
   () => {
-    const { isSocketConnected, isIRacingConnected, connecting } =
-      useIRacingContext();
+    const {
+      isSocketConnected,
+      isIRacingConnected,
+      connecting,
+      connectionError,
+    } = useIRacingContext();
 
     return {
       connecting,
       isSocketConnected,
       isIRacingConnected,
+      connectionError,
     };
   };

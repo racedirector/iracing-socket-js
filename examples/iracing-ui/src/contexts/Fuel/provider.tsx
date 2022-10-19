@@ -1,294 +1,169 @@
 import {
-  useDriversByCarIndex,
   useIRacingContext,
   Flags,
-  SessionState,
   TrackLocation,
+  SessionState,
 } from "@racedirector/iracing-socket-js";
 import React, {
   PropsWithChildren,
-  Reducer,
   useCallback,
+  useContext,
   useEffect,
-  useMemo,
   useReducer,
-  useState,
 } from "react";
-import { FuelContext, FuelContextType } from "./context";
+import usePrevious from "../../hooks/usePrevious";
+import { getFuelContext } from "./context";
+import { reducer, FuelActionType } from "../../reducers/fuel";
+import useRaceLength from "src/hooks/useRaceLength";
 
-enum FuelActionType {
-  SET_FUEL_LEVEL = "SET_FUEL_LEVEL",
-  SET_FUEL_CALC = "SET_FUEL_CALC",
-  ADD_USAGE = "ADD_USAGE",
-  SET_LAP_STARTED = "SET_LAP_STARTED",
-  OFF_TRACK = "OFF_TRACK",
-  ON_PIT_ROAD = "ON_PIT_ROAD",
-  RESET = "RESET",
-}
-
-interface FuelActionBase<T> {
-  type: FuelActionType;
-  payload: T;
-}
-
-interface SetFuelLevelAction extends FuelActionBase<string> {
-  type: FuelActionType.SET_FUEL_LEVEL;
-}
-
-interface SetFuelLevelCalculationAction extends FuelActionBase<number> {
-  type: FuelActionType.SET_FUEL_CALC;
-}
-
-interface AddUsageFuelAction extends FuelActionBase<number> {
-  type: FuelActionType.ADD_USAGE;
-}
-
-interface SetLapStartedAction extends FuelActionBase<boolean> {
-  type: FuelActionType.SET_LAP_STARTED;
-}
-
-interface ResetAction {
-  type: FuelActionType.RESET;
-}
-
-interface OnPitRoadAction {
-  type: FuelActionType.ON_PIT_ROAD;
-}
-
-type FuelAction =
-  | AddUsageFuelAction
-  | SetLapStartedAction
-  | SetFuelLevelAction
-  | SetFuelLevelCalculationAction
-  | ResetAction
-  | OnPitRoadAction;
-
-type FuelState = FuelContextType;
-
-const initialState: FuelState = {
-  fuelLevel: "0",
-  fuelCalculation: 0,
-  averageUsage: -1,
-  averageUsageUnit: null,
-  pastUsage: [],
-
-  lapStarted: false,
-  lastLapDistance: 0,
-  lastFuelLevel: 0,
+const flagsResetLap = (flags: Flags) => {
+  return (
+    flags &
+    (Flags.RandomWaving |
+      Flags.GreenHeld |
+      Flags.Serviceable |
+      Flags.CautionWaving |
+      Flags.Furled)
+  );
 };
 
-const reducer: Reducer<FuelState, FuelAction> = (state, action) => {
-  console.log("Handling action:", action);
-  switch (action.type) {
-    case FuelActionType.ADD_USAGE: {
-      const nextPastUsage = [...state.pastUsage, action.payload];
-      while (nextPastUsage.length > 7) {
-        nextPastUsage.shift();
-      }
-
-      return { ...state, pastUsage: nextPastUsage };
-    }
-    case FuelActionType.SET_FUEL_LEVEL:
-      return { ...state, fuelLevel: action.payload };
-    case FuelActionType.SET_LAP_STARTED:
-      return { ...state, lapStarted: action.payload };
-    case FuelActionType.SET_FUEL_CALC:
-      return { ...state, fuelCalculation: action.payload };
-    case FuelActionType.RESET:
-      return {
-        ...state,
-        lapStarted: false,
-        lastFuelLevel: null,
-        lastLapDistance: null,
-      };
-    case FuelActionType.ON_PIT_ROAD:
-      return { ...state, lapStarted: false };
-    default:
-      throw new Error("Invalid action!");
-  }
-};
-
-export interface FuelProviderProps {
-  numberOfPastLaps?: number;
-}
+export interface FuelProviderProps {}
 
 export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
-  numberOfPastLaps = 7,
-  children = null,
+  children,
 }) => {
-  const {
-    data: {
-      LFwearR,
-      PlayerTrackSurface,
-      SessionFlags: sessionFlags = -1,
-      SessionState: sessionState = SessionState.GetInCar,
-      OnPitRoad,
-      IsOnTrack,
-      LapDistPct = -1,
-      FuelLevel: nextFuelLevel,
-      DisplayUnits: displayUnits = undefined,
-      DriverInfo: {
-        DriverCarIdx: driverCarIndex = -1,
-        DriverCarFuelKgPerLtr: kgPerLiterConstant,
-      } = {},
-    } = {},
-  } = useIRacingContext();
-  const driverIndex = useDriversByCarIndex();
-  const [previousTrackSurface, setPreviousTrackSurface] =
-    useState(PlayerTrackSurface);
+  const FuelContext = getFuelContext();
+  const initialState = useContext(FuelContext);
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const currentDriver = useMemo(
-    () => driverIndex?.[driverCarIndex],
-    [driverIndex, driverCarIndex],
-  );
-
-  const useKg = useMemo(() => {
-    return currentDriver
-      ? [33, 39, 71, 77].includes(currentDriver.CarID)
-      : false;
-  }, [currentDriver]);
-
-  const useImpGal = useMemo(() => {
-    return currentDriver ? [25, 42].includes(currentDriver.CarID) : false;
-  }, [currentDriver]);
-
-  const normalizeFuelLevel = useCallback(
-    (fuel: number) => {
-      let normalizedFuelLevel = fuel;
-      if (useKg) {
-        normalizedFuelLevel *= kgPerLiterConstant;
-      }
-
-      if (!displayUnits) {
-        if (useImpGal) {
-          normalizedFuelLevel *= 0.21996924829909;
-        } else if (useKg) {
-          normalizedFuelLevel *= 2.20462262;
-        } else {
-          normalizedFuelLevel *= 0.264172052;
-        }
-      }
-
-      return normalizedFuelLevel;
-    },
-    [displayUnits, kgPerLiterConstant, useImpGal, useKg],
-  );
-
-  const checkFlagsCallback = useCallback(() => {
-    if (!sessionFlags || sessionFlags === -1) {
-      return false;
-    } else if (
-      sessionFlags &
-      (Flags.RandomWaving |
-        Flags.GreenHeld |
-        Flags.Serviceable |
-        Flags.CautionWaving |
-        Flags.Furled)
-    ) {
-      return false;
-    }
-
-    return true;
-  }, [sessionFlags]);
-
-  // Update the fuel level state
   useEffect(() => {
-    if (!nextFuelLevel || nextFuelLevel < 0) {
-      return;
-    }
+    console.log("Next state:", state);
+  }, [state]);
 
-    const fuel = normalizeFuelLevel(nextFuelLevel).toFixed(2);
-    if (fuel !== state.fuelLevel) {
-      console.log("Setting fuel level");
-      dispatch({ type: FuelActionType.SET_FUEL_LEVEL, payload: fuel });
-    }
-  }, [nextFuelLevel, normalizeFuelLevel, state.fuelLevel]);
+  const {
+    data: {
+      FuelLevel: nextFuelLevel = -1,
+      IsOnTrack: isOnTrack,
+      LapDistPct: lapDistancePercent = -1,
+      OnPitRoad: isOnPitRoad,
+      PlayerTrackSurface: playerTrackSurface,
+      SessionFlags: sessionFlags = -1,
+      SessionState: sessionState = SessionState.Invalid,
+    } = {},
+  } = useIRacingContext();
+  const previousFuelLevel = usePrevious(nextFuelLevel);
+  const previousLapDistancePercentage = usePrevious(lapDistancePercent);
+  const previousPlayerTrackSurface = usePrevious(playerTrackSurface);
 
   // Check flags every time the flag changes
   useEffect(() => {
-    if (
-      sessionFlags &
-      (Flags.RandomWaving |
-        Flags.GreenHeld |
-        Flags.Serviceable |
-        Flags.CautionWaving |
-        Flags.Furled)
-    ) {
-      console.log("Flags, lap false");
-      dispatch({
-        type: FuelActionType.SET_LAP_STARTED,
-        payload: false,
-      });
+    if (!sessionFlags || sessionFlags === -1) {
+      return;
+    }
+
+    if (flagsResetLap(sessionFlags)) {
+      dispatch({ type: FuelActionType.RESET_LAP });
     }
   }, [sessionFlags]);
 
   // Update off track state
   useEffect(() => {
-    if (!IsOnTrack) {
-      console.log("Not on track, reset");
-      dispatch({ type: FuelActionType.RESET });
+    if (!isOnTrack) {
+      console.log("Off track");
+      dispatch({ type: FuelActionType.RESET_LAP });
     }
-  }, [IsOnTrack]);
+  }, [isOnTrack]);
 
   // Update pit road state
   useEffect(() => {
-    console.log(OnPitRoad);
-    if (OnPitRoad) {
-      console.log("On pit road");
-      dispatch({ type: FuelActionType.ON_PIT_ROAD });
+    if (isOnPitRoad) {
+      dispatch({ type: FuelActionType.RESET_LAP });
     }
-  }, [OnPitRoad]);
+  }, [isOnPitRoad]);
 
-  // If the tire wear status changes, mark the lap as not started
   useEffect(() => {
-    console.log("Tire wear, lap false");
-    dispatch({ type: FuelActionType.SET_LAP_STARTED, payload: false });
-  }, [LFwearR]);
+    if (
+      nextFuelLevel > -1 &&
+      previousFuelLevel &&
+      nextFuelLevel > previousFuelLevel
+    ) {
+      console.log("Measured fuel level greater than the previous check...");
+      dispatch({ type: FuelActionType.RESET_LAP });
+    }
+  }, [nextFuelLevel, previousFuelLevel]);
+
+  useEffect(() => {
+    if (
+      !previousLapDistancePercentage ||
+      previousLapDistancePercentage === lapDistancePercent
+    ) {
+      return;
+    }
+
+    if (
+      isOnTrack &&
+      lapDistancePercent < 0.1 &&
+      previousLapDistancePercentage > 0.9 &&
+      !flagsResetLap(sessionFlags)
+    ) {
+      console.log("Looks like we crossed the line... good luck!");
+      dispatch({ type: FuelActionType.LAP_STARTED });
+    }
+  }, [
+    previousLapDistancePercentage,
+    lapDistancePercent,
+    isOnTrack,
+    sessionFlags,
+  ]);
 
   // If the track surface changes, check if we should reset...
   useEffect(() => {
-    if (PlayerTrackSurface !== previousTrackSurface) {
-      if (
-        PlayerTrackSurface === TrackLocation.NotInWorld ||
-        (previousTrackSurface === TrackLocation.OnTrack &&
-          PlayerTrackSurface === TrackLocation.InPitStall) ||
-        (previousTrackSurface === TrackLocation.InPitStall &&
-          PlayerTrackSurface === TrackLocation.OnTrack)
-      ) {
-        console.log("Reset track surface");
-        dispatch({ type: FuelActionType.RESET });
-      }
-
-      setPreviousTrackSurface(PlayerTrackSurface);
+    if (
+      typeof playerTrackSurface === "undefined" ||
+      typeof previousPlayerTrackSurface === "undefined" ||
+      playerTrackSurface === previousPlayerTrackSurface
+    ) {
+      return;
     }
-  }, [PlayerTrackSurface, previousTrackSurface]);
 
-  // useEffect(() => {
-  //   console.log("Try to update fuel calc!");
-  //   const lapDistance = LapDistPct !== -1 ? LapDistPct : null;
-  //   let lapChanged = false;
+    if (
+      playerTrackSurface === TrackLocation.NotInWorld ||
+      (previousPlayerTrackSurface === TrackLocation.OnTrack &&
+        playerTrackSurface === TrackLocation.InPitStall) ||
+      (previousPlayerTrackSurface === TrackLocation.InPitStall &&
+        playerTrackSurface === TrackLocation.OnTrack)
+    ) {
+      dispatch({ type: FuelActionType.RESET_LAP });
+    }
+  }, [playerTrackSurface, previousPlayerTrackSurface]);
 
-  //   if (IsOnTrack) {
-  //     if (state.lastFuelLevel && nextFuelLevel > state.lastFuelLevel) {
-  //       // TODO: Lap started
-  //     }
+  const trackFuelCallback = useCallback(() => {
+    console.log("TrackFuelCallback!");
 
-  //     if (lapDistance && lapDistance !== -1) {
-  //       if (
-  //         lapDistance < 0.1 &&
-  //         state.lastLapDistance > 0.9 &&
-  //         checkFlagsCallback()
-  //       ) {
+    const isValidLap =
+      !isOnPitRoad || sessionFlags & (Flags.Caution | Flags.CautionWaving);
+    const fuelUsage = state.lastFuelLevel - nextFuelLevel;
 
-  //       }
-  //     }
-  //   }
+    if (
+      isValidLap &&
+      nextFuelLevel >= 0 &&
+      state.lastFuelLevel > nextFuelLevel
+    ) {
+      dispatch({
+        type: FuelActionType.ADD_USAGE,
+        payload: { fuelUsage, currentFuelLevel: nextFuelLevel },
+      });
+    }
+  }, [isOnPitRoad, sessionFlags, state.lastFuelLevel, nextFuelLevel]);
 
-  //   // updateFuelCalculation();
-  // }, [IsOnTrack, LapDistPct, checkFlagsCallback, nextFuelLevel, state.lastFuelLevel, state.lastLapDistance]);
+  useEffect(() => {
+    if (state.lapChanged && sessionState === SessionState.Racing) {
+      console.log("Tracking fuel usage!");
+      trackFuelCallback();
+    }
+  }, [state.lapChanged, sessionState, trackFuelCallback]);
 
-  return <FuelContext.Provider value={state}></FuelContext.Provider>;
+  return <FuelContext.Provider value={state}>{children}</FuelContext.Provider>;
 };
 
 export default FuelProvider;

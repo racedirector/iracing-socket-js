@@ -6,6 +6,7 @@ export interface iRacingContextType {
   connecting: boolean;
   isSocketConnected: boolean;
   isIRacingConnected: boolean;
+  connectionError?: Event;
   data?: iRacingData;
   sendCommand: iRacingSocket["sendCommand"];
 }
@@ -15,6 +16,7 @@ const DEFAULT_CONTEXT: iRacingContextType = {
   isSocketConnected: false,
   isIRacingConnected: false,
   data: undefined,
+  connectionError: undefined,
   sendCommand: () => {},
 };
 

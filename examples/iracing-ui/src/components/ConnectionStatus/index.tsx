@@ -1,4 +1,5 @@
 import React from "react";
+import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
 
 export interface ConnectionStatusProps {
   isSocketConnected: boolean;
@@ -9,11 +10,21 @@ export const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
   isSocketConnected,
   isIRacingConnected,
 }) => (
-  <>
-    <h1>iRacing Socket UI</h1>
-    <p>Socket connected? {isSocketConnected ? "yes" : "no"}</p>
-    <p>iRacing connected? {isIRacingConnected ? "yes" : "no"}</p>
-  </>
+  <Flex
+    align="center"
+    backgroundColor="#282c34"
+    color="white"
+    paddingBottom={2.5}
+    paddingTop={2.5}
+  >
+    <HStack spacing={10}>
+      <Heading>iRacing Socket UI</Heading>
+      <Box>
+        <Text>Socket connected? {isSocketConnected ? "yes" : "no"}</Text>
+        <Text>iRacing connected? {isIRacingConnected ? "yes" : "no"}</Text>
+      </Box>
+    </HStack>
+  </Flex>
 );
 
 export default ConnectionStatus;

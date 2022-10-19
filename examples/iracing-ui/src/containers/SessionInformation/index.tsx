@@ -25,7 +25,7 @@ export const SessionInformation: React.FC<SessionInformationProps> = () => {
       } = {},
     } = {},
   } = useIRacingContext();
-  const { strengthOfField } = useStrengthOfFieldContext();
+  const { strengthOfField, totalStrengthOfField } = useStrengthOfFieldContext();
   const { SessionName = "Unknown" } = useCurrentSession() || {};
   const totalTime = useSessionTotalTime();
   // const windDirectionDegrees = useWindDirection();
@@ -40,11 +40,10 @@ export const SessionInformation: React.FC<SessionInformationProps> = () => {
       liveTrackTemperature={TrackTemp}
       trackWindDirection={TrackWindDir}
       trackWindVelocity={TrackWindVel}
-      windDirection={WindDirection}
-      windSpeed={WindSpeed}
       liveWindDirection={liveWindDirection}
       liveWindVelocity={liveWindVelocity}
       strengthOfField={strengthOfField}
+      totalStrengthOfField={totalStrengthOfField}
     />
   );
 };

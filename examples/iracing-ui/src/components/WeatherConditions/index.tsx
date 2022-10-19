@@ -6,8 +6,6 @@ export interface WeatherConditionsProps {
   ambientTemperature: string;
   liveTrackTemperature?: number;
   liveAmbientTemperature?: number;
-  windDirection: string;
-  windSpeed: string;
   trackWindDirection?: string;
   trackWindVelocity?: string;
   liveWindDirection?: number;
@@ -17,8 +15,6 @@ export interface WeatherConditionsProps {
 export const WeatherConditions: React.FC<WeatherConditionsProps> = ({
   trackTemperature,
   ambientTemperature,
-  windDirection,
-  windSpeed,
   liveWindDirection = -1,
   liveWindVelocity = -1,
   liveTrackTemperature = 0,
@@ -36,7 +32,6 @@ export const WeatherConditions: React.FC<WeatherConditionsProps> = ({
     )}) (Delta ${(
       liveAmbientTemperature - parseFloat(ambientTemperature)
     ).toFixed(2)})`}</p>
-    <p>{`Wind: ${windDirection} at ${windSpeed}`}</p>
     {liveWindDirection >= 0 && liveWindVelocity >= 0 && (
       <LiveWindDirection
         direction={liveWindDirection}
