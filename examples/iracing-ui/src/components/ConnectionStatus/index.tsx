@@ -1,5 +1,26 @@
 import React from "react";
-import { Box, Flex, Heading, HStack, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  Text,
+} from "@chakra-ui/react";
+
+interface ConnectionStatusIndicatorProps {
+  connected: boolean;
+}
+
+const ConnectionStatusIndicator: React.FC<ConnectionStatusIndicatorProps> = ({
+  connected,
+}) => (
+  <Badge colorScheme={connected ? "green" : "red"}>
+    {connected ? "Connected" : "Disconnected"}
+  </Badge>
+);
 
 export interface ConnectionStatusProps {
   isSocketConnected: boolean;
@@ -10,21 +31,22 @@ export const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
   isSocketConnected,
   isIRacingConnected,
 }) => (
-  <Flex
-    align="center"
-    backgroundColor="#282c34"
-    color="white"
-    paddingBottom={2.5}
-    paddingTop={2.5}
-  >
-    <HStack spacing={10}>
-      <Heading>iRacing Socket UI</Heading>
-      <Box>
-        <Text>Socket connected? {isSocketConnected ? "yes" : "no"}</Text>
-        <Text>iRacing connected? {isIRacingConnected ? "yes" : "no"}</Text>
-      </Box>
-    </HStack>
-  </Flex>
+  <Grid templateColumns="repeat(2, 1fr)" templateRows="repeat(2, 1fr)">
+    <GridItem colSpan={1}>
+      <Text>Socket: </Text>
+    </GridItem>
+
+    <GridItem colSpan={1}>
+      <ConnectionStatusIndicator connected={isSocketConnected} />
+    </GridItem>
+
+    <GridItem colSpan={1}>
+      <Text>iRacing: </Text>
+    </GridItem>
+    <GridItem colSpan={1}>
+      <ConnectionStatusIndicator connected={isIRacingConnected} />
+    </GridItem>
+  </Grid>
 );
 
 export default ConnectionStatus;

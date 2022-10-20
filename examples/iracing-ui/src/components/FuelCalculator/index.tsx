@@ -68,11 +68,11 @@ const FuelDisplay: React.FC<FuelDisplayProps> = ({
     </GridItem>
 
     <GridItem colSpan={1}>
-      <Display title="To add" detail={`${toAdd}${unit}`} />
+      <Display title="Refuel" detail={toAdd ? `${toAdd}${unit}` : "--"} />
     </GridItem>
 
     <GridItem colSpan={1}>
-      <Display title="Laps remaining" detail={`${remaining}`} />
+      <Display title="Fuel laps remaining" detail={`${remaining}`} />
     </GridItem>
   </Grid>
 );
@@ -104,22 +104,23 @@ const FuelDisplayInput: React.FC<FuelDisplayInputProps> = ({
     </GridItem>
 
     <GridItem colSpan={1}>
-      <Display title="To add" detail={`${toAdd}${unit}`} />
+      <Display title="Refuel" detail={`${toAdd}${unit}`} />
     </GridItem>
 
     <GridItem colSpan={1}>
-      <Display title="Laps remaining" detail={`${remaining}`} />
+      <Display title="Fuel laps remaining" detail={`${remaining}`} />
     </GridItem>
   </Grid>
 );
 
 export interface FuelCalculatorProps {
+  raceLaps?: number;
   raceLapsRemaining: number;
   fuelLevel: string;
   fuelUnit: string;
   lastFuelUsage: FuelDisplayProps;
   averageFuelUsage: FuelDisplayProps;
-  customFuelUsage: Omit<FuelDisplayProps, "usage">;
+  customFuelUsage?: Omit<FuelDisplayProps, "usage">;
 
   onCustomUsageChange?: (usage: number) => void;
 }
@@ -127,41 +128,46 @@ export interface FuelCalculatorProps {
 export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
   fuelLevel,
   fuelUnit,
+  raceLaps = 0,
   raceLapsRemaining,
   lastFuelUsage,
   averageFuelUsage,
-  customFuelUsage,
+  customFuelUsage = null,
   onCustomUsageChange = () => {},
 }) => {
   return (
-    <Grid templateColumns="repeat(2, 1fr)">
+    <Grid templateColumns="repeat(3, 1fr)">
       <GridItem colSpan={1}>
         <Display title="Fuel level" detail={`${fuelLevel}${fuelUnit}`} />
       </GridItem>
+
       <GridItem colSpan={1}>
-        <Display
-          title="Race laps remaining"
-          detail={raceLapsRemaining.toString()}
-        />
+        <Display title="Laps in race" detail={(raceLaps || 0).toString()} />
       </GridItem>
 
-      <GridItem colSpan={2}>
+      <GridItem colSpan={1}>
+        <Display title="Laps remaining" detail={raceLapsRemaining.toString()} />
+      </GridItem>
+
+      <GridItem colSpan={3}>
         <FuelDisplay prefix="Average" {...averageFuelUsage} />
       </GridItem>
 
-      <GridItem colSpan={2}>
+      <GridItem colSpan={3}>
         <FuelDisplay prefix="Last" {...lastFuelUsage} />
       </GridItem>
 
-      <GridItem colSpan={2}>
-        <FuelDisplayInput
-          prefix="Custom"
-          {...customFuelUsage}
-          onChange={(event) => {
-            onCustomUsageChange(parseFloat(event.target.value));
-          }}
-        />
-      </GridItem>
+      {customFuelUsage ? (
+        <GridItem colSpan={3}>
+          <FuelDisplayInput
+            prefix="Custom"
+            {...customFuelUsage}
+            onChange={(event) => {
+              onCustomUsageChange?.(parseFloat(event.target.value));
+            }}
+          />
+        </GridItem>
+      ) : null}
     </Grid>
   );
 };

@@ -1,37 +1,39 @@
 import { createContext } from "react";
+import { FuelState } from "../../features/fuelSlice";
 
-export interface FuelContextType {
-  // The fuel to add
-  fuelCalculation: number;
+export interface FuelContextType extends FuelState {
+  // The fuel to add based on the average usage
+  averageFuelCalculation: number;
   // The average usage
   averageUsage: number;
-  // Usage last lap
-  lastLapUsage: number;
-  // The last 5 laps
-  pastUsage: number[];
+  // Fuel laps remaining based on the average usage
+  averageFuelLapsRemaining: number;
 
-  lapStarted: boolean;
-  lapChanged: boolean;
-
-  lastFuelLevel: number;
+  // The fuel to add based on the average usage
+  lastFuelCalculation: number;
+  // The last usage
+  lastUsage: number;
+  // Fuel laps remaining based on the last usage
+  lastFuelLapsRemaining: number;
 }
 
 const DEFAULT_CONTEXT: FuelContextType = {
-  fuelCalculation: 0,
-  averageUsage: 1.32,
-  lastLapUsage: 1.36,
-  pastUsage: [1.3, 1.36],
+  averageUsage: 0,
+  averageFuelCalculation: 0,
+  averageFuelLapsRemaining: 0,
+
+  lastUsage: 0,
+  lastFuelCalculation: 0,
+  lastFuelLapsRemaining: 0,
+
+  pastUsage: [],
 
   lapStarted: false,
   lapChanged: false,
 
-  lastFuelLevel: 3.5,
+  lastFuelLevel: 0,
 };
 
-// To make sure Apollo Client doesn't create more than one React context
-// (which can lead to problems like having an Apollo Client instance added
-// in one context, then attempting to retrieve it from another different
-// context), a single Apollo context is created and tracked in global state.
 const contextKey =
   typeof Symbol === "function" && typeof Symbol.for === "function"
     ? Symbol.for("__IRACING_FUEL_CONTEXT__")

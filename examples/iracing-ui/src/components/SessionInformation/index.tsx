@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Badge, Box, HStack } from "@chakra-ui/react";
 import StrengthOfField, { StrengthOfFieldProps } from "../StrengthOfField";
 import WeatherConditions, {
   WeatherConditionsProps,
@@ -9,12 +9,18 @@ export interface SessionInformationProps
   extends WeatherConditionsProps,
     Omit<StrengthOfFieldProps, "index"> {
   name: string;
+  sessionType?: string;
+  sessionSubType?: string;
+  eventType?: string;
   timeRemaining: string;
   strengthOfField: StrengthOfFieldProps["index"];
 }
 
 export const SessionInformation: React.FC<SessionInformationProps> = ({
   name,
+  eventType,
+  sessionType,
+  sessionSubType,
   timeRemaining,
   strengthOfField,
   totalStrengthOfField,
@@ -22,9 +28,28 @@ export const SessionInformation: React.FC<SessionInformationProps> = ({
 }) => {
   return (
     <Box>
-      <h1>{`Session "${name}"`}</h1>
+      <HStack>
+        <Badge variant={"solid"} colorScheme={"green"}>
+          {name}
+        </Badge>
+        {sessionType && (
+          <Badge variant={"outline"} colorScheme={"red"}>
+            {sessionType}
+          </Badge>
+        )}
+        {sessionSubType && (
+          <Badge variant={"outline"} colorScheme={"red"}>
+            {sessionSubType}
+          </Badge>
+        )}
+        {eventType && (
+          <Badge variant={"solid"} colorScheme={"red"}>
+            {eventType}
+          </Badge>
+        )}
+      </HStack>
       <h2>{`Time Remaining: ${timeRemaining}`}</h2>
-      <WeatherConditions {...weatherProps} />
+      {/* <WeatherConditions {...weatherProps} /> */}
       <StrengthOfField
         index={strengthOfField}
         totalStrengthOfField={totalStrengthOfField}

@@ -1,6 +1,10 @@
 import React, { PropsWithChildren, useMemo } from "react";
 import { IRacingProvider } from "@racedirector/iracing-socket-js";
 import { useIRacingSocketConnectionContext } from "../../contexts/IRacingSocketConnection";
+import { PaceProvider } from "../../contexts/SessionPace";
+import { FuelProvider } from "../../contexts/Fuel";
+import { RaceLengthProvider } from "../../contexts/RaceLength";
+import { StrengthOfFieldProvider } from "../../contexts/StrengthOfField";
 
 export interface IRacingProps {}
 
@@ -29,7 +33,13 @@ export const IRacing: React.FC<PropsWithChildren<IRacingProps>> = ({
         "__all_telemetry__",
       ]}
     >
-      {children}
+      <StrengthOfFieldProvider>
+        <PaceProvider>
+          <RaceLengthProvider>
+            <FuelProvider>{children}</FuelProvider>
+          </RaceLengthProvider>
+        </PaceProvider>
+      </StrengthOfFieldProvider>
     </IRacingProvider>
   );
 };

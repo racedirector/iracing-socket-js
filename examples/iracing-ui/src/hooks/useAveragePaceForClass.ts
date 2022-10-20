@@ -1,146 +1,21 @@
-import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useMemo } from "react";
 import {
-  SessionResultsPosition,
-  SessionState,
   useCurrentDriver,
-  useIRacingContext,
   useCurrentSessionIsRaceSession,
-  useCurrentSessionResultsByClass,
 } from "@racedirector/iracing-socket-js";
-import { find, isEmpty, isEqual, omit } from "lodash";
-import usePrevious from "./usePrevious";
-import {
-  reducer,
-  initialState,
-  RacePaceState,
-  RacePaceActionType,
-  ClassAveragePaceState,
-} from "../reducers/racePace";
-
-type UseAveragePaceHook = () => RacePaceState;
-
-export const useAveragePace: UseAveragePaceHook = () => {
-  const isRaceSession = useCurrentSessionIsRaceSession();
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const {
-    data: {
-      SessionState: sessionState = SessionState.Invalid,
-      SessionTimeRemain = -1,
-    } = {},
-  } = useIRacingContext();
-  const classResults = useCurrentSessionResultsByClass();
-
-  const classLeaders: Record<string, SessionResultsPosition> = useMemo(
-    () =>
-      Object.entries(classResults).reduce(
-        (index, [classId, classPositions]) => {
-          return {
-            ...index,
-            [classId]: find(
-              classPositions,
-              ({ ClassPosition }) => ClassPosition === 0,
-            ),
-          };
-        },
-        {},
-      ),
-    [classResults],
-  );
-
-  const previousClassLeaders = usePrevious(classLeaders);
-
-  const checkLapTimesCallback = useCallback(
-    (
-      classId: string,
-      {
-        LapsComplete: lapsComplete,
-        LastTime: lastTime,
-      }: SessionResultsPosition,
-    ) => {
-      const { lapsComplete: previousLapsComplete = 0 } = state[classId] || {};
-      if (lapsComplete < 2 || lapsComplete <= previousLapsComplete) {
-        return;
-      }
-
-      dispatch({
-        type: RacePaceActionType.SET_LAPS_COMPLETE,
-        payload: { classId, lapsComplete },
-      });
-
-      if (sessionState === SessionState.Racing && lastTime > 0) {
-        dispatch({
-          type: RacePaceActionType.ADD_LAP_TIME,
-          payload: {
-            classId,
-            lapTime: lastTime,
-            sessionTimeRemaining: SessionTimeRemain,
-          },
-        });
-      }
-    },
-    [SessionTimeRemain, sessionState, state],
-  );
-
-  useEffect(() => {
-    if (isEmpty(classLeaders) || !isRaceSession) {
-      return;
-    }
-
-    const newClassLeaders = !isEqual(classLeaders, previousClassLeaders);
-
-    if (newClassLeaders) {
-      Object.entries(classLeaders).forEach(([classId, leader]) => {
-        checkLapTimesCallback(classId, leader);
-      });
-    }
-  }, [
-    checkLapTimesCallback,
-    classLeaders,
-    isRaceSession,
-    previousClassLeaders,
-  ]);
-
-  return state;
-};
-
-type UseAveragePaceForCurrentDriverClass = () => ClassAveragePaceState;
-
-export const useAveragePaceForCurrentDriverClass: UseAveragePaceForCurrentDriverClass =
-  () => {
-    const { classes: paceIndex } = useAveragePace();
-    const { CarClassID = null } = useCurrentDriver() || {};
-    return useMemo(() => {
-      return paceIndex?.[CarClassID];
-    }, [CarClassID, paceIndex]);
-  };
+import { isEmpty, omit } from "lodash";
+import { usePace, usePaceIndex } from "src/contexts/SessionPace";
 
 type UseTotalLapsByClassHook = () => Record<string, number>;
 
 export const useTotalLapsByClass: UseTotalLapsByClassHook = () => {
-  const { classes: paceIndex } = useAveragePace();
+  const { topClassId, index: paceIndex } = usePace();
   const isRaceSession = useCurrentSessionIsRaceSession();
 
   return useMemo(() => {
     if (isEmpty(paceIndex) || !isRaceSession) {
       return null;
     }
-
-    const topClassId = Object.entries(paceIndex).reduce<string>(
-      (topClassId, [classId, paceData]) => {
-        if (!topClassId) {
-          return classId;
-        }
-
-        const topClass = paceIndex[topClassId];
-        if (paceData.averageLapTime < topClass.averageLapTime) {
-          return classId;
-        }
-
-        return topClassId;
-      },
-      null,
-    );
 
     const topClass = paceIndex[topClassId];
     const lapsRemaining =
@@ -177,13 +52,13 @@ export const useTotalLapsByClass: UseTotalLapsByClassHook = () => {
         };
       }, lapsRemainingIndex);
     }
-  }, [isRaceSession, paceIndex]);
+  }, [isRaceSession, paceIndex, topClassId]);
 };
 
 type UseRemainingLapsByClassHook = () => Record<string, number>;
 
 export const useRemainingLapsByClass: UseRemainingLapsByClassHook = () => {
-  const { classes: paceIndex } = useAveragePace();
+  const paceIndex = usePaceIndex();
   const totalLapsIndex = useTotalLapsByClass();
 
   const remainingLapsIndex = useMemo(() => {

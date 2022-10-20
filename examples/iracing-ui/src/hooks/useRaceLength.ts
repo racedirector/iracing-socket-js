@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo } from "react";
 import {
   useRaceSession,
   useSessionSessionTime,
@@ -8,14 +8,15 @@ import {
   useDriversInCurrentDriverClass,
   expectedRaceLengthForPositionData,
 } from "@racedirector/iracing-socket-js";
-import {
-  reducer,
-  initialState,
-  RaceLengthState,
-  RaceLengthActionType,
-} from "../reducers/raceLength";
-import { useAveragePaceForCurrentDriverClass } from "./useAveragePaceForClass";
 import { find, isEmpty } from "lodash";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import {
+  setEstimatedLaps,
+  setRaceLaps,
+  setRaceLength,
+  setSessionLaps,
+} from "src/features/raceLengthSlice";
+import { useCurrentDriverClassPace } from "src/contexts/SessionPace";
 
 const useExpectedRaceLength = () => {
   const { data: { SessionInfo: { Sessions: sessions = [] } = {} } = {} } =
@@ -34,7 +35,7 @@ const useExpectedRaceLength = () => {
   }, [sessions]);
 
   return useMemo(() => {
-    if (raceSessionLength > 0) {
+    if (typeof raceSessionLength === "number" && raceSessionLength > 0) {
       if (!isEmpty(qualifyResults)) {
         return expectedRaceLengthForPositionData(
           raceSessionLength,
@@ -59,88 +60,61 @@ const useExpectedRaceLength = () => {
   ]);
 };
 
-type RaceLengthResult = RaceLengthState;
-
-type UseRaceLengthResult = RaceLengthResult;
-
-type UseRaceLengthHook = () => UseRaceLengthResult;
-
-export const useSessionLength: UseRaceLengthHook = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const session = useRaceSession();
-  const normalizedSessionLaps = useSessionSessionLaps(session);
-  const normalizedSessionTime = useSessionSessionTime(session);
-  const currentDriverClassPace = useAveragePaceForCurrentDriverClass();
-  const expectedLength = useExpectedRaceLength();
-
-  useEffect(() => {
-    if (expectedLength >= 0) {
-      dispatch({
-        type: RaceLengthActionType.SET_RACE_LAPS,
-        payload: expectedLength,
-      });
-    }
-  }, [expectedLength]);
-
-  // If the session laps are updated from iracing and different, update
-  useEffect(() => {
-    if (normalizedSessionLaps && normalizedSessionLaps !== state.sessionLaps) {
-      dispatch({
-        type: RaceLengthActionType.SET_SESSION_LAPS,
-        payload: normalizedSessionLaps,
-      });
-    }
-  }, [normalizedSessionLaps, state.sessionLaps]);
-
-  // If the session time is updated from iracing and different, update
-  useEffect(() => {
-    if (
-      normalizedSessionTime &&
-      normalizedSessionTime !== state.lengthInSeconds
-    ) {
-      dispatch({
-        type: RaceLengthActionType.SET_RACE_TIME,
-        payload: normalizedSessionTime,
-      });
-    }
-  }, [normalizedSessionTime, state.lengthInSeconds]);
-
-  // If the session goes official and the laps complete is different, update
-  useEffect(() => {
-    if (currentDriverClassPace && session.ResultsOfficial) {
-      const completedLaps = currentDriverClassPace.lapsComplete;
-      if (completedLaps !== state.sessionLaps) {
-        dispatch({
-          type: RaceLengthActionType.SET_SESSION_LAPS,
-          payload: completedLaps,
-        });
-      }
-    }
-  }, [currentDriverClassPace, state.sessionLaps, session.ResultsOfficial]);
-
-  useEffect(() => {
-    if (!currentDriverClassPace) {
-      return;
-    }
-
-    const expectedLapCount = currentDriverClassPace.sessionLaps;
-    if (
-      !normalizedSessionLaps ||
-      (expectedLapCount && expectedLapCount < normalizedSessionLaps - 1)
-    ) {
-      dispatch({
-        type: RaceLengthActionType.SET_ESTIMATED_LAPS,
-        payload: expectedLapCount,
-      });
-    }
-  }, [currentDriverClassPace, normalizedSessionLaps]);
-
-  useEffect(() => {
-    console.log("Race length state:", state);
-  }, [state]);
-
-  return state;
+export const useSessionLength = () => {
+  // const state = useAppSelector((state) => state.raceLength);
+  // const dispatch = useAppDispatch();
+  // const session = useRaceSession();
+  // const normalizedSessionLaps = useSessionSessionLaps(session);
+  // const normalizedSessionTime = useSessionSessionTime(session);
+  // const currentDriverClassPace = useCurrentDriverClassPace();
+  // const expectedLength = useExpectedRaceLength();
+  // useEffect(() => {
+  //   if (expectedLength >= 0) {
+  //     dispatch(setRaceLaps(expectedLength));
+  //   }
+  // }, [dispatch, expectedLength]);
+  // // If the session laps are updated from iracing and different, update
+  // useEffect(() => {
+  //   if (normalizedSessionLaps && normalizedSessionLaps !== state.sessionLaps) {
+  //     dispatch(setSessionLaps(normalizedSessionLaps));
+  //   }
+  // }, [dispatch, normalizedSessionLaps, state.sessionLaps]);
+  // // If the session time is updated from iracing and different, update
+  // useEffect(() => {
+  //   if (
+  //     normalizedSessionTime &&
+  //     normalizedSessionTime !== state.lengthInSeconds
+  //   ) {
+  //     dispatch(setRaceLength(normalizedSessionTime));
+  //   }
+  // }, [dispatch, normalizedSessionTime, state.lengthInSeconds]);
+  // // If the session goes official and the laps complete is different, update
+  // useEffect(() => {
+  //   if (currentDriverClassPace && session.ResultsOfficial) {
+  //     const completedLaps = currentDriverClassPace.lapsComplete;
+  //     if (completedLaps !== state.sessionLaps) {
+  //       dispatch(setSessionLaps(completedLaps));
+  //     }
+  //   }
+  // }, [
+  //   currentDriverClassPace,
+  //   state.sessionLaps,
+  //   session.ResultsOfficial,
+  //   dispatch,
+  // ]);
+  // useEffect(() => {
+  //   if (!currentDriverClassPace) {
+  //     return;
+  //   }
+  //   const expectedLapCount = currentDriverClassPace.sessionLaps;
+  //   if (
+  //     !normalizedSessionLaps ||
+  //     (expectedLapCount && expectedLapCount < normalizedSessionLaps - 1)
+  //   ) {
+  //     dispatch(setEstimatedLaps(expectedLapCount));
+  //   }
+  // }, [currentDriverClassPace, dispatch, normalizedSessionLaps]);
+  // return state;
 };
 
 export default useSessionLength;

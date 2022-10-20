@@ -1,96 +1,57 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   FuelCalculator as FuelCalculatorUI,
   FuelCalculatorProps as FuelCalculatorUIProps,
 } from "src/components/FuelCalculator";
-import { useRemainingLapsForCurrentDriverClass } from "src/hooks/useAveragePaceForClass";
-import { useFuel, useFuelUnit } from "src/hooks/useFuel";
-
-const lapsRemaining: (fuelLevel: number, usagePerLap: number) => number = (
-  fuelLevel,
-  usagePerLap,
-) => (usagePerLap <= 0 ? 0 : +(fuelLevel / usagePerLap).toFixed(2));
+import { useFuelUnit } from "src/hooks/useFuelUnit";
+import { useFuel } from "src/contexts/Fuel";
+import { useRaceLength } from "src/contexts/RaceLength";
 
 export interface FuelCalculatorProps {}
 
 export const FuelCalculator: React.FC<FuelCalculatorProps> = () => {
-  const { averageUsage, lastLapUsage, lastFuelLevel } = useFuel();
+  const {
+    averageUsage,
+    lastUsage,
+    lastFuelLapsRemaining,
+    lastFuelCalculation,
+    lastFuelLevel,
+    averageFuelLapsRemaining,
+    averageFuelCalculation,
+  } = useFuel();
+  const { raceLaps, lapsRemaining } = useRaceLength();
   const fuelUnit = useFuelUnit();
-  const raceLapsRemaining = useRemainingLapsForCurrentDriverClass();
-  const [customUsage, setCustomUsage] = useState(0);
-
-  const averageLapsRemaining = useMemo(
-    () => lapsRemaining(lastFuelLevel, averageUsage),
-    [lastFuelLevel, averageUsage],
-  );
-
-  const averageToAdd = useMemo(
-    () => averageUsage * raceLapsRemaining,
-    [averageUsage, raceLapsRemaining],
-  );
 
   const averageFuelUsageProps = useMemo<
     FuelCalculatorUIProps["averageFuelUsage"]
   >(
     () => ({
       usage: averageUsage,
-      remaining: averageLapsRemaining,
-      toAdd: averageToAdd,
+      remaining: averageFuelLapsRemaining,
+      toAdd: averageFuelCalculation,
       unit: fuelUnit,
     }),
-    [averageUsage, averageLapsRemaining, averageToAdd, fuelUnit],
-  );
-
-  const lastLapLapsRemaining = useMemo(
-    () => lapsRemaining(lastFuelLevel, lastLapUsage),
-    [lastLapUsage, lastFuelLevel],
-  );
-
-  const lastLapToAdd = useMemo(
-    () => lastLapUsage * raceLapsRemaining,
-    [lastLapUsage, raceLapsRemaining],
+    [averageUsage, averageFuelCalculation, averageFuelLapsRemaining, fuelUnit],
   );
 
   const lastFuelUsageProps = useMemo<FuelCalculatorUIProps["lastFuelUsage"]>(
     () => ({
-      usage: lastLapUsage,
-      remaining: lastLapLapsRemaining,
-      toAdd: lastLapToAdd,
+      usage: lastUsage,
+      remaining: lastFuelLapsRemaining,
+      toAdd: lastFuelCalculation,
       unit: fuelUnit,
     }),
-    [lastLapUsage, lastLapLapsRemaining, lastLapToAdd, fuelUnit],
-  );
-
-  const customLapsRemaining = useMemo(
-    () => lapsRemaining(lastFuelLevel, customUsage),
-    [lastFuelLevel, customUsage],
-  );
-
-  const customLapsToAdd = useMemo(
-    () => Math.max(0, customUsage * raceLapsRemaining - lastFuelLevel),
-    [customUsage, raceLapsRemaining],
-  );
-
-  const customFuelUsageProps = useMemo<
-    FuelCalculatorUIProps["customFuelUsage"]
-  >(
-    () => ({
-      remaining: customLapsRemaining,
-      toAdd: customLapsToAdd,
-      unit: fuelUnit,
-    }),
-    [customLapsRemaining, customLapsToAdd, fuelUnit],
+    [lastUsage, lastFuelLapsRemaining, lastFuelCalculation, fuelUnit],
   );
 
   return (
     <FuelCalculatorUI
       fuelLevel={lastFuelLevel.toFixed(2)}
       fuelUnit={fuelUnit}
-      raceLapsRemaining={raceLapsRemaining}
+      raceLaps={raceLaps}
+      raceLapsRemaining={lapsRemaining}
       averageFuelUsage={averageFuelUsageProps}
       lastFuelUsage={lastFuelUsageProps}
-      customFuelUsage={customFuelUsageProps}
-      onCustomUsageChange={setCustomUsage}
     />
   );
 };

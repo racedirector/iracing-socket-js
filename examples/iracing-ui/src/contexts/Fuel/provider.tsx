@@ -7,24 +7,31 @@ import {
 import React, {
   PropsWithChildren,
   useCallback,
-  useContext,
   useEffect,
-  useReducer,
+  useMemo,
 } from "react";
+import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import {
+  lapStarted,
+  resetLap,
+  addUsage,
+  selectFuel,
+  selectLastLapUsage,
+  setFuelLevel,
+  selectAverageUsage,
+  selectAverageFuelLapsRemaining,
+  selectLastLapFuelLapsRemaining,
+  selectAverageRefuelAmount,
+  selectLastLapRefuelAmount,
+} from "src/features/fuelSlice";
 import usePrevious from "../../hooks/usePrevious";
-import { getFuelContext } from "./context";
-import { reducer, FuelActionType } from "../../reducers/fuel";
-import useRaceLength from "src/hooks/useRaceLength";
+import { useRaceLength } from "../RaceLength";
+import { FuelContextType, getFuelContext } from "./context";
 
 const flagsResetLap = (flags: Flags) => {
-  return (
-    flags &
-    (Flags.RandomWaving |
-      Flags.GreenHeld |
-      Flags.Serviceable |
-      Flags.CautionWaving |
-      Flags.Furled)
-  );
+  const randomWaving = flags & Flags.RandomWaving;
+  const shouldLapReset = flags & (0x0400 | 0x4000 | 0x8000 | 0x080000);
+  return randomWaving && shouldLapReset;
 };
 
 export interface FuelProviderProps {}
@@ -33,19 +40,18 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
   children,
 }) => {
   const FuelContext = getFuelContext();
-  const initialState = useContext(FuelContext);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const state = useAppSelector(selectFuel);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    console.log("Next state:", state);
-  }, [state]);
+  const { lapsRemaining } = useRaceLength();
 
   const {
     data: {
       FuelLevel: nextFuelLevel = -1,
-      IsOnTrack: isOnTrack,
       LapDistPct: lapDistancePercent = -1,
-      OnPitRoad: isOnPitRoad,
+      IsOnTrack: isOnTrack = false,
+      OnPitRoad: isOnPitRoad = true,
+      IsInGarage: isInGarage = false,
       PlayerTrackSurface: playerTrackSurface,
       SessionFlags: sessionFlags = -1,
       SessionState: sessionState = SessionState.Invalid,
@@ -54,6 +60,21 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
   const previousFuelLevel = usePrevious(nextFuelLevel);
   const previousLapDistancePercentage = usePrevious(lapDistancePercent);
   const previousPlayerTrackSurface = usePrevious(playerTrackSurface);
+  const lastUsage = useAppSelector(selectLastLapUsage);
+  const lastFuelLapsRemaining = useAppSelector(selectLastLapFuelLapsRemaining);
+
+  const averageUsage = useAppSelector(selectAverageUsage);
+  const averageFuelLapsRemaining = useAppSelector(
+    selectAverageFuelLapsRemaining,
+  );
+
+  const averageRefuelAmount = useAppSelector(
+    selectAverageRefuelAmount(lapsRemaining),
+  );
+
+  const lastRefuelAmount = useAppSelector(
+    selectLastLapRefuelAmount(lapsRemaining),
+  );
 
   // Check flags every time the flag changes
   useEffect(() => {
@@ -62,24 +83,35 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
     }
 
     if (flagsResetLap(sessionFlags)) {
-      dispatch({ type: FuelActionType.RESET_LAP });
+      dispatch(resetLap());
     }
-  }, [sessionFlags]);
+  }, [dispatch, sessionFlags]);
 
   // Update off track state
   useEffect(() => {
     if (!isOnTrack) {
-      console.log("Off track");
-      dispatch({ type: FuelActionType.RESET_LAP });
+      dispatch(resetLap());
     }
-  }, [isOnTrack]);
+  }, [dispatch, isOnTrack]);
 
   // Update pit road state
   useEffect(() => {
     if (isOnPitRoad) {
-      dispatch({ type: FuelActionType.RESET_LAP });
+      dispatch(resetLap());
     }
-  }, [isOnPitRoad]);
+  }, [dispatch, isOnPitRoad]);
+
+  useEffect(() => {
+    if (isOnPitRoad && playerTrackSurface === TrackLocation.InPitStall) {
+      dispatch(setFuelLevel(nextFuelLevel));
+    }
+  }, [dispatch, isOnPitRoad, playerTrackSurface, nextFuelLevel]);
+
+  useEffect(() => {
+    if (isInGarage && nextFuelLevel !== previousFuelLevel) {
+      dispatch(setFuelLevel(nextFuelLevel));
+    }
+  }, [dispatch, isInGarage, nextFuelLevel, previousFuelLevel]);
 
   useEffect(() => {
     if (
@@ -87,10 +119,9 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
       previousFuelLevel &&
       nextFuelLevel > previousFuelLevel
     ) {
-      console.log("Measured fuel level greater than the previous check...");
-      dispatch({ type: FuelActionType.RESET_LAP });
+      dispatch(resetLap());
     }
-  }, [nextFuelLevel, previousFuelLevel]);
+  }, [dispatch, nextFuelLevel, previousFuelLevel]);
 
   useEffect(() => {
     if (
@@ -106,14 +137,15 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
       previousLapDistancePercentage > 0.9 &&
       !flagsResetLap(sessionFlags)
     ) {
-      console.log("Looks like we crossed the line... good luck!");
-      dispatch({ type: FuelActionType.LAP_STARTED });
+      dispatch(lapStarted(nextFuelLevel));
     }
   }, [
     previousLapDistancePercentage,
     lapDistancePercent,
+    nextFuelLevel,
     isOnTrack,
     sessionFlags,
+    dispatch,
   ]);
 
   // If the track surface changes, check if we should reset...
@@ -133,15 +165,14 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
       (previousPlayerTrackSurface === TrackLocation.InPitStall &&
         playerTrackSurface === TrackLocation.OnTrack)
     ) {
-      dispatch({ type: FuelActionType.RESET_LAP });
+      dispatch(resetLap());
     }
-  }, [playerTrackSurface, previousPlayerTrackSurface]);
+  }, [dispatch, playerTrackSurface, previousPlayerTrackSurface]);
 
   const trackFuelCallback = useCallback(() => {
-    console.log("TrackFuelCallback!");
+    const isCautionOut = sessionFlags & (Flags.Caution | Flags.CautionWaving);
+    const isValidLap = !isOnPitRoad || !isCautionOut;
 
-    const isValidLap =
-      !isOnPitRoad || sessionFlags & (Flags.Caution | Flags.CautionWaving);
     const fuelUsage = state.lastFuelLevel - nextFuelLevel;
 
     if (
@@ -149,21 +180,40 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
       nextFuelLevel >= 0 &&
       state.lastFuelLevel > nextFuelLevel
     ) {
-      dispatch({
-        type: FuelActionType.ADD_USAGE,
-        payload: { fuelUsage, currentFuelLevel: nextFuelLevel },
-      });
+      dispatch(addUsage({ usage: fuelUsage, fuelLevel: nextFuelLevel }));
     }
-  }, [isOnPitRoad, sessionFlags, state.lastFuelLevel, nextFuelLevel]);
+  }, [isOnPitRoad, sessionFlags, state.lastFuelLevel, nextFuelLevel, dispatch]);
 
   useEffect(() => {
     if (state.lapChanged && sessionState === SessionState.Racing) {
-      console.log("Tracking fuel usage!");
       trackFuelCallback();
     }
   }, [state.lapChanged, sessionState, trackFuelCallback]);
 
-  return <FuelContext.Provider value={state}>{children}</FuelContext.Provider>;
+  const context = useMemo<FuelContextType>(
+    () => ({
+      ...state,
+      averageUsage,
+      averageFuelLapsRemaining,
+      averageFuelCalculation: averageRefuelAmount,
+      lastUsage,
+      lastFuelLapsRemaining,
+      lastFuelCalculation: lastRefuelAmount,
+    }),
+    [
+      state,
+      averageUsage,
+      averageFuelLapsRemaining,
+      averageRefuelAmount,
+      lastUsage,
+      lastFuelLapsRemaining,
+      lastRefuelAmount,
+    ],
+  );
+
+  return (
+    <FuelContext.Provider value={context}>{children}</FuelContext.Provider>
+  );
 };
 
 export default FuelProvider;

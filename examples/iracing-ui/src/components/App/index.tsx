@@ -3,36 +3,34 @@ import { useIRacingSocketConnectionState } from "@racedirector/iracing-socket-js
 import "./index.css";
 import { ConnectionStatus } from "../../containers/ConnectionStatus";
 import { FuelCalculator } from "../../containers/FuelCalculator";
-import { FuelProvider } from "../../contexts/Fuel";
+import { SessionInformation } from "../../containers/SessionInformation";
+import { Flex, Heading, HStack } from "@chakra-ui/react";
 
 const App: React.FC<Record<string, never>> = () => {
   const { isIRacingConnected } = useIRacingSocketConnectionState();
 
   return (
     <div style={{ flex: 1 }}>
-      <ConnectionStatus />
-      {/* 
-      {!isSocketConnected && (
-        <SocketConnectionForm
-          connecting={connecting}
-          onSubmit={(values) => {
-            setHost(values.host);
-            setPort(values.port);
-          }}
-        />
-      )} */}
+      <Flex
+        align="center"
+        backgroundColor="#282c34"
+        color="white"
+        paddingBottom={2.5}
+        paddingTop={2.5}
+      >
+        <HStack spacing={10}>
+          <Heading>iRacing Socket UI</Heading>
+          <ConnectionStatus />
+        </HStack>
+      </Flex>
 
       {isIRacingConnected && (
         <>
-          {/* <StrengthOfFieldProvider> */}
-          {/* <SessionInformation /> */}
-          {/* </StrengthOfFieldProvider> */}
+          <SessionInformation />
 
           {/* <Cameras /> */}
 
-          <FuelProvider>
-            <FuelCalculator />
-          </FuelProvider>
+          <FuelCalculator />
 
           {/* <RepairsRemaining /> */}
 

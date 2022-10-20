@@ -22,18 +22,26 @@ export const SessionInformation: React.FC<SessionInformationProps> = () => {
         TrackWindDir,
         TrackWindVel,
         WeekendOptions: { WindDirection, WindSpeed } = {},
+        EventType: eventType = "Unknown",
       } = {},
     } = {},
   } = useIRacingContext();
   const { strengthOfField, totalStrengthOfField } = useStrengthOfFieldContext();
-  const { SessionName = "Unknown" } = useCurrentSession() || {};
+  const {
+    SessionName: sessionName = "Unknown",
+    SessionType: sessionType = "Unknown",
+    SessionSubType: sessionSubType = "Unknown",
+  } = useCurrentSession() || {};
   const totalTime = useSessionTotalTime();
   // const windDirectionDegrees = useWindDirection();
 
   return (
     <SessionInformationUI
-      name={SessionName}
+      name={sessionName}
       timeRemaining={totalTime}
+      eventType={eventType}
+      sessionType={sessionType}
+      sessionSubType={sessionSubType}
       ambientTemperature={TrackAirTemp}
       liveAmbientTemperature={AirTemp}
       trackTemperature={TrackSurfaceTemp}
