@@ -47,7 +47,7 @@ export const useQualifyResultsExpectedRaceLength: UseQualifyResultsExpectedRaceL
     const driverIndexesInClass = useDriversInCurrentDriverClass();
 
     return useMemo(() => {
-      if (raceSessionLength > 0) {
+      if (typeof raceSessionLength === "number" && raceSessionLength > 0) {
         return expectedRaceLengthForPositionData(
           raceSessionLength,
           results,

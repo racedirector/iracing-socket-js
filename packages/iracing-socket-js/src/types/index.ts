@@ -2,6 +2,8 @@
 
 export const PACE_CAR_CLASS_ID = 11;
 
+export type RaceTime = number | "unlimited";
+
 interface LiveData {
   CpuUsageFG: number;
   CpuUsageBG: number;

@@ -4,7 +4,7 @@ import { Driver } from "../../types";
 import { useDriversByCarIndex, useDriverIndexesByClass } from "./useDrivers";
 
 export const useDriverForCarIndex = (carIdx: number) => {
-  const [driver, setDriver] = useState<Driver>(null);
+  const [driver, setDriver] = useState<Driver>();
   const driverIndex = useDriversByCarIndex();
 
   useEffect(() => {

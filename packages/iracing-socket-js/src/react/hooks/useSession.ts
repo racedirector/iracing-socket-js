@@ -1,19 +1,17 @@
 import { useMemo } from "react";
-import { find } from "lodash";
+import { find, isEmpty } from "lodash";
 import { useIRacingContext } from "../context";
-import { Session, SessionResultsPosition } from "../../types";
+import { RaceTime, Session, SessionResultsPosition } from "../../types";
 import { useDriverIndexesByClass } from "./useDrivers";
-import { useDriversInCurrentDriverClass } from "./useDriver";
+import { useCurrentDriver, useDriversInCurrentDriverClass } from "./useDriver";
 import { expectedRaceLengthForPositionData } from "../../utilities";
 
-const sessionIsRaceSession = ({ SessionName }: Session) =>
+const sessionIsRaceSession = ({ SessionName = "" }: Session) =>
   sessionNameIsRaceSession(SessionName);
 
 const sessionNameIsRaceSession = (name: string) => name === "RACE";
 
-export type UseSessionHook = (sessionNumber: number) => Session | undefined;
-
-export const useSession: UseSessionHook = (sessionNumber) => {
+export const useSession = (sessionNumber) => {
   const { data: { SessionInfo: { Sessions: sessions = [] } = {} } = {} } =
     useIRacingContext();
 
@@ -28,27 +26,11 @@ export const useSession: UseSessionHook = (sessionNumber) => {
   return session;
 };
 
-export type UseSessionResultsHook = (
-  sessionNumber: number,
-) => SessionResultsPosition[];
-
-export const useSessionResults: UseSessionResultsHook = (sessionNumber) => {
-  const { ResultsPositions: resultsPositions = [] } =
-    useSession(sessionNumber) || {};
-  return resultsPositions;
-};
-
-export type UseSessionResultsByClassHook = (
-  sessionNumber: number,
-) => Record<string, SessionResultsPosition[]>;
-
-export const useSessionResultsByClass: UseSessionResultsByClassHook = (
-  sessionNumber,
-) => {
-  const results = useSessionResults(sessionNumber);
+export const useSessionResultsByClass = (sessionNumber: number) => {
+  const { ResultsPositions: results = [] } = useSession(sessionNumber) || {};
   const drivers = useDriverIndexesByClass();
 
-  return useMemo(
+  return useMemo<Record<string, SessionResultsPosition[]>>(
     () =>
       Object.entries(drivers).reduce((index, [classId, driverIndexes]) => {
         return {
@@ -62,31 +44,29 @@ export const useSessionResultsByClass: UseSessionResultsByClassHook = (
   );
 };
 
-type UseSessionSessionTimeHook = (session: Session) => number | null;
+type UseSessionSessionTimeHook = (session: Session) => RaceTime | null;
 
 export const useSessionSessionTime: UseSessionSessionTimeHook = ({
   SessionTime: sessionTime,
 }) => {
   return useMemo(() => {
+    if (sessionTime === "unlimited") {
+      return sessionTime;
+    }
+
     const value = parseInt(sessionTime);
     return Number.isNaN(value) ? null : value;
   }, [sessionTime]);
 };
 
-type UseSessionSessionLapsHook = (session: Session) => number | null;
-
-export const useSessionSessionLaps: UseSessionSessionLapsHook = ({
-  SessionLaps: sessionLaps,
-}) => {
+export const useSessionSessionLaps = ({ SessionLaps: sessionLaps }) => {
   return useMemo(() => {
     const value = parseInt(sessionLaps);
     return Number.isNaN(value) ? null : value;
   }, [sessionLaps]);
 };
 
-type UseSessionExpectedRaceLengthHook = (session: Session) => number | null;
-
-export const useSessionExpectedRaceLength: UseSessionExpectedRaceLengthHook = ({
+export const useSessionExpectedRaceLength = ({
   ResultsPositions: results = [],
 }) => {
   const session = useRaceSession();
@@ -94,7 +74,7 @@ export const useSessionExpectedRaceLength: UseSessionExpectedRaceLengthHook = ({
   const driverIndexesInClass = useDriversInCurrentDriverClass();
 
   return useMemo(() => {
-    if (raceSessionLength > 0) {
+    if (typeof raceSessionLength === "number" && raceSessionLength > 0) {
       return expectedRaceLengthForPositionData(
         raceSessionLength,
         results,
@@ -106,61 +86,54 @@ export const useSessionExpectedRaceLength: UseSessionExpectedRaceLengthHook = ({
   }, [raceSessionLength, results, driverIndexesInClass]);
 };
 
-export type UseCurrentSessionHook = () => Session | undefined;
-
-export const useCurrentSession: UseCurrentSessionHook = () => {
+export const useCurrentSession = () => {
   const { data: { SessionNum: sessionNumber = -1 } = {} } = useIRacingContext();
   return useSession(sessionNumber);
 };
 
-export type UseCurrentSessionResultsHook = () => SessionResultsPosition[];
+export const useCurrentSessionResultsByClass = () => {
+  const { ResultsPositions: results } = useCurrentSession() || {};
+  const drivers = useDriverIndexesByClass();
 
-export const useCurrentSessionResults: UseCurrentSessionResultsHook = () => {
-  const { ResultsPositions: resultsPositions } = useCurrentSession();
-  return resultsPositions;
-};
-
-export type UseCurrentSessionResultsByClassHook = () => Record<
-  string,
-  SessionResultsPosition[]
->;
-
-export const useCurrentSessionResultsByClass: UseCurrentSessionResultsByClassHook =
-  () => {
-    const results = useCurrentSessionResults();
-    const drivers = useDriverIndexesByClass();
-
-    return useMemo(() => {
-      return Object.entries(drivers).reduce(
-        (index, [classId, driverIndexes]) => {
+  return useMemo<Record<string, SessionResultsPosition[]>>(() => {
+    return !isEmpty(results)
+      ? Object.entries(drivers).reduce((index, [classId, driverIndexes]) => {
           return {
             ...index,
             [classId]: results.filter(({ CarIdx }) =>
               driverIndexes.includes(CarIdx),
             ),
           };
-        },
-        {},
-      );
-    }, [results, drivers]);
-  };
+        }, {})
+      : {};
+  }, [results, drivers]);
+};
+
+export const useCurrentDriverResult = () => {
+  const { ResultsPositions: results = [] } = useCurrentSession() || {};
+  const { CarIdx: driverCarIndex = null } = useCurrentDriver() || {};
+  return useMemo(
+    () =>
+      driverCarIndex &&
+      find(results, ({ CarIdx }) => CarIdx === driverCarIndex),
+    [results, driverCarIndex],
+  );
+};
 
 export type UseCurrentSessionIsRaceSessionHook = () => boolean;
 
 export const useCurrentSessionIsRaceSession: UseCurrentSessionIsRaceSessionHook =
   () => {
-    const { SessionName } = useCurrentSession();
+    const { SessionName = "" } = useCurrentSession() || {};
     return useMemo(() => sessionNameIsRaceSession(SessionName), [SessionName]);
   };
-
-export type UseRaceSessionHook = () => Session | undefined;
 
 /**
  * Gets the most recent race session.
  * @returns The current session if it's a race session, otherwise the
  *          first session with `SessionName === "RACE"`, else undefined.
  */
-export const useRaceSession: UseRaceSessionHook = () => {
+export const useRaceSession = () => {
   const {
     data: {
       SessionNum: sessionNumber = -1,
