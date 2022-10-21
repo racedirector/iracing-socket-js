@@ -16,7 +16,7 @@ const initialState: FuelState = {
   pastUsage: [10],
   lapStarted: false,
   lapChanged: false,
-  lastFuelLevel: 0,
+  lastFuelLevel: 75.672,
 };
 
 interface AddUsagePayload {
@@ -109,7 +109,6 @@ export const selectAverageUsage = (state: RootState) => {
 
   const usage = [...fuelState.pastUsage].sort();
   const averageUsageSource = usage.length >= 3 ? usage.slice(1, -1) : usage;
-
   const totalFuelUsage = averageUsageSource.reduce(
     (aggregateFuelUsage, fuelUsage) => aggregateFuelUsage + fuelUsage,
   );

@@ -211,6 +211,10 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
     ],
   );
 
+  useEffect(() => {
+    console.log(context);
+  }, [context]);
+
   return (
     <FuelContext.Provider value={context}>{children}</FuelContext.Provider>
   );

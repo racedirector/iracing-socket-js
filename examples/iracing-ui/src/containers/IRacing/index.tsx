@@ -5,6 +5,19 @@ import { PaceProvider } from "../../contexts/SessionPace";
 import { FuelProvider } from "../../contexts/Fuel";
 import { RaceLengthProvider } from "../../contexts/RaceLength";
 import { StrengthOfFieldProvider } from "../../contexts/StrengthOfField";
+import { RaceStrategyProvider } from "src/contexts/RaceStrategy";
+
+const StrategyProvider: React.FC<PropsWithChildren<unknown>> = ({
+  children,
+}) => (
+  <PaceProvider>
+    <RaceLengthProvider>
+      <FuelProvider>
+        <RaceStrategyProvider>{children}</RaceStrategyProvider>
+      </FuelProvider>
+    </RaceLengthProvider>
+  </PaceProvider>
+);
 
 export interface IRacingProps {}
 
@@ -34,11 +47,7 @@ export const IRacing: React.FC<PropsWithChildren<IRacingProps>> = ({
       ]}
     >
       <StrengthOfFieldProvider>
-        <PaceProvider>
-          <RaceLengthProvider>
-            <FuelProvider>{children}</FuelProvider>
-          </RaceLengthProvider>
-        </PaceProvider>
+        <StrategyProvider>{children}</StrategyProvider>
       </StrengthOfFieldProvider>
     </IRacingProvider>
   );

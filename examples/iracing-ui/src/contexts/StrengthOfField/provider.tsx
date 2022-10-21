@@ -17,7 +17,7 @@ export const StrengthOfFieldProvider: React.FC<
 
   const strengthOfField: Record<string, number> = useMemo(() => {
     return chain(Object.values(driverIndex))
-      .groupBy("CarClassShortName")
+      .groupBy("CarClassShortName" || "CarClassID")
       .mapValues((drivers) => {
         const total = drivers.reduce(
           (totalIRating, { IRating }) =>

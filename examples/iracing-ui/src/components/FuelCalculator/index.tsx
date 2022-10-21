@@ -37,7 +37,7 @@ interface DisplayProps {
 const Display: React.FC<DisplayProps> = ({ title, detail }) => {
   return (
     <VStack>
-      <Heading>{title}</Heading>
+      <Heading size="md">{title}</Heading>
       <Text>{detail}</Text>
     </VStack>
   );

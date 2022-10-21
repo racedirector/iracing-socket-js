@@ -4250,6 +4250,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-socket-js@workspace:packages/iracing-socket-js"
   dependencies:
+    "@reduxjs/toolkit": ^1.8.6
     "@testing-library/react": ^13.0.1
     "@types/react": ^18
     "@types/react-dom": ^18
