@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { getContextKey } from "../../utils";
 import { FuelState } from "../../features/fuelSlice";
 
 export interface FuelContextType extends FuelState {
@@ -34,10 +35,7 @@ const DEFAULT_CONTEXT: FuelContextType = {
   lastFuelLevel: 0,
 };
 
-const contextKey =
-  typeof Symbol === "function" && typeof Symbol.for === "function"
-    ? Symbol.for("__IRACING_FUEL_CONTEXT__")
-    : "__IRACING_FUEL_CONTEXT__";
+const contextKey = getContextKey("__IRACING_FUEL_CONTEXT__");
 
 export function getFuelContext(): React.Context<FuelContextType> {
   let context = (createContext as any)[

@@ -1,24 +1,26 @@
 import { createContext } from "react";
-import { RaceLengthState } from "src/features/raceLengthSlice";
+import { RaceTime } from "@racedirector/iracing-socket-js";
+import { getContextKey } from "../../utils";
 
-export interface RaceLengthContextType extends RaceLengthState {
-  totalLaps?: Record<string, number>;
+export interface RaceLengthContextType {
+  raceLaps: number;
   lapsRemaining: number;
   lapsComplete: number;
+  sessionLength: RaceTime;
+  isRaceTimed: boolean;
+  estimatedLaps: number;
 }
 
 const DEFAULT_CONTEXT: RaceLengthContextType = {
-  sessionLaps: 0,
-  raceLaps: 0,
+  raceLaps: -1,
   lapsComplete: 0,
   lapsRemaining: -1,
-  lengthInSeconds: "unlimited",
+  sessionLength: "unlimited",
+  isRaceTimed: false,
+  estimatedLaps: -1,
 };
 
-const contextKey =
-  typeof Symbol === "function" && typeof Symbol.for === "function"
-    ? Symbol.for("__IRACING_RACE_LENGTH_CONTEXT__")
-    : "__IRACING_RACE_LENGTH_CONTEXT__";
+const contextKey = getContextKey("__IRACING_RACE_LENGTH_CONTEXT__");
 
 export function getRaceLengthContext(): React.Context<RaceLengthContextType> {
   let context = (createContext as any)[

@@ -1,13 +1,11 @@
 import { createContext } from "react";
+import { getContextKey } from "../../utils";
 
 export interface RaceStrategyContextType {}
 
 const DEFAULT_CONTEXT: RaceStrategyContextType = {};
 
-const contextKey =
-  typeof Symbol === "function" && typeof Symbol.for === "function"
-    ? Symbol.for("__IRACING_RACE_STRATEGY_CONTEXT__")
-    : "__IRACING_RACE_STRATEGY_CONTEXT__";
+const contextKey = getContextKey("__IRACING_RACE_STRATEGY_CONTEXT__");
 
 export function getRaceStrategyContext(): React.Context<RaceStrategyContextType> {
   let context = (createContext as any)[

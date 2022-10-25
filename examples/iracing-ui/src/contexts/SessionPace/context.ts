@@ -1,20 +1,12 @@
 import { createContext } from "react";
 import { SessionPaceState } from "../../features/sessionPaceSlice";
+import { getContextKey } from "../../utils";
 
-export interface PaceContextType {
-  topClassId?: string;
-  index: SessionPaceState;
-}
+export interface PaceContextType extends SessionPaceState {}
 
-const DEFAULT_CONTEXT: PaceContextType = {
-  topClassId: null,
-  index: {},
-};
+const DEFAULT_CONTEXT: PaceContextType = {};
 
-const contextKey =
-  typeof Symbol === "function" && typeof Symbol.for === "function"
-    ? Symbol.for("__IRACING_PACE_CONTEXT__")
-    : "__IRACING_PACE_CONTEXT__";
+const contextKey = getContextKey("__IRACING_SESSION_PACE_CONTEXT__");
 
 export function getPaceContext(): React.Context<PaceContextType> {
   let context = (createContext as any)[
