@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import fuelReducer from "../features/fuelSlice";
 import sessionPaceReducer from "../features/sessionPaceSlice";
 import paceAnalysisReducer from "../features/paceAnalysisSlice";
-import pitStopAnalysisReducer from "../features/pitStopAnalysis";
+import pitStopAnalysisReducer from "../features/pitStopAnalysisSlice";
 import teamReducer from "../features/teamSlice";
 
 export const store = configureStore({

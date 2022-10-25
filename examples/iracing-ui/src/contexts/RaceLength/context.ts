@@ -1,6 +1,5 @@
-import { createContext } from "react";
 import { RaceTime } from "@racedirector/iracing-socket-js";
-import { getContextKey } from "../../utils";
+import { getContextKey, getContext } from "../../utils";
 
 export interface RaceLengthContextType {
   raceLaps: number;
@@ -23,18 +22,8 @@ const DEFAULT_CONTEXT: RaceLengthContextType = {
 const contextKey = getContextKey("__IRACING_RACE_LENGTH_CONTEXT__");
 
 export function getRaceLengthContext(): React.Context<RaceLengthContextType> {
-  let context = (createContext as any)[
-    contextKey
-  ] as React.Context<RaceLengthContextType>;
-  if (!context) {
-    Object.defineProperty(createContext, contextKey, {
-      value: (context = createContext<RaceLengthContextType>(DEFAULT_CONTEXT)),
-      enumerable: false,
-      writable: false,
-      configurable: true,
-    });
-    context.displayName = "RaceLengthContext";
-  }
+  const context = getContext(contextKey, DEFAULT_CONTEXT);
+  context.displayName = "RaceLengthContext";
   return context;
 }
 
