@@ -7,3 +7,5 @@ export * from "./useSessionTotalTime";
 export * from "./useStandingsForSession";
 export * from "./useQualifyResults";
 export * from "./useWindDirection";
+export * from "./usePrevious";
+export * from "./useTrackSurfaceTransitionEffect";

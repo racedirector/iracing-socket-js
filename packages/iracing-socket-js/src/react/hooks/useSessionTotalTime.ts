@@ -67,7 +67,7 @@ export const useSessionTotalTime = () => {
             if (time > 0 && calculatedTime > time) {
               setSessionTotalTime(formatTimeForSession(time));
             } else {
-              setSessionTotalTime(`&asymp;${formatTime(calculatedTime)}`);
+              setSessionTotalTime(`${formatTime(calculatedTime)}`);
               setForceUseSessionTime(true);
             }
           }
