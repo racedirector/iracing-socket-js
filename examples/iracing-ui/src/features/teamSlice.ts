@@ -12,7 +12,9 @@ export const teamSlice = createSlice({
   name: "team",
   initialState,
   reducers: {
-    addDriver: () => {},
+    addDriver: (state, action: PayloadAction<Driver>) => {
+      
+    },
   },
 });
 

@@ -4,7 +4,6 @@ import sessionPaceReducer from "../features/sessionPaceSlice";
 import paceAnalysisReducer from "../features/paceAnalysisSlice";
 import pitStopAnalysisReducer from "../features/pitStopAnalysis";
 import teamReducer from "../features/teamSlice";
-// import raceStrategyReducer from "../features/raceStrategySlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +12,6 @@ export const store = configureStore({
     paceAnalysis: paceAnalysisReducer,
     pitStopAnalysis: pitStopAnalysisReducer,
     team: teamReducer,
-    // raceStrategy: raceStrategyReducer,
   },
 });
 

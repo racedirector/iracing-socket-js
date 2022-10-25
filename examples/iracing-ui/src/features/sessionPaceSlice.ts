@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import averagePaceReducer, {
   addLapTime,
   AveragePaceState,
+  selectAverageLapTime,
   setLapsComplete,
   setLapTimes,
 } from "./averagePaceSlice";
@@ -88,7 +89,8 @@ export const selectTopClassId = ({ sessionPace }: RootState) => {
       }
 
       const topClass = sessionPace[topClassId];
-
+      const topClassAverageLapTime = selectAverageLapTime(topClass);
+      const classAverageLapTime = selectAverageLapTime(paceData);
       // If this class has done more laps than the current top class,
       // it is now the top class.
       if (paceData.lapsComplete > topClass.lapsComplete) {
@@ -97,7 +99,7 @@ export const selectTopClassId = ({ sessionPace }: RootState) => {
 
       // If this class has a faster average lap time,
       // is is now the top class.
-      if (paceData.averageLapTime < topClass.averageLapTime) {
+      if (classAverageLapTime < topClassAverageLapTime) {
         return classId;
       }
 
@@ -128,15 +130,17 @@ export const selectEstimatedTotalLaps = (state: RootState) => {
     return null;
   }
 
+  const topClassAverageLapTime = selectAverageLapTime(topClassPace);
+
   const estimatedLapsRemaining =
-    Math.max(1, topClassPace.sessionTimeRemaining) /
-    topClassPace.averageLapTime;
+    Math.max(1, topClassPace.sessionTimeRemaining) / topClassAverageLapTime;
 
   const topClassTotalLaps = topClassPace.lapsComplete + estimatedLapsRemaining;
 
   return Object.keys(otherClasses).reduce(
     (index, classId) => {
       const pace = otherClasses[classId];
+      const paceAverageLapTime = selectAverageLapTime(pace);
       const timeRemainingDifference =
         topClassPace.sessionTimeRemaining - pace.sessionTimeRemaining;
 
@@ -144,7 +148,7 @@ export const selectEstimatedTotalLaps = (state: RootState) => {
         Math.max(
           1,
           topClassPace.sessionTimeRemaining - timeRemainingDifference,
-        ) / pace.averageLapTime;
+        ) / paceAverageLapTime;
 
       const totalClassLaps = pace.lapsComplete + estimatedLapsRemaining;
 

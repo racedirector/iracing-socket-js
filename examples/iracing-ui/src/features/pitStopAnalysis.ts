@@ -3,26 +3,25 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { PitServiceFlags } from "@racedirector/iracing-socket-js";
 
 export interface PitStopAnalysisState {
-  lastStopTime?: number;
-  stopTimes: number[];
-  stopService: PitServiceFlags[];
+  serviceStarted: boolean;
 }
 
 const initialState: PitStopAnalysisState = {
-  stopTimes: [],
-  stopService: [],
+  serviceStarted: false,
 };
 
 export const pitStopAnalaysisSlice = createSlice({
   name: "pitStopAnalysis",
   initialState,
   reducers: {
-    addStopTime: () => {},
-    addService: () => {},
+    serviceStart: (state) => {
+      state.serviceStarted = true;
+    },
+    serviceEnd: () => {},
   },
 });
 
-export const { addStopTime, addService } = pitStopAnalaysisSlice.actions;
+export const { serviceStart, serviceEnd } = pitStopAnalaysisSlice.actions;
 
 export const selectAverageStopTime = (state: PitStopAnalysisState) => {};
 export const selectLastStopTime = (state: PitStopAnalysisState) => {};

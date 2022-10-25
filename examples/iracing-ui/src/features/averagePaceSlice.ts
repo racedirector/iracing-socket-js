@@ -47,14 +47,12 @@ export const averagePaceSlice = createSlice({
     setLapTimes: (state, action: PayloadAction<SetLapTimesPayload>) => {
       const { lapTimes, sessionTimeRemaining } = action.payload;
       state.lapTimes = lapTimes;
-      // state.averageLapTime = averageLapTimes(lapTimes);
       state.sessionTimeRemaining = sessionTimeRemaining;
     },
     addLapTime: (state, action: PayloadAction<AddLapTimePayload>) => {
       const { lapTime, sessionTimeRemaining } = action.payload;
       state.lapTimes.push(lapTime);
       while (state.lapTimes.length > state.lapTimeLimit) state.lapTimes.shift();
-      // state.averageLapTime = averageLapTimes(state.lapTimes);
       state.sessionTimeRemaining = sessionTimeRemaining;
     },
   },
