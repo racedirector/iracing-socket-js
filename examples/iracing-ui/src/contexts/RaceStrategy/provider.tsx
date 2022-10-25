@@ -27,10 +27,6 @@ export const RaceStrategyProvider: React.FC<
     return estimated;
   }, [averageFuelCalculation, DriverCarFuelMaxLtr]);
 
-  useEffect(() => {
-    console.log("Stints remaining:", estimatedFuelStintsRemaining);
-  }, [estimatedFuelStintsRemaining]);
-
   return (
     <RaceStrategyContext.Provider value={{}}>
       {children}
