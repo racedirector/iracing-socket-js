@@ -1,30 +1,21 @@
 import { useMemo, useCallback } from "react";
 import {
-  useDriversByCarIndex,
+  useCurrentDriver,
   useIRacingContext,
 } from "@racedirector/iracing-socket-js";
 
 export type UseNormalizeFuelLevelHookResult = (fuel: number) => number;
-
 export type UseNormalizeFuelLevelHook = () => UseNormalizeFuelLevelHookResult;
 
 export const useNormalizeFuelLevel: UseNormalizeFuelLevelHook = () => {
   const {
     data: {
       DisplayUnits: displayUnits = undefined,
-      DriverInfo: {
-        DriverCarIdx: driverCarIndex = -1,
-        DriverCarFuelKgPerLtr: kgPerLiterConstant,
-      } = {},
+      DriverInfo: { DriverCarFuelKgPerLtr: kgPerLiterConstant = 0.75 } = {},
     } = {},
   } = useIRacingContext();
 
-  const driverIndex = useDriversByCarIndex();
-
-  const currentDriver = useMemo(
-    () => driverIndex?.[driverCarIndex],
-    [driverIndex, driverCarIndex],
-  );
+  const currentDriver = useCurrentDriver();
 
   const useKg = useMemo(() => {
     return currentDriver
