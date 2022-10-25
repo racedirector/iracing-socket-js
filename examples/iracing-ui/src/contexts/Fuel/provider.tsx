@@ -1,5 +1,6 @@
 import {
   useIRacingContext,
+  useLapResetEffect,
   Flags,
   TrackLocation,
   SessionState,
@@ -30,7 +31,9 @@ import { FuelContextType, getFuelContext } from "./context";
 
 const flagsResetLap = (flags: Flags) => {
   const randomWaving = flags & Flags.RandomWaving;
-  const shouldLapReset = flags & (0x0400 | 0x4000 | 0x8000 | 0x080000);
+  const shouldLapReset =
+    flags &
+    (Flags.GreenHeld | Flags.Caution | Flags.CautionWaving | Flags.Furled);
   return randomWaving && shouldLapReset;
 };
 
@@ -59,7 +62,6 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
   } = useIRacingContext();
   const previousFuelLevel = usePrevious(nextFuelLevel);
   const previousLapDistancePercentage = usePrevious(lapDistancePercent);
-  const previousPlayerTrackSurface = usePrevious(playerTrackSurface);
   const lastUsage = useAppSelector(selectLastLapUsage);
   const lastFuelLapsRemaining = useAppSelector(selectLastLapFuelLapsRemaining);
 
@@ -148,26 +150,9 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
     dispatch,
   ]);
 
-  // If the track surface changes, check if we should reset...
-  useEffect(() => {
-    if (
-      typeof playerTrackSurface === "undefined" ||
-      typeof previousPlayerTrackSurface === "undefined" ||
-      playerTrackSurface === previousPlayerTrackSurface
-    ) {
-      return;
-    }
-
-    if (
-      playerTrackSurface === TrackLocation.NotInWorld ||
-      (previousPlayerTrackSurface === TrackLocation.OnTrack &&
-        playerTrackSurface === TrackLocation.InPitStall) ||
-      (previousPlayerTrackSurface === TrackLocation.InPitStall &&
-        playerTrackSurface === TrackLocation.OnTrack)
-    ) {
-      dispatch(resetLap());
-    }
-  }, [dispatch, playerTrackSurface, previousPlayerTrackSurface]);
+  useLapResetEffect(() => {
+    dispatch(resetLap());
+  });
 
   const trackFuelCallback = useCallback(() => {
     const isCautionOut = sessionFlags & (Flags.Caution | Flags.CautionWaving);
@@ -210,10 +195,6 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
       lastRefuelAmount,
     ],
   );
-
-  useEffect(() => {
-    console.log(context);
-  }, [context]);
 
   return (
     <FuelContext.Provider value={context}>{children}</FuelContext.Provider>
