@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useCurrentSession,
   useIRacingContext,
@@ -6,6 +6,7 @@ import {
 } from "@racedirector/iracing-socket-js";
 import { SessionInformation as SessionInformationUI } from "../../components/SessionInformation";
 import { useStrengthOfFieldContext } from "../../contexts/StrengthOfField/context";
+import { useRaceLength } from "src/contexts/RaceLength";
 
 export interface SessionInformationProps {}
 
@@ -26,6 +27,7 @@ export const SessionInformation: React.FC<SessionInformationProps> = () => {
       } = {},
     } = {},
   } = useIRacingContext();
+  const { isRaceTimed } = useRaceLength();
   const { strengthOfField, totalStrengthOfField } = useStrengthOfFieldContext();
   const {
     SessionName: sessionName = "Unknown",

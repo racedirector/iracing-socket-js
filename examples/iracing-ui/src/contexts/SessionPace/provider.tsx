@@ -1,3 +1,9 @@
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+} from "react";
 import {
   SessionResultsPosition,
   SessionState,
@@ -6,21 +12,16 @@ import {
   useIRacingContext,
 } from "@racedirector/iracing-socket-js";
 import { find, isEmpty, isEqual } from "lodash";
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
-import { useAppDispatch, useAppSelector } from "src/app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   addLapTimeForClass,
   selectSessionPace,
   setLapsCompleteForClass,
   setLapTimesForClass,
-} from "src/features/sessionPaceSlice";
-import usePrevious from "src/hooks/usePrevious";
+} from "../../features/sessionPaceSlice";
+import usePrevious from "../../hooks/usePrevious";
 import { getPaceContext, PaceContextType } from "./context";
+import { selectAverageLapTime } from "src/features/averagePaceSlice";
 
 export interface PaceProviderProps {}
 
@@ -68,12 +69,13 @@ export const PaceProvider: React.FC<PropsWithChildren<PaceProviderProps>> = ({
         FastestTime: fastestTime,
       }: SessionResultsPosition,
     ) => {
-      const { lapsComplete: previousLapsComplete = 0, averageLapTime } =
-        state[classId] || {};
+      const classPace = state?.[classId];
+      const averageLapTime = classPace ? selectAverageLapTime(classPace) : -1;
+      const classLapsComplete = classPace?.lapsComplete || -1;
 
       if (
         lapsComplete < 2 ||
-        (isRaceSession && lapsComplete <= previousLapsComplete) ||
+        (isRaceSession && lapsComplete <= classLapsComplete) ||
         // !!!: If not in a race session, the average lap time will be the fastest lap time
         // of the session. Ensure that the update includes a faster lap!
         (!isRaceSession && fastestTime <= averageLapTime)
@@ -114,28 +116,6 @@ export const PaceProvider: React.FC<PropsWithChildren<PaceProviderProps>> = ({
     [dispatch, isRaceSession, sessionState, sessionTimeRemaining, state],
   );
 
-  const topClassId = useMemo(() => {
-    return Object.entries(state).reduce<string>(
-      (topClassId, [classId, paceData]) => {
-        if (!topClassId) {
-          return classId;
-        }
-
-        const topClass = state[topClassId];
-        if (paceData.averageLapTime < topClass.averageLapTime) {
-          return classId;
-        }
-
-        return topClassId;
-      },
-      null,
-    );
-  }, [state]);
-
-  const context: PaceContextType = useMemo(() => {
-    return { index: state, topClassId };
-  }, [state, topClassId]);
-
   useEffect(() => {
     if (isEmpty(classLeaders)) {
       return;
@@ -145,14 +125,14 @@ export const PaceProvider: React.FC<PropsWithChildren<PaceProviderProps>> = ({
 
     if (newClassLeaders) {
       Object.entries(classLeaders).forEach(([classId, leader]) => {
-        checkLapTimes(classId, leader);
+        if (leader) {
+          checkLapTimes(classId, leader);
+        }
       });
     }
   }, [classLeaders, previousClassLeaders, checkLapTimes]);
 
-  return (
-    <PaceContext.Provider value={context}>{children}</PaceContext.Provider>
-  );
+  return <PaceContext.Provider value={state}>{children}</PaceContext.Provider>;
 };
 
 export default PaceProvider;
