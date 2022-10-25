@@ -13,10 +13,10 @@ export interface FuelState {
 }
 
 const initialState: FuelState = {
-  pastUsage: [10],
+  pastUsage: [],
   lapStarted: false,
   lapChanged: false,
-  lastFuelLevel: 75.672,
+  lastFuelLevel: 0,
 };
 
 interface AddUsagePayload {

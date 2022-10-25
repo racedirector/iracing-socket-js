@@ -72,6 +72,91 @@ export const {
   addLapTimeForClass,
 } = sessionPaceSlice.actions;
 
-export const selectSessionPace = (state: RootState) => state.sessionPace;
+export const selectSessionPace = ({ sessionPace }: RootState) => sessionPace;
+
+export const selectSessionPaceForClass =
+  (classId: string) =>
+  ({ sessionPace }: RootState) => {
+    return sessionPace[classId];
+  };
+
+export const selectTopClassId = ({ sessionPace }: RootState) => {
+  return Object.entries(sessionPace).reduce<string>(
+    (topClassId, [classId, paceData]) => {
+      if (!topClassId) {
+        return classId;
+      }
+
+      const topClass = sessionPace[topClassId];
+
+      // If this class has done more laps than the current top class,
+      // it is now the top class.
+      if (paceData.lapsComplete > topClass.lapsComplete) {
+        return classId;
+      }
+
+      // If this class has a faster average lap time,
+      // is is now the top class.
+      if (paceData.averageLapTime < topClass.averageLapTime) {
+        return classId;
+      }
+
+      return topClassId;
+    },
+    null,
+  );
+};
+
+export const selectTopClass = (state: RootState) => {
+  const topClassId = selectTopClassId(state);
+  return selectSessionPaceForClass(topClassId)(state);
+};
+
+export const selectOtherClasses = (state: RootState) => {
+  const topClassId = selectTopClassId(state);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { [topClassId]: topClass, ...otherClasses } = state.sessionPace;
+  return otherClasses;
+};
+
+export const selectEstimatedTotalLaps = (state: RootState) => {
+  const topClassId = selectTopClassId(state);
+  const topClassPace = selectTopClass(state);
+  const otherClasses = selectOtherClasses(state);
+
+  if (!topClassPace) {
+    return null;
+  }
+
+  const estimatedLapsRemaining =
+    Math.max(1, topClassPace.sessionTimeRemaining) /
+    topClassPace.averageLapTime;
+
+  const topClassTotalLaps = topClassPace.lapsComplete + estimatedLapsRemaining;
+
+  return Object.keys(otherClasses).reduce(
+    (index, classId) => {
+      const pace = otherClasses[classId];
+      const timeRemainingDifference =
+        topClassPace.sessionTimeRemaining - pace.sessionTimeRemaining;
+
+      const estimatedLapsRemaining =
+        Math.max(
+          1,
+          topClassPace.sessionTimeRemaining - timeRemainingDifference,
+        ) / pace.averageLapTime;
+
+      const totalClassLaps = pace.lapsComplete + estimatedLapsRemaining;
+
+      return {
+        ...index,
+        [classId]: Math.round(totalClassLaps),
+      };
+    },
+    {
+      [topClassId]: Math.round(topClassTotalLaps),
+    },
+  );
+};
 
 export default sessionPaceSlice.reducer;

@@ -15,15 +15,15 @@ const averageLapTimes = (lapTimes: number[]) => {
 
 export interface AveragePaceState {
   lapsComplete: number;
+  lapTimeLimit: number;
   lapTimes: number[];
-  averageLapTime: number;
   sessionTimeRemaining: number;
 }
 
 const initialState: AveragePaceState = {
   lapsComplete: 0,
+  lapTimeLimit: 5,
   lapTimes: [],
-  averageLapTime: -1,
   sessionTimeRemaining: -1,
 };
 
@@ -37,8 +37,6 @@ interface SetLapTimesPayload {
   lapTimes: number[];
 }
 
-const MAX_LAP_TIMES = 5;
-
 export const averagePaceSlice = createSlice({
   name: "averagePace",
   initialState,
@@ -49,14 +47,14 @@ export const averagePaceSlice = createSlice({
     setLapTimes: (state, action: PayloadAction<SetLapTimesPayload>) => {
       const { lapTimes, sessionTimeRemaining } = action.payload;
       state.lapTimes = lapTimes;
-      state.averageLapTime = averageLapTimes(lapTimes);
+      // state.averageLapTime = averageLapTimes(lapTimes);
       state.sessionTimeRemaining = sessionTimeRemaining;
     },
     addLapTime: (state, action: PayloadAction<AddLapTimePayload>) => {
       const { lapTime, sessionTimeRemaining } = action.payload;
       state.lapTimes.push(lapTime);
-      while (state.lapTimes.length > MAX_LAP_TIMES) state.lapTimes.shift();
-      state.averageLapTime = averageLapTimes(state.lapTimes);
+      while (state.lapTimes.length > state.lapTimeLimit) state.lapTimes.shift();
+      // state.averageLapTime = averageLapTimes(state.lapTimes);
       state.sessionTimeRemaining = sessionTimeRemaining;
     },
   },
@@ -64,5 +62,8 @@ export const averagePaceSlice = createSlice({
 
 export const { setLapsComplete, addLapTime, setLapTimes } =
   averagePaceSlice.actions;
+
+export const selectAverageLapTime = (state: AveragePaceState) =>
+  averageLapTimes(state.lapTimes);
 
 export default averagePaceSlice.reducer;
