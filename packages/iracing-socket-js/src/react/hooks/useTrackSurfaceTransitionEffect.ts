@@ -25,12 +25,6 @@ export const useTrackLocationTransitionEffect = (
       return;
     }
 
-    console.log(
-      "Calling effect for transition:",
-      previousPlayerTrackSurface,
-      "->",
-      playerTrackSurface,
-    );
     effect(playerTrackSurface, previousPlayerTrackSurface);
   }, [effect, playerTrackSurface, previousPlayerTrackSurface]);
 };

@@ -68,7 +68,7 @@ interface LiveData {
   PlayerCarDryTireSetLimit: number;
   PlayerCarClass: number;
   PlayerCarClassPosition: number;
-  PlayerCarPitSvStatus: PitServiceFlags;
+  PlayerCarPitSvStatus: PitServiceStatus;
   PlayerCarTeamIncidentCount: number;
   PlayerCarDriverIncidentCount: number;
   PlayerCarIdx: number;

@@ -14,15 +14,12 @@ export function getContext<T>(
 ): React.Context<T> {
   let context = (createContext as any)[key] as React.Context<T>;
   if (!context) {
-    console.log("Defining new context for", key);
     Object.defineProperty(createContext, key, {
       value: (context = createContext<T>(initialContext)),
       enumerable: false,
       writable: false,
       configurable: true,
     });
-  } else {
-    console.log("Got existing context for", key);
   }
 
   return context;

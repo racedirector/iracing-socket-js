@@ -3,6 +3,7 @@ import {
   iRacingDataKey,
   PitServiceFlags,
   TrackLocation,
+  PitServiceStatus,
 } from "@racedirector/iracing-socket-js";
 
 export enum PitTimingEvents {
@@ -54,7 +55,7 @@ export class PitTimingEmitter extends iRacingSocketConsumer {
     return this._fuelAmount;
   }
 
-  private playerServiceStatus: PitServiceFlags = 0x0;
+  private playerServiceStatus: PitServiceStatus = 0x0;
 
   onUpdate = (keys) => {
     const {
