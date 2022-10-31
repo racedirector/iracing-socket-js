@@ -4,7 +4,10 @@ import { useIRacingContext } from "../context";
 import { RaceTime, Session, SessionResultsPosition } from "../../types";
 import { useDriverIndexesByClass } from "./useDrivers";
 import { useCurrentDriver, useDriversInCurrentDriverClass } from "./useDriver";
-import { expectedRaceLengthForPositionData } from "../../utilities";
+import {
+  expectedRaceLengthForPositionData,
+  getFastestLap,
+} from "../../utilities";
 
 const sessionIsRaceSession = ({ SessionName = "" }: Session) =>
   sessionNameIsRaceSession(SessionName);
@@ -107,6 +110,47 @@ export const useCurrentSessionResultsByClass = () => {
         }, {})
       : {};
   }, [results, drivers]);
+};
+
+export const useCurrentSessionClassLeaders = () => {
+  const classResults = useCurrentSessionResultsByClass();
+
+  return useMemo<Record<string, SessionResultsPosition>>(
+    () =>
+      Object.entries(classResults).reduce(
+        (index, [classId, classPositions]) => {
+          return {
+            ...index,
+            [classId]: find(
+              classPositions,
+              ({ ClassPosition }) => ClassPosition === 0,
+            ),
+          };
+        },
+        {},
+      ),
+    [classResults],
+  );
+};
+
+export const useCurrentSessionFastestLap = () => {
+  const { ResultsPositions: results } = useCurrentSession() || {};
+  return getFastestLap(results);
+};
+
+export const useCurrentSessionClassFastestLap = () => {
+  const classResults = useCurrentSessionResultsByClass();
+  return useMemo<Record<string, number>>(
+    () =>
+      Object.entries(classResults).reduce(
+        (index, [classId, classResults]) => ({
+          ...index,
+          [classId]: getFastestLap(classResults),
+        }),
+        {},
+      ),
+    [classResults],
+  );
 };
 
 export const useCurrentDriverResult = () => {

@@ -2,10 +2,12 @@ import React, { useMemo } from "react";
 import {
   FuelCalculator as FuelCalculatorUI,
   FuelCalculatorProps as FuelCalculatorUIProps,
-} from "src/components/FuelCalculator";
-import { useFuelUnit } from "src/hooks/useFuelUnit";
-import { useFuel } from "src/contexts/Fuel";
-import { useRaceLength } from "src/contexts/RaceLength";
+} from "../../components/FuelCalculator";
+import { useFuelUnit } from "../../hooks/useFuelUnit";
+import { useFuel } from "../../contexts/Fuel";
+import { useRaceLength } from "../../contexts/RaceLength";
+import { useCurrentDriver } from "@racedirector/iracing-socket-js";
+import { RaceLength } from "../RaceLength";
 
 export interface FuelCalculatorProps {}
 
@@ -21,6 +23,12 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = () => {
   } = useFuel();
   const { raceLaps, lapsRemaining } = useRaceLength();
   const fuelUnit = useFuelUnit();
+  const { CarClassID = -1 } = useCurrentDriver() || {};
+
+  const lapsRemainingForCurrentDriver = useMemo(
+    () => lapsRemaining?.[CarClassID] || 0,
+    [lapsRemaining, CarClassID],
+  );
 
   const averageFuelUsageProps = useMemo<
     FuelCalculatorUIProps["averageFuelUsage"]
@@ -45,14 +53,17 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = () => {
   );
 
   return (
-    <FuelCalculatorUI
-      fuelLevel={lastFuelLevel.toFixed(2)}
-      fuelUnit={fuelUnit}
-      raceLaps={raceLaps}
-      raceLapsRemaining={lapsRemaining}
-      averageFuelUsage={averageFuelUsageProps}
-      lastFuelUsage={lastFuelUsageProps}
-    />
+    <>
+      <RaceLength />
+      <FuelCalculatorUI
+        fuelLevel={lastFuelLevel.toFixed(2)}
+        fuelUnit={fuelUnit}
+        raceLaps={raceLaps}
+        raceLapsRemaining={lapsRemainingForCurrentDriver}
+        averageFuelUsage={averageFuelUsageProps}
+        lastFuelUsage={lastFuelUsageProps}
+      />
+    </>
   );
 };
 

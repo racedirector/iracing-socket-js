@@ -1,14 +1,12 @@
 import React, { PropsWithChildren, useEffect, useMemo } from "react";
-import {
-  RaceTime,
-  useCurrentDriver,
-  useCurrentDriverResult,
-  useCurrentSession,
-} from "@racedirector/iracing-socket-js";
+import { RaceTime, useCurrentSession } from "@racedirector/iracing-socket-js";
 import { useAppSelector } from "src/app/hooks";
-import { usePace } from "../SessionPace";
-import { getRaceLengthContext } from "./context";
-import { selectEstimatedTotalLaps } from "src/features/sessionPaceSlice";
+import { getRaceLengthContext, RaceLengthContextType } from "./context";
+import {
+  selectEstimatedLapsRemaining,
+  selectEstimatedTotalLaps,
+  selectLapsCompleted,
+} from "src/features/sessionPaceSlice";
 
 export interface RaceLengthProviderProps {}
 
@@ -17,10 +15,8 @@ export const RaceLengthProvider: React.FC<
 > = ({ children }) => {
   const RaceLengthContext = getRaceLengthContext();
   const totalLapsIndex = useAppSelector(selectEstimatedTotalLaps);
-  const { CarClassID = null } = useCurrentDriver() || {};
-  const { LapsComplete: currentDriverLapsComplete = 0 } =
-    useCurrentDriverResult() || {};
-  const paceIndex = usePace();
+  const lapsRemaining = useAppSelector(selectEstimatedLapsRemaining);
+  const lapsComplete = useAppSelector(selectLapsCompleted);
   const { SessionTime, SessionLaps } = useCurrentSession() || {};
 
   const raceLaps = useMemo(() => {
@@ -40,34 +36,21 @@ export const RaceLengthProvider: React.FC<
     return "unlimited";
   }, [SessionTime]);
 
-  const estimatedLapCount = useMemo(() => {
-    return totalLapsIndex?.[CarClassID] || -1;
-  }, [totalLapsIndex, CarClassID]);
-
-  const lapsComplete = useMemo(() => {
-    return currentDriverLapsComplete + 1;
-  }, [currentDriverLapsComplete]);
-
-  const lapsRemaining = useMemo(() => {
-    const { lapsComplete: fieldLapsComplete = 0 } =
-      paceIndex?.[CarClassID] || {};
-
-    const normalizedLapsComplete = Math.max(0, fieldLapsComplete, lapsComplete);
-
-    return Math.ceil(raceLaps || estimatedLapCount) - normalizedLapsComplete;
-  }, [CarClassID, estimatedLapCount, lapsComplete, paceIndex, raceLaps]);
-
-  const context = useMemo(
+  const context: RaceLengthContextType = useMemo(
     () => ({
       raceLaps,
       lapsComplete,
-      lapsRemaining,
       sessionLength,
+      lapsRemaining: lapsRemaining,
       isRaceTimed: typeof sessionLength === "number",
-      estimatedLaps: estimatedLapCount,
+      estimatedLaps: totalLapsIndex,
     }),
-    [raceLaps, lapsComplete, lapsRemaining, sessionLength, estimatedLapCount],
+    [raceLaps, lapsComplete, sessionLength, lapsRemaining, totalLapsIndex],
   );
+
+  useEffect(() => {
+    console.log("Race length context:", context);
+  }, [context]);
 
   return (
     <RaceLengthContext.Provider value={context}>

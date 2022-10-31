@@ -13,7 +13,8 @@ export const teamSlice = createSlice({
   initialState,
   reducers: {
     addDriver: (state, action: PayloadAction<Driver>) => {
-      
+      const existingTeamDrivers = state[action.payload.CarIdx] || [];
+      state[action.payload.CarIdx] = [...existingTeamDrivers, action.payload];
     },
   },
 });

@@ -2,6 +2,12 @@ import { useContext, useMemo } from "react";
 import { useCurrentDriver } from "@racedirector/iracing-socket-js";
 import { invariant } from "ts-invariant";
 import { getPaceContext } from "./context";
+import { useAppSelector } from "src/app/hooks";
+import {
+  selectOtherClasses,
+  selectClassById,
+  selectTopClass,
+} from "src/features/sessionPaceSlice";
 
 export const usePace = () => {
   const context = useContext(getPaceContext());
@@ -10,19 +16,21 @@ export const usePace = () => {
 };
 
 export const usePaceIndex = () => {
-  const { index } = usePace();
-  return index;
+  const { classPace } = usePace();
+  return classPace;
 };
 
-export const useTopClassPace = () => {
-  const { topClassId, index: paceIndex } = usePace();
-  return useMemo(() => paceIndex?.[topClassId], [paceIndex, topClassId]);
-};
+export const useTopClassPace = () => useAppSelector(selectTopClass);
 
 export const useCurrentDriverClassPace = () => {
-  const paceIndex = usePaceIndex();
   const { CarClassID = null } = useCurrentDriver() || {};
-  return useMemo(() => {
-    return paceIndex?.[CarClassID];
-  }, [CarClassID, paceIndex]);
+  return useAppSelector((state) =>
+    selectClassById(state, CarClassID.toString()),
+  );
+};
+
+export const useTopClassAndOtherClasses = () => {
+  const topClass = useAppSelector(selectTopClass);
+  const otherClasses = useAppSelector(selectOtherClasses);
+  return useMemo(() => [topClass, otherClasses], [topClass, otherClasses]);
 };

@@ -1,10 +1,58 @@
 import React from "react";
 import { useIRacingSocketConnectionState } from "@racedirector/iracing-socket-js";
 import "./index.css";
+import {
+  Flex,
+  Heading,
+  Spacer,
+  Tab,
+  Tabs,
+  TabList,
+  TabPanel,
+  TabPanels,
+} from "@chakra-ui/react";
 import { ConnectionStatus } from "../../containers/ConnectionStatus";
 import { FuelCalculator } from "../../containers/FuelCalculator";
 import { SessionInformation } from "../../containers/SessionInformation";
-import { Flex, Heading, HStack } from "@chakra-ui/react";
+import { Standings } from "../../containers/Standings";
+import { Cameras } from "../../containers/Cameras";
+
+const AppTabBar = () => (
+  <Tabs isFitted variant="enclosed">
+    <TabList mb="1em">
+      <Tab>Session Information</Tab>
+      <Tab>Leaderboard</Tab>
+      <Tab>Relatives</Tab>
+      <Tab>Incidents</Tab>
+      <Tab>Fuel Calculator</Tab>
+      <Tab>Strategy</Tab>
+      <Tab>Camera</Tab>
+    </TabList>
+    <TabPanels>
+      <TabPanel>
+        <SessionInformation />
+      </TabPanel>
+      <TabPanel>
+        <Standings />
+      </TabPanel>
+      <TabPanel>
+        <Heading>Coming soon</Heading>
+      </TabPanel>
+      <TabPanel>
+        <Heading>Coming soon</Heading>
+      </TabPanel>
+      <TabPanel>
+        <FuelCalculator />
+      </TabPanel>
+      <TabPanel>
+        <Heading>Coming soon</Heading>
+      </TabPanel>
+      <TabPanel>
+        <Cameras />
+      </TabPanel>
+    </TabPanels>
+  </Tabs>
+);
 
 const App: React.FC<Record<string, never>> = () => {
   const { isIRacingConnected } = useIRacingSocketConnectionState();
@@ -18,25 +66,12 @@ const App: React.FC<Record<string, never>> = () => {
         paddingBottom={2.5}
         paddingTop={2.5}
       >
-        <HStack spacing={10}>
-          <Heading>iRacing Socket UI</Heading>
-          <ConnectionStatus />
-        </HStack>
+        <Heading>iRacing Socket UI</Heading>
+        <Spacer />
+        <ConnectionStatus />
       </Flex>
 
-      {isIRacingConnected && (
-        <>
-          <SessionInformation />
-
-          {/* <Cameras /> */}
-
-          <FuelCalculator />
-
-          {/* <RepairsRemaining /> */}
-
-          {/* <Standings /> */}
-        </>
-      )}
+      {isIRacingConnected && <AppTabBar />}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
+import { pick } from "lodash";
 
 // !!!: This is copy-pasta from `averagePaceSlice`
 const averageLapTimes = (lapTimes: number[]) => {
@@ -52,8 +53,14 @@ export const selectPaceAnalysis = (state: RootState) => state.paceAnalysis;
 
 export const selectAverageLapTimesForTargets = (
   state: RootState,
+  targetIndexes: string[],
 ): Record<string, number> => {
-  return Object.entries(state.paceAnalysis.targetLapTimes).reduce(
+  const targetLapTimes = pick(
+    state.paceAnalysis.targetLapTimes,
+    ...targetIndexes,
+  );
+
+  return Object.entries(targetLapTimes).reduce(
     (lapTimeIndex, [carIndex, lapTimes]) => {
       return {
         ...lapTimeIndex,
@@ -64,8 +71,38 @@ export const selectAverageLapTimesForTargets = (
   );
 };
 
+export const selectAverageLapTimesForTargetsByClass = (
+  state: RootState,
+  targetIndexesByClass: Record<string, string[]>,
+) => {
+  return Object.entries(targetIndexesByClass).reduce(
+    (index, [classId, targetIndexes]) => {
+      const targetLapTimes = selectAverageLapTimesForTargets(
+        state,
+        targetIndexes,
+      );
+
+      const lapTimes = Object.values(targetLapTimes);
+      const totalLapTime = lapTimes.reduce(
+        (totalLapTime, averageLapTime) => totalLapTime + averageLapTime,
+        0,
+      );
+
+      return {
+        ...index,
+        [classId]: totalLapTime / lapTimes.length,
+      };
+    },
+    {},
+  );
+};
+
 export const selectAverageLapTimeForSession = (state: RootState) => {
-  const averageLapTimes = selectAverageLapTimesForTargets(state);
+  const averageLapTimes = selectAverageLapTimesForTargets(
+    state,
+    Object.keys(state.paceAnalysis.targetLapTimes),
+  );
+
   const lapTimes = Object.values(averageLapTimes);
   const totalLapTime = lapTimes.reduce(
     (totalLapTime, averageLapTime) => totalLapTime + averageLapTime,
@@ -86,40 +123,5 @@ export const selectLastLapTimesForTargets = (state: RootState) => {
     {},
   );
 };
-
-export const selectTimeGainedAgainstField =
-  (driverCarIndex: number) => (state: RootState) => {
-    if (driverCarIndex < 0) {
-      return;
-    }
-
-    const { [driverCarIndex.toString()]: driverCarPace, ...rest } =
-      selectAverageLapTimesForTargets(state);
-
-    return Object.entries(rest).reduce((gainIndex, [carIndex, averagePace]) => {
-      return {
-        ...gainIndex,
-        [carIndex]: driverCarPace - averagePace,
-      };
-    }, {});
-  };
-
-export const selectTimeGainedAgainstTarget =
-  (comparisonIndex: string, carIndex: string) => (state: RootState) => {
-    const comparisonPace = averageLapTimes(
-      state.paceAnalysis.targetLapTimes?.[comparisonIndex] || [],
-    );
-
-    const targetPace = averageLapTimes(
-      state.paceAnalysis.targetLapTimes?.[carIndex] || [],
-    );
-
-    console.log(
-      `Pace gained: ${comparisonPace} - ${targetPace} = ${
-        comparisonPace - targetPace
-      }`,
-    );
-    return comparisonPace - targetPace;
-  };
 
 export default paceAnalysisSlice.reducer;

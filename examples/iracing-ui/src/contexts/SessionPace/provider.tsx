@@ -1,17 +1,12 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
+import React, { PropsWithChildren, useCallback, useEffect } from "react";
 import {
   SessionResultsPosition,
   SessionState,
+  useCurrentSessionClassLeaders,
   useCurrentSessionIsRaceSession,
-  useCurrentSessionResultsByClass,
   useIRacingContext,
 } from "@racedirector/iracing-socket-js";
-import { find, isEmpty, isEqual } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   addLapTimeForClass,
@@ -20,7 +15,7 @@ import {
   setLapTimesForClass,
 } from "../../features/sessionPaceSlice";
 import usePrevious from "../../hooks/usePrevious";
-import { getPaceContext, PaceContextType } from "./context";
+import { getPaceContext } from "./context";
 import { selectAverageLapTime } from "src/features/averagePaceSlice";
 
 export interface PaceProviderProps {}
@@ -39,24 +34,7 @@ export const PaceProvider: React.FC<PropsWithChildren<PaceProviderProps>> = ({
     } = {},
   } = useIRacingContext();
   const isRaceSession = useCurrentSessionIsRaceSession();
-  const classResults = useCurrentSessionResultsByClass();
-
-  const classLeaders: Record<string, SessionResultsPosition> = useMemo(
-    () =>
-      Object.entries(classResults).reduce(
-        (index, [classId, classPositions]) => {
-          return {
-            ...index,
-            [classId]: find(
-              classPositions,
-              ({ ClassPosition }) => ClassPosition === 0,
-            ),
-          };
-        },
-        {},
-      ),
-    [classResults],
-  );
+  const classLeaders = useCurrentSessionClassLeaders();
 
   const previousClassLeaders = usePrevious(classLeaders);
 

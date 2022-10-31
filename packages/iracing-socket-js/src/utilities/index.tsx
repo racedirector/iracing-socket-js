@@ -1,3 +1,4 @@
+import { SessionResultsPosition } from "../types";
 import { canUseSymbol } from "./globals";
 export * from "./position";
 
@@ -63,4 +64,20 @@ export const formatTimeForSession = (time: number) => {
   }
 
   return result;
+};
+
+export interface FastestLapTimeProvider {
+  FastestTime: number;
+}
+
+export const getFastestLap = <T extends FastestLapTimeProvider>(
+  results: T[],
+): number => {
+  return results.reduce((fastestLapTime, { FastestTime: fastestTime }) => {
+    if (fastestLapTime < 0 || fastestTime < fastestLapTime) {
+      return fastestTime;
+    }
+
+    return fastestLapTime;
+  }, -1);
 };

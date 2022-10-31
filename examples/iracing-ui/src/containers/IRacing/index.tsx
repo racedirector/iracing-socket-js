@@ -2,10 +2,9 @@ import React, { PropsWithChildren, useMemo } from "react";
 import { IRacingProvider } from "@racedirector/iracing-socket-js";
 import { useIRacingSocketConnectionContext } from "../../contexts/IRacingSocketConnection";
 import { PaceProvider } from "../../contexts/SessionPace";
-// import { FuelProvider } from "../../contexts/Fuel";
+import { FuelProvider } from "../../contexts/Fuel";
 import { RaceLengthProvider } from "../../contexts/RaceLength";
 import { StrengthOfFieldProvider } from "../../contexts/StrengthOfField";
-import { RaceStrategyProvider } from "../../contexts/RaceStrategy";
 import { PaceAnalysisProvider } from "../../contexts/PaceAnalysis";
 import { PitStopAnalysisProvider } from "../../contexts/PitStop";
 
@@ -15,11 +14,9 @@ const StrategyProvider: React.FC<PropsWithChildren<unknown>> = ({
   <PaceProvider>
     <PaceAnalysisProvider>
       <RaceLengthProvider>
-        {/* <FuelProvider> */}
-        <PitStopAnalysisProvider>
-          <RaceStrategyProvider>{children}</RaceStrategyProvider>
-        </PitStopAnalysisProvider>
-        {/* </FuelProvider> */}
+        <FuelProvider>
+          <PitStopAnalysisProvider>{children}</PitStopAnalysisProvider>
+        </FuelProvider>
       </RaceLengthProvider>
     </PaceAnalysisProvider>
   </PaceProvider>

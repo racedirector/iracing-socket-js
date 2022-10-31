@@ -47,7 +47,7 @@ export const SocketConnectionForm: React.FC<SocketConnectionFormProps> = ({
         <FormLabel htmlFor="port">Port</FormLabel>
         <Input
           id="port"
-          placeholder="5182"
+          placeholder="8182"
           value={port}
           {...register("port", { required: true })}
         />

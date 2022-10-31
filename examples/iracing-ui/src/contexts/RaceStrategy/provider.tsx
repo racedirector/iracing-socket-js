@@ -11,21 +11,21 @@ export const RaceStrategyProvider: React.FC<
   PropsWithChildren<RaceStrategyProviderProps>
 > = ({ children = null }) => {
   const RaceStrategyContext = getRaceStrategyContext();
-  const { data: { DriverInfo: { DriverCarFuelMaxLtr } = {} } = {} } =
-    useIRacingContext();
+  // const { data: { DriverInfo: { DriverCarFuelMaxLtr } = {} } = {} } =
+  //   useIRacingContext();
 
-  const { lapsRemaining } = useRaceLength();
-  const averageFuelCalculation = useAppSelector(
-    selectAverageRefuelAmount(lapsRemaining),
-  );
+  // const { lapsRemaining } = useRaceLength();
+  // const averageFuelCalculation = useAppSelector((state) =>
+  // selectAverageRefuelAmount(state, lapsRemaining),
+  // );
 
   // console.log("Need to put in", averageFuelCalculation, "more fuel");
   // console.log(DriverCarFuelMaxLtr, "L is what the car holds");
 
-  const estimatedFuelStintsRemaining = useMemo(() => {
-    const estimated = averageFuelCalculation / DriverCarFuelMaxLtr;
-    return estimated;
-  }, [averageFuelCalculation, DriverCarFuelMaxLtr]);
+  // const estimatedFuelStintsRemaining = useMemo(() => {
+  //   const estimated = averageFuelCalculation / DriverCarFuelMaxLtr;
+  //   return estimated;
+  // }, [averageFuelCalculation, DriverCarFuelMaxLtr]);
 
   return (
     <RaceStrategyContext.Provider value={{}}>

@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 const averageLapTimes = (lapTimes: number[]) => {
@@ -14,9 +14,14 @@ const averageLapTimes = (lapTimes: number[]) => {
 };
 
 export interface AveragePaceState {
+  // The number of laps completed
   lapsComplete: number;
+  // The number of lap times to track
   lapTimeLimit: number;
+  // The last `lapTimeLimit` lap times
   lapTimes: number[];
+  // The session time remaining at the last update.
+  // -1 represents it hasn't started yet.
   sessionTimeRemaining: number;
 }
 
@@ -41,6 +46,9 @@ export const averagePaceSlice = createSlice({
   name: "averagePace",
   initialState,
   reducers: {
+    setLapTimeLimit: (state, action: PayloadAction<number>) => {
+      state.lapTimeLimit = action.payload;
+    },
     setLapsComplete: (state, action: PayloadAction<number>) => {
       state.lapsComplete = action.payload;
     },
@@ -61,7 +69,13 @@ export const averagePaceSlice = createSlice({
 export const { setLapsComplete, addLapTime, setLapTimes } =
   averagePaceSlice.actions;
 
-export const selectAverageLapTime = (state: AveragePaceState) =>
-  averageLapTimes(state.lapTimes);
+export const selectLapTimes = (state: AveragePaceState) => state.lapTimes;
+
+export const selectAverageLapTime = createSelector(selectLapTimes, (lapTimes) =>
+  averageLapTimes(lapTimes),
+);
+
+export const selectLapTimeLimit = (state: AveragePaceState) =>
+  state.lapTimeLimit;
 
 export default averagePaceSlice.reducer;

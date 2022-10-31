@@ -1,59 +1,73 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { Badge, Box, HStack } from "@chakra-ui/react";
-import StrengthOfField, { StrengthOfFieldProps } from "../StrengthOfField";
-import WeatherConditions, {
-  WeatherConditionsProps,
-} from "../WeatherConditions";
 
-export interface SessionInformationProps
-  extends WeatherConditionsProps,
-    Omit<StrengthOfFieldProps, "index"> {
+export interface SessionInformationProps {
   name: string;
   sessionType?: string;
   sessionSubType?: string;
   eventType?: string;
-  timeRemaining: string;
-  strengthOfField: StrengthOfFieldProps["index"];
+  sessionId?: string;
+  subsessionId?: string;
+  seasonId?: string;
+  seriesId?: string;
 }
 
-export const SessionInformation: React.FC<SessionInformationProps> = ({
+export const SessionInformation: React.FC<
+  PropsWithChildren<SessionInformationProps>
+> = ({
   name,
-  eventType,
-  sessionType,
-  sessionSubType,
-  timeRemaining,
-  strengthOfField,
-  totalStrengthOfField,
-  ...weatherProps
+  eventType = null,
+  sessionType = null,
+  sessionSubType = null,
+  sessionId,
+  subsessionId,
+  seriesId,
+  seasonId,
+  children = null,
 }) => {
   return (
     <Box>
       <HStack>
         <Badge variant={"solid"} colorScheme={"green"}>
-          {name}
+          Name: {name}
         </Badge>
         {sessionType && (
           <Badge variant={"outline"} colorScheme={"red"}>
-            {sessionType}
+            Type: {sessionType}
           </Badge>
         )}
         {sessionSubType && (
           <Badge variant={"outline"} colorScheme={"red"}>
-            {sessionSubType}
+            Subtype: {sessionSubType}
           </Badge>
         )}
         {eventType && (
           <Badge variant={"solid"} colorScheme={"red"}>
-            {eventType}
+            Event type: {eventType}
+          </Badge>
+        )}
+        {sessionId && (
+          <Badge variant={"solid"} colorScheme={"blue"}>
+            Session ID: {sessionId}
+          </Badge>
+        )}
+        {subsessionId && (
+          <Badge variant={"outline"} colorScheme={"blue"}>
+            Subsession ID: {subsessionId}
+          </Badge>
+        )}
+        {seasonId && (
+          <Badge variant={"solid"} colorScheme={"green"}>
+            Season ID: {seasonId}
+          </Badge>
+        )}
+        {seriesId && (
+          <Badge variant={"outline"} colorScheme={"green"}>
+            Series ID: {seriesId}
           </Badge>
         )}
       </HStack>
-      <h2>{`Time Remaining: ${timeRemaining}`}</h2>
-      {/* <WeatherConditions {...weatherProps} /> */}
-      <StrengthOfField
-        index={strengthOfField}
-        totalStrengthOfField={totalStrengthOfField}
-      />
+      {children}
     </Box>
   );
 };

@@ -1,7 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "src/app/store";
-import { isEmpty } from "lodash";
+import { RootState } from "../app/store";
 
 export interface FuelState {
   pastUsage: number[];
@@ -89,43 +88,55 @@ export const selectLastFuelLevel = (state: RootState) =>
 export const selectLastLapUsage = (state: RootState) =>
   state.fuel.pastUsage?.[state.fuel.pastUsage.length - 1] || 0;
 
-export const selectLastLapFuelLapsRemaining = (state: RootState) => {
-  const usage = selectLastLapUsage(state);
-  return fuelLapsRemaining(usage, state.fuel.lastFuelLevel);
-};
+export const selectPastUsage = (state: RootState) => state.fuel.pastUsage || [];
 
-export const selectLastLapRefuelAmount =
-  (lapsRemaining: number) => (state: RootState) => {
-    const usage = selectLastLapUsage(state);
-    const fuelLevel = selectLastFuelLevel(state);
-    return refuelAmount(lapsRemaining, usage, fuelLevel);
-  };
+export const selectLastLapFuelLapsRemaining = createSelector(
+  selectLastLapUsage,
+  selectLastFuelLevel,
+  (usage, lastFuelLevel) => fuelLapsRemaining(usage, lastFuelLevel),
+);
 
-export const selectAverageUsage = (state: RootState) => {
-  const fuelState = state.fuel;
-  if (isEmpty(fuelState.pastUsage)) {
-    return 0;
-  }
+export const selectAverageUsage = createSelector(
+  selectPastUsage,
+  (pastUsage) => {
+    const sortedUsage = [...pastUsage].sort();
+    const averageUsageSource =
+      sortedUsage.length >= 3 ? sortedUsage.slice(1, -1) : sortedUsage;
 
-  const usage = [...fuelState.pastUsage].sort();
-  const averageUsageSource = usage.length >= 3 ? usage.slice(1, -1) : usage;
-  const totalFuelUsage = averageUsageSource.reduce(
-    (aggregateFuelUsage, fuelUsage) => aggregateFuelUsage + fuelUsage,
-  );
+    return (
+      averageUsageSource.reduce(
+        (aggregateFuelUsage, fuelUsage) => aggregateFuelUsage + fuelUsage,
+        0,
+      ) / averageUsageSource.length
+    );
+  },
+);
 
-  return totalFuelUsage / averageUsageSource.length;
-};
+export const selectAverageFuelLapsRemaining = createSelector(
+  selectAverageUsage,
+  selectLastFuelLevel,
+  (averageUsage, lastFuelLevel) =>
+    fuelLapsRemaining(averageUsage, lastFuelLevel),
+);
 
-export const selectAverageFuelLapsRemaining = (state: RootState) => {
-  const usage = selectAverageUsage(state);
-  return fuelLapsRemaining(usage, state.fuel.lastFuelLevel);
-};
+export const selectLastLapRefuelAmount = createSelector(
+  [
+    selectLastLapUsage,
+    selectLastFuelLevel,
+    (_state, lapsRemaining: number) => lapsRemaining,
+  ],
+  (usage, fuelLevel, lapsRemaining) =>
+    refuelAmount(lapsRemaining, usage, fuelLevel),
+);
 
-export const selectAverageRefuelAmount =
-  (lapsRemaining: number) => (state: RootState) => {
-    const usage = selectAverageUsage(state);
-    const fuelLevel = selectLastFuelLevel(state);
-    return refuelAmount(lapsRemaining, usage, fuelLevel);
-  };
+export const selectAverageRefuelAmount = createSelector(
+  [
+    selectAverageUsage,
+    selectLastFuelLevel,
+    (_state, lapsRemaining: number) => lapsRemaining,
+  ],
+  (usage, fuelLevel, lapsRemaining) =>
+    refuelAmount(lapsRemaining, usage, fuelLevel),
+);
 
 export default fuelSlice.reducer;

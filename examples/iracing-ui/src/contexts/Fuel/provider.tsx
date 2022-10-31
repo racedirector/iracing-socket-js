@@ -26,7 +26,7 @@ import {
   selectLastLapRefuelAmount,
 } from "src/features/fuelSlice";
 import usePrevious from "../../hooks/usePrevious";
-import { useRaceLength } from "../RaceLength";
+import { useLapsRemainingForCurrentDriver } from "../RaceLength";
 import { FuelContextType, getFuelContext } from "./context";
 
 const flagsResetLap = (flags: Flags) => {
@@ -46,7 +46,7 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
   const state = useAppSelector(selectFuel);
   const dispatch = useAppDispatch();
 
-  const { lapsRemaining } = useRaceLength();
+  const lapsRemaining = useLapsRemainingForCurrentDriver();
 
   const {
     data: {
@@ -60,6 +60,7 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
       SessionState: sessionState = SessionState.Invalid,
     } = {},
   } = useIRacingContext();
+
   const previousFuelLevel = usePrevious(nextFuelLevel);
   const previousLapDistancePercentage = usePrevious(lapDistancePercent);
   const lastUsage = useAppSelector(selectLastLapUsage);
@@ -70,12 +71,12 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
     selectAverageFuelLapsRemaining,
   );
 
-  const averageRefuelAmount = useAppSelector(
-    selectAverageRefuelAmount(lapsRemaining),
+  const averageRefuelAmount = useAppSelector((state) =>
+    selectAverageRefuelAmount(state, lapsRemaining),
   );
 
-  const lastRefuelAmount = useAppSelector(
-    selectLastLapRefuelAmount(lapsRemaining),
+  const lastRefuelAmount = useAppSelector((state) =>
+    selectLastLapRefuelAmount(state, lapsRemaining),
   );
 
   // Check flags every time the flag changes
