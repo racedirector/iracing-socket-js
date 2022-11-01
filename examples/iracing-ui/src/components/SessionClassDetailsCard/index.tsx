@@ -53,19 +53,27 @@ export const SessionClassDetailsCard: React.FC<
   expectedLapTime = -1,
 }) => {
   const normalizedFastestLap = useMemo(() => {
-    return normalizeLapTime(moment.duration(fastestLap, "seconds"));
+    return fastestLap > 0
+      ? normalizeLapTime(moment.duration(fastestLap, "seconds"))
+      : null;
   }, [fastestLap]);
 
   const normalizedLeaderPace = useMemo(() => {
-    return normalizeLapTime(moment.duration(leaderPace, "seconds"));
+    return leaderPace > 0
+      ? normalizeLapTime(moment.duration(leaderPace, "seconds"))
+      : null;
   }, [leaderPace]);
 
   const normalizedFieldPace = useMemo(() => {
-    return normalizeLapTime(moment.duration(fieldPace, "seconds"));
+    return fieldPace > 0
+      ? normalizeLapTime(moment.duration(fieldPace, "seconds"))
+      : null;
   }, [fieldPace]);
 
   const normalizedExpectedPace = useMemo(() => {
-    return normalizeLapTime(moment.duration(expectedLapTime, "seconds"));
+    return expectedLapTime > 0
+      ? normalizeLapTime(moment.duration(expectedLapTime, "seconds"))
+      : null;
   }, [expectedLapTime]);
 
   return (

@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Badge,
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  HStack,
-  Text,
-} from "@chakra-ui/react";
+import { Badge, Grid, GridItem, Text } from "@chakra-ui/react";
 
 interface ConnectionStatusIndicatorProps {
   connected: boolean;
