@@ -3,7 +3,6 @@ export * from "./useDriver";
 export * from "./useDrivers";
 export * from "./useIRacingSocketConnectionState";
 export * from "./useSession";
-export * from "./useSessionTotalTime";
 export * from "./useStandingsForSession";
 export * from "./useQualifyResults";
 export * from "./useWindDirection";

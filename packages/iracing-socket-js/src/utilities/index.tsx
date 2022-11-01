@@ -1,4 +1,3 @@
-import { SessionResultsPosition } from "../types";
 import { canUseSymbol } from "./globals";
 export * from "./position";
 

@@ -17,22 +17,26 @@
     "prepack": "bob prepack"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.8.6",
     "ts-invariant": "^0.9.4",
     "websocket-polyfill": "^0.0.3",
     "winston": "^3.6.0",
     "yargs": "^17.4.0"
   },
   "peerDependencies": {
+    "@reduxjs/toolkit": "^1.8.6",
     "lodash": "*",
     "react": "*"
   },
   "peerDependenciesMeta": {
+    "@reduxjs/toolkit": {
+      "optional": true
+    },
     "react": {
       "optional": true
     }
   },
   "devDependencies": {
+    "@reduxjs/toolkit": "^1.8.6",
     "@testing-library/react": "^13.0.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",

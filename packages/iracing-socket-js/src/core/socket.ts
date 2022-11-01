@@ -142,13 +142,13 @@ export class iRacingSocket extends EventEmitter {
 
   close = () => this.socket.close();
 
-  scheduleRetry = (retryInterval?: number) => {
+  private scheduleRetry = (retryInterval?: number) => {
     this.reconnectTimeout = setTimeout(() => {
       this.open();
     }, retryInterval || this.reconnectTimeoutInterval);
   };
 
-  cancelRetry = () => {
+  private cancelRetry = () => {
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout);
     }
