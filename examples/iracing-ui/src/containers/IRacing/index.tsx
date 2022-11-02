@@ -1,57 +1,26 @@
-import React, { PropsWithChildren, useMemo } from "react";
-import { IRacingProvider } from "@racedirector/iracing-socket-js";
-import { useIRacingSocketConnectionContext } from "../../contexts/IRacingSocketConnection";
-import { PaceProvider } from "../../contexts/SessionPace";
-import { FuelProvider } from "../../contexts/Fuel";
-import { RaceLengthProvider } from "../../contexts/RaceLength";
-import { StrengthOfFieldProvider } from "../../contexts/StrengthOfField";
-import { PaceAnalysisProvider } from "../../contexts/PaceAnalysis";
-import { PitStopAnalysisProvider } from "../../contexts/PitStop";
-
-const StrategyProvider: React.FC<PropsWithChildren<unknown>> = ({
-  children,
-}) => (
-  <PaceProvider>
-    <PaceAnalysisProvider>
-      <RaceLengthProvider>
-        <FuelProvider>
-          <PitStopAnalysisProvider>{children}</PitStopAnalysisProvider>
-        </FuelProvider>
-      </RaceLengthProvider>
-    </PaceAnalysisProvider>
-  </PaceProvider>
-);
+import React, { PropsWithChildren, useEffect } from "react";
+import {
+  connectAction,
+  disconnectAction,
+} from "@racedirector/iracing-socket-js";
+import { useAppDispatch } from "src/app/hooks";
 
 export interface IRacingProps {}
 
 export const IRacing: React.FC<PropsWithChildren<IRacingProps>> = ({
-  children,
+  children = null,
 }) => {
-  const { host, port } = useIRacingSocketConnectionContext();
+  const dispatch = useAppDispatch();
 
-  const server = useMemo(() => {
-    return `${host}:${port}`;
-  }, [host, port]);
+  useEffect(() => {
+    console.log("Connect socket explicitly");
+    dispatch(connectAction());
 
-  return (
-    <IRacingProvider
-      server={server}
-      fps={1}
-      requestParameters={[
-        "CameraInfo",
-        "CarSetup",
-        "DriverInfo",
-        "QualifyResultsInfo",
-        "RadioInfo",
-        "SessionInfo",
-        "SplitTimeInfo",
-        "WeekendInfo",
-        "__all_telemetry__",
-      ]}
-    >
-      <StrengthOfFieldProvider>
-        <StrategyProvider>{children}</StrategyProvider>
-      </StrengthOfFieldProvider>
-    </IRacingProvider>
-  );
+    return () => {
+      console.log("Disconnect socket explicitly...");
+      dispatch(disconnectAction());
+    };
+  }, [dispatch]);
+
+  return <>{children}</>;
 };

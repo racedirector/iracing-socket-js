@@ -8,5 +8,17 @@ export {
   selectIRacingServiceConnected,
   selectIRacingSocketConnected,
   selectIRacingSocketConnecting,
+  selectIRacingSessionInfo,
+  selectIRacingSessions,
+  selectSessionForSessionNumber,
+  selectCurrentSession,
+  selectCurrentDriverIndex,
+  selectActiveDrivers,
+  selectActiveDriversByCarClass,
+  selectActiveDriversByCarIndex,
+  selectActiveDriversForClass,
+  selectCurrentDriver,
+  selectStrengthOfField,
+  selectStrengthOfFieldByClass,
 } from "./state";
 export { createIRacingSocketMiddleware } from "./middleware";

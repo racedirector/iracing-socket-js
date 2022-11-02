@@ -1,5 +1,5 @@
 import React from "react";
-import { useIRacingSocketConnectionState } from "@racedirector/iracing-socket-js";
+import { useIRacingConnectionState } from "src/app/hooks";
 import "./index.css";
 import {
   Flex,
@@ -55,7 +55,7 @@ const AppTabBar = () => (
 );
 
 const App: React.FC<Record<string, never>> = () => {
-  const { isIRacingConnected } = useIRacingSocketConnectionState();
+  const { isIRacingConnected } = useIRacingConnectionState();
 
   return (
     <div style={{ flex: 1 }}>

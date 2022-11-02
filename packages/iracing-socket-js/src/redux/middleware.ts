@@ -75,8 +75,8 @@ export const createIRacingSocketMiddleware = ({
               );
 
             socket.on(iRacingSocketEvents.Update, (keys: string[]) => {
-              const newEntries = Object.entries(socket.data).filter(([key]) =>
-                keys.includes(key),
+              const newEntries = Object.entries(socket?.data || {}).filter(
+                ([key]) => keys.includes(key),
               );
 
               store.dispatch(updateIRacingData(Object.fromEntries(newEntries)));

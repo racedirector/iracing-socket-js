@@ -21,25 +21,28 @@ export const store = configureStore({
     team: teamReducer,
     iRacing: iRacingReducer,
   },
-  middleware: [
-    logger,
-    createIRacingSocketMiddleware({
-      requestParameters: [
-        "CameraInfo",
-        "CarSetup",
-        "DriverInfo",
-        "QualifyResultsInfo",
-        "RadioInfo",
-        "SessionInfo",
-        "SplitTimeInfo",
-        "WeekendInfo",
-        "__all_telemetry__",
-      ],
-    }),
-  ],
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([
+      logger,
+      createIRacingSocketMiddleware({
+        requestParameters: [
+          "CameraInfo",
+          "CarSetup",
+          "DriverInfo",
+          "QualifyResultsInfo",
+          "RadioInfo",
+          "SessionInfo",
+          "SplitTimeInfo",
+          "WeekendInfo",
+          "__all_telemetry__",
+        ],
+      }),
+    ]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const selectIRacingState = (state: RootState) => state.iRacing;
 
 export default store;

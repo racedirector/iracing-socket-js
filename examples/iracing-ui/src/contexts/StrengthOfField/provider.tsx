@@ -1,51 +1,23 @@
-import React, { PropsWithChildren, useMemo } from "react";
-import { chain } from "lodash";
-import { Driver, useDriversByCarIndex } from "@racedirector/iracing-socket-js";
+import React, { PropsWithChildren } from "react";
+import {
+  selectStrengthOfField,
+  selectStrengthOfFieldByClass,
+} from "@racedirector/iracing-socket-js";
 import { StrengthOfFieldContext } from "./context";
-
-const MAGIC_NUMBER = 1600;
-const getIRatingForDrivers = (drivers: Driver[]) => {
-  const total = drivers.reduce(
-    (totalIRating, { IRating }) =>
-      totalIRating + Math.pow(2, -IRating / MAGIC_NUMBER),
-    0,
-  );
-
-  const strength =
-    (MAGIC_NUMBER / Math.log(2)) * Math.log(drivers.length / total);
-
-  return strength / 1000;
-};
+import { useAppSelector } from "src/app/hooks";
 
 export interface StrengthOfFieldProviderProps {}
 
 export const StrengthOfFieldProvider: React.FC<
   PropsWithChildren<StrengthOfFieldProviderProps>
 > = ({ children = null }) => {
-  const driverIndex = useDriversByCarIndex({
-    includeSpectators: false,
-    includePaceCar: false,
-  });
+  const strengthOfField = useAppSelector(({ iRacing }) =>
+    selectStrengthOfFieldByClass(iRacing),
+  );
 
-  const strengthOfField: Record<string, number> = useMemo(() => {
-    return chain(Object.values(driverIndex))
-      .groupBy("CarClassID")
-      .mapValues(getIRatingForDrivers)
-      .valueOf();
-  }, [driverIndex]);
-
-  const totalStrengthOfField: number = useMemo(() => {
-    const numberOfClasses = Object.keys(strengthOfField).length;
-    const total = Object.values(strengthOfField).reduce(
-      (aggregation, iRating) => aggregation + iRating,
-      0,
-    );
-
-    const strength =
-      (MAGIC_NUMBER / Math.log(2)) * Math.log(numberOfClasses / total);
-
-    return strength / 1000;
-  }, [strengthOfField]);
+  const totalStrengthOfField = useAppSelector(({ iRacing }) =>
+    selectStrengthOfField(iRacing),
+  );
 
   return (
     <StrengthOfFieldContext.Provider

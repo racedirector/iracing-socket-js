@@ -21,7 +21,4 @@ export const teamSlice = createSlice({
 
 export const { addDriver } = teamSlice.actions;
 
-export const selectTeamStrengthOfField =
-  (carIndex: number) => (state: TeamState) => {};
-
 export default teamSlice.reducer;

@@ -1,12 +1,11 @@
 import React from "react";
-import { useIRacingSocketConnectionState } from "@racedirector/iracing-socket-js";
+import { useIRacingConnectionState } from "src/app/hooks";
 import { ConnectionStatus as ConnectionStatusUI } from "../../components/ConnectionStatus";
 
 export interface ConnectionStatusProps {}
 
 export const ConnectionStatus: React.FC<ConnectionStatusProps> = () => {
-  const { isIRacingConnected, isSocketConnected } =
-    useIRacingSocketConnectionState();
+  const { isIRacingConnected, isSocketConnected } = useIRacingConnectionState();
 
   return (
     <ConnectionStatusUI
