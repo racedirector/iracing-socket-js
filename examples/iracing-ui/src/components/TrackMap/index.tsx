@@ -2,7 +2,6 @@ import React, {
   useEffect,
   useState,
   useRef,
-  useCallback,
   useMemo,
   useLayoutEffect,
 } from "react";
@@ -27,11 +26,11 @@ interface DriverIndicatorStyles {
   color: string;
 }
 
-const DEFAULT_DRIVER_INDICATOR_STYLE: DriverIndicatorStyles = {
-  radius: 12,
-  highlightWidth: 4,
-  color: "yellow",
-};
+// const DEFAULT_DRIVER_INDICATOR_STYLE: DriverIndicatorStyles = {
+//   radius: 12,
+//   highlightWidth: 4,
+//   color: "yellow",
+// };
 
 export interface TrackMapProps
   extends Omit<
@@ -58,15 +57,15 @@ export const TrackMap: React.FC<TrackMapProps> = ({
   trackId,
   driverIndicators: driverIndicatorsProps = [],
   sectors = [],
-  driverIndicatorStyles = DEFAULT_DRIVER_INDICATOR_STYLE,
-  drawSectorLines: shouldDrawSectorLines = true,
+  // driverIndicatorStyles = DEFAULT_DRIVER_INDICATOR_STYLE,
+  // drawSectorLines: shouldDrawSectorLines = true,
   trackPathColor: trackLineColor = "black",
   trackPathWidth: trackLineWidth = 10,
   startFinishLineColor = "white",
   startFinishLineWidth = trackLineWidth * 3,
   sectorLineColor = "yellow",
   sectorLineWidth = trackLineWidth * 2,
-  style,
+  // style,
 }) => {
   const containerRef = useRef<SVGSVGElement>(null);
   const trackPathRef = useRef<TrackPathRef>(null);
@@ -90,7 +89,6 @@ export const TrackMap: React.FC<TrackMapProps> = ({
   useLayoutEffect(() => {
     if (!trackViewBox) {
       const viewBox = trackPathRef.current.getViewBox();
-      console.log(viewBox);
       if (viewBox) {
         setTrackViewBox(viewBox);
       }
@@ -102,10 +100,6 @@ export const TrackMap: React.FC<TrackMapProps> = ({
       setPaths(tracks[trackId].paths);
     }
   }, [trackId]);
-
-  useEffect(() => {
-    console.log("View box:", trackViewBox);
-  }, [trackViewBox]);
 
   return (
     <svg

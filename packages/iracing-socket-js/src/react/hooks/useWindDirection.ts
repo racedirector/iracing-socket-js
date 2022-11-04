@@ -1,13 +1,15 @@
 import { useIRacingContext } from "@racedirector/iracing-socket-js";
 
+const radiansToDegrees = (radians) => (radians * 180) / Math.PI + 180;
+
 export const useWindDirection = () => {
   const { data: { WindDir } = {} } = useIRacingContext();
-  return (WindDir * 180) / Math.PI + 180;
+  return radiansToDegrees(WindDir);
 };
 
 export const useWindDirectionRelativeToCar = () => {
   const { data: { WindDir, YawNorth } = {} } = useIRacingContext();
-  return ((WindDir - YawNorth) * 180) / Math.PI + 180;
+  return radiansToDegrees(WindDir - YawNorth);
 };
 
 export default useWindDirection;

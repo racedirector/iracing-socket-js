@@ -49,8 +49,8 @@ export const SessionClassDetails: React.FC<SessionClassDetailsProps> = () => {
     return index;
   }, [activeDrivers]);
 
-  const strengthOfField = useAppSelector(({ iRacing }) =>
-    selectStrengthOfFieldByClass(iRacing),
+  const strengthOfField = useAppSelector((state) =>
+    selectStrengthOfFieldByClass(state.iRacing),
   );
   const fastestLapIndex = useCurrentSessionClassFastestLap();
 
@@ -72,6 +72,7 @@ export const SessionClassDetails: React.FC<SessionClassDetailsProps> = () => {
     selectAverageLapTimesForTargetsByClass(state, driverIndexesByClassId),
   );
 
+  console.log(raceLaps, estimatedLaps, lapsComplete);
   const classDetails = useMemo(() => {
     return Object.values(classes).map<SessionClassDetailsCardProps>(
       ({ color, shortName, id }) => ({
@@ -98,10 +99,6 @@ export const SessionClassDetails: React.FC<SessionClassDetailsProps> = () => {
     raceLaps,
     strengthOfField,
   ]);
-
-  useEffect(() => {
-    console.log("Got new class details:", classDetails);
-  }, [classDetails]);
 
   return <SessionClassDetailsUI classDetails={classDetails} />;
 };

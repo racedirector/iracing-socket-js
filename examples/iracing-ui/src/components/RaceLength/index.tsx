@@ -39,6 +39,7 @@ export const RaceLength: React.FC<RaceLengthProps> = ({
 
   const normalizedTotalTime = useMemo(() => {
     if (totalTime === "unlimited") {
+      // TODO: This should be the estimated length
       return -1;
     } else {
       const totalTimeDuration = moment.duration(totalTime, "seconds");

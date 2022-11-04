@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import {
   useDriversByCarIndex,
   useIRacingContext,
@@ -43,25 +43,6 @@ export const TrackMap: React.FC<TrackMapProps> = () => {
       };
     });
   }, [driverIndex]);
-
-  // const [fakeLaps, setFakeLaps] = useState([-1, 0]);
-
-  // console.log(driverIndex);
-  // useEffect(() => {
-  //   const timerRef = setTimeout(() => {
-  //     setFakeLaps([0, 0.2]);
-  //     setTimeout(() => {
-  //       setFakeLaps([0, 0.21]);
-  //       setTimeout(() => {
-  //         setFakeLaps([0, 0.22]);
-  //       }, 500);
-  //     }, 500);
-  //   }, 500);
-
-  //   return () => {
-  //     clearTimeout(timerRef);
-  //   };
-  // }, []);
 
   return (
     <TrackMapUI

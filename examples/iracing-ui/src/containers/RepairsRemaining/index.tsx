@@ -1,5 +1,5 @@
-import { useIRacingContext } from "@racedirector/iracing-socket-js";
 import React from "react";
+import { useIRacingContext } from "src/app/hooks";
 import { RepairsRemaining as RepairsRemainingUI } from "../../components/RepairsRemaining";
 
 export interface RepairsRemainingProps {}

@@ -6,17 +6,17 @@ import { useMemo } from "react";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export const useIRacingState: () => RootState["iRacing"] = () =>
+export const useIRacingContext: () => RootState["iRacing"] = () =>
   useAppSelector((state) => state.iRacing);
 
 export const useIRacingConnectionState = () => {
-  const iRacingState = useIRacingState();
+  const { isIRacingConnected, isSocketConnected } = useIRacingContext();
 
   return useMemo(
     () => ({
-      isIRacingConnected: iRacingState.isIRacingConnected,
-      isSocketConnected: iRacingState.isSocketConnected,
+      isIRacingConnected,
+      isSocketConnected,
     }),
-    [iRacingState.isIRacingConnected, iRacingState.isSocketConnected],
+    [isIRacingConnected, isSocketConnected],
   );
 };

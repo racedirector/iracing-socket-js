@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useCurrentDriver } from "@racedirector/iracing-socket-js";
 import {
   FuelCalculator as FuelCalculatorUI,
   FuelCalculatorProps as FuelCalculatorUIProps,
@@ -6,7 +7,6 @@ import {
 import { useFuelUnit } from "../../hooks/useFuelUnit";
 import { useFuel } from "../../contexts/Fuel";
 import { useRaceLength } from "../../contexts/RaceLength/hooks";
-import { useCurrentDriver } from "@racedirector/iracing-socket-js";
 import { RaceLength } from "../RaceLength";
 
 export interface FuelCalculatorProps {}

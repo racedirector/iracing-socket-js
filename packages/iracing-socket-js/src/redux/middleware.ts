@@ -7,12 +7,10 @@ import {
   iRacingSocketEvents,
   iRacingSocketOptions,
 } from "../core";
+import { connect, disconnect } from "./actions";
 import {
-  connect,
-  disconnect,
-  setIRacingConnected,
   setSocketConnected,
-  setSocketConnecting,
+  setIRacingConnected,
   updateIRacingData,
 } from "./state";
 
@@ -57,9 +55,6 @@ export const createIRacingSocketMiddleware = ({
             });
 
             socket.socketConnectionEmitter
-              .on(iRacingSocketConnectionEvents.Connecting, (connecting) => {
-                store.dispatch(setSocketConnecting(connecting));
-              })
               .on(iRacingSocketConnectionEvents.Connect, () =>
                 store.dispatch(setSocketConnected(true)),
               )

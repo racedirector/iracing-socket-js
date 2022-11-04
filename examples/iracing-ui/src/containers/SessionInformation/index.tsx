@@ -8,10 +8,9 @@ import { SessionClassDetails } from "../SessionClassDetails";
 import RaceLength from "../RaceLength";
 import { TrackMap } from "../TrackMap";
 import { useAppSelector } from "src/app/hooks";
-import { RootState, selectIRacingState } from "src/app/store";
+import { RootState } from "src/app/store";
 
 const selectSessionInformation = (state: RootState) => {
-  const iRacingState = selectIRacingState(state);
   const {
     WeekendInfo: {
       EventType: eventType = "Unknown",
@@ -20,12 +19,12 @@ const selectSessionInformation = (state: RootState) => {
       SeasonID: seasonId,
       SeriesID: seriesId,
     } = {},
-  } = selectIRacingData(iRacingState);
+  } = selectIRacingData(state.iRacing);
   const {
     SessionName: sessionName = "Unknown",
     SessionType: sessionType = "Unknown",
     SessionSubType: sessionSubType = "Unknown",
-  } = selectCurrentSession(iRacingState) || {};
+  } = selectCurrentSession(state.iRacing) || {};
 
   return {
     sessionName,

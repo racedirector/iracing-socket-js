@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import {
   useDriversByCarIndex,
-  useIRacingContext,
   useStandingsForSession,
   useIsMulticlass,
   SessionResultsPosition,
@@ -13,6 +12,7 @@ import {
   Standings as StandingsUI,
   StandingsProps as StandingsUIProps,
 } from "../../components/Standings";
+import { useIRacingContext } from "src/app/hooks";
 
 const stringForGap = (
   sessionLeader: SessionResultsPosition,
@@ -58,7 +58,6 @@ export interface StandingsProps {}
 export const Standings: React.FC<StandingsProps> = () => {
   const [sessionNumber, setSessionNumber] = useState(0);
   const {
-    sendCommand,
     data: {
       CamCameraNumber: cameraNumber = -1,
       CamGroupNumber: cameraGroupNumber = -1,
@@ -85,16 +84,16 @@ export const Standings: React.FC<StandingsProps> = () => {
     });
   }, [driverIndex, standingsResult]);
 
-  const onPressCallback = useCallback(
-    (carNumber) => {
-      sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
-        carNumber.toString(),
-        cameraGroupNumber,
-        cameraNumber,
-      ]);
-    },
-    [cameraGroupNumber, cameraNumber, sendCommand],
-  );
+  // const onPressCallback = useCallback(
+  //   (carNumber) => {
+  //     // sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
+  //     //   carNumber.toString(),
+  //     //   cameraGroupNumber,
+  //     //   cameraNumber,
+  //     // ]);
+  //   },
+  //   [cameraGroupNumber, cameraNumber, sendCommand],
+  // );
 
   return (
     <StandingsUI
@@ -103,7 +102,7 @@ export const Standings: React.FC<StandingsProps> = () => {
       sessions={sessions}
       standings={standings}
       onSetSessionNumber={setSessionNumber}
-      onPress={onPressCallback}
+      onPress={console.log}
     />
   );
 };

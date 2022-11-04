@@ -4,7 +4,6 @@ import {
   PitServiceFlags,
   PitServiceStatus,
   TrackLocation,
-  selectPitServiceRequest,
 } from "@racedirector/iracing-socket-js";
 import { RootState } from "src/app/store";
 import { startAppListening } from "src/app/middleware";
@@ -159,23 +158,22 @@ startAppListening({
   },
 });
 
-startAppListening({
-  predicate: (_action, currentState, previousState) => {
-    const currentRequestedService =
-      currentState.iRacing.data?.PitSvFlags || 0x0;
-    const previousRequestedService =
-      previousState.iRacing.data?.PitSvFlags || 0x0;
+// startAppListening({
+//   predicate: (_action, currentState, previousState) => {
+//     const currentRequestedService =
+//       currentState.iRacing.data?.PitSvFlags || 0x0;
+//     const previousRequestedService =
+//       previousState.iRacing.data?.PitSvFlags || 0x0;
 
-    // ???: Need to check what gets called as you request service...?
-    // ???: If i have tires checked and change pressures, does this still fire?
+//     // ???: Need to check what gets called as you request service...?
+//     // ???: If i have tires checked and change pressures, does this still fire?
 
-    return currentRequestedService !== previousRequestedService;
-  },
-  effect: (_action, listenerApi) => {
-    const currentState = listenerApi.getState();
-    const requestedService = selectPitServiceRequest(currentState.iRacing);
-    console.log("Requested service has changed:", requestedService);
-  },
-});
+//     return currentRequestedService !== previousRequestedService;
+//   },
+//   effect: (_action, listenerApi) => {
+//     const currentState = listenerApi.getState();
+//     const requestedService = selectPitServiceRequest(currentState.iRacing);
+//   },
+// });
 
 export default pitStopAnalaysisSlice.reducer;

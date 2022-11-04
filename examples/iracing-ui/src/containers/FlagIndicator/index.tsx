@@ -1,5 +1,5 @@
 import React from "react";
-import { useIRacingContext } from "@racedirector/iracing-socket-js";
+import { useIRacingContext } from "src/app/hooks";
 import { FlagIndicator as FlagIndicatorUI } from "src/components/FlagIndicator";
 
 export interface FlagIndicatorProps {}
