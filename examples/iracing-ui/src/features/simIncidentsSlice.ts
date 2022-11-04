@@ -1,11 +1,6 @@
-import {
-  AnyAction,
-  createSelector,
-  createSlice,
-  ListenerEffect,
-} from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { AppDispatch, RootState } from "src/app/store";
+import { RootState } from "src/app/store";
 import {
   Flags,
   selectActiveDriversByCarIndex,
@@ -13,6 +8,7 @@ import {
 } from "@racedirector/iracing-socket-js";
 import {
   activeDriversDidChangePredicate,
+  AppListenerEffect,
   startAppListening,
 } from "src/app/middleware";
 
@@ -160,11 +156,12 @@ const incidentFilters = {
   includeSpectators: false,
 };
 
-export const checkIncidentsEffect: ListenerEffect<
-  AnyAction,
-  RootState,
-  AppDispatch
-> = (_action, listenerApi) => {
+export const checkIncidentsPredicate = activeDriversDidChangePredicate;
+
+export const checkIncidentsEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
   const currentState = listenerApi.getState();
   const previousState = listenerApi.getOriginalState();
 
@@ -216,7 +213,7 @@ export const checkIncidentsEffect: ListenerEffect<
 };
 
 startAppListening({
-  predicate: activeDriversDidChangePredicate,
+  predicate: checkIncidentsPredicate,
   effect: checkIncidentsEffect,
 });
 

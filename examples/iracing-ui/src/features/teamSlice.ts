@@ -1,9 +1,4 @@
-import {
-  AnyAction,
-  AnyListenerPredicate,
-  createSlice,
-  ListenerEffect,
-} from "@reduxjs/toolkit";
+import { AnyListenerPredicate, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   Driver,
@@ -11,9 +6,10 @@ import {
 } from "@racedirector/iracing-socket-js";
 import {
   activeDriversDidChangePredicate,
+  AppListenerEffect,
   startAppListening,
 } from "src/app/middleware";
-import { AppDispatch, RootState } from "src/app/store";
+import { RootState } from "src/app/store";
 
 interface Team {
   teamName: string;
@@ -70,11 +66,7 @@ const driverSwapPredicate: AnyListenerPredicate<RootState> = (
   activeDriversDidChangePredicate(action, currentState, previousState) &&
   currentState.iRacing.data?.WeekendInfo?.TeamRacing > 0;
 
-const checkDriverChangeEffect: ListenerEffect<
-  AnyAction,
-  RootState,
-  AppDispatch
-> = (_action, listenerApi) => {
+const checkDriverChangeEffect: AppListenerEffect = (_action, listenerApi) => {
   const currentState = listenerApi.getState();
   const previousState = listenerApi.getOriginalState();
 

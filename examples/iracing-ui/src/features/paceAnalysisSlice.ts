@@ -2,7 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 import { find, isEmpty, isEqual, pick } from "lodash";
-import { startAppListening } from "src/app/middleware";
+import {
+  AppListenerEffect,
+  AppListenerPredicate,
+  startAppListening,
+} from "src/app/middleware";
 import {
   selectCurrentSession,
   selectSessionResultsPositions,
@@ -129,41 +133,52 @@ export const selectLastLapTimesForTargets = (state: RootState) => {
   );
 };
 
+export const currentSessionResultsDidChangePredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+  previousState,
+) => {
+  const currentSession = selectCurrentSession(currentState.iRacing);
+  const previousSession = selectCurrentSession(previousState.iRacing);
+
+  const currentResults = selectSessionResultsPositions(currentSession);
+  const previousResults = selectSessionResultsPositions(previousSession);
+
+  return !isEqual(currentResults, previousResults);
+};
+
+export const currentSessionResultsDidChangeEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
+  const currentState = listenerApi.getState();
+  const previousState = listenerApi.getOriginalState();
+  const currentSession = selectCurrentSession(currentState.iRacing);
+  const previousSession = selectCurrentSession(previousState.iRacing);
+  const currentResults = selectSessionResultsPositions(currentSession);
+  const previousResults = selectSessionResultsPositions(previousSession);
+
+  const newResults: Record<string, number> = currentResults
+    .filter(({ CarIdx, LapsComplete }) => {
+      const previousResult = find(
+        previousResults,
+        ({ CarIdx: resultCarIndex }) => resultCarIndex === CarIdx,
+      );
+
+      return !previousResult || LapsComplete > previousResult.LapsComplete;
+    })
+    .reduce((index, { CarIdx, LastTime }) => {
+      return LastTime >= 0 ? { ...index, [CarIdx]: LastTime } : index;
+    }, {});
+
+  if (!isEmpty(newResults)) {
+    listenerApi.dispatch(addTargetLapTimes(newResults));
+  }
+};
+
 startAppListening({
-  predicate: (_action, currentState, previousState) => {
-    const currentSession = selectCurrentSession(currentState.iRacing);
-    const previousSession = selectCurrentSession(previousState.iRacing);
-
-    const currentResults = selectSessionResultsPositions(currentSession);
-    const previousResults = selectSessionResultsPositions(previousSession);
-
-    return !isEqual(currentResults, previousResults);
-  },
-  effect: (_action, listenerApi) => {
-    const currentState = listenerApi.getState();
-    const previousState = listenerApi.getOriginalState();
-    const currentSession = selectCurrentSession(currentState.iRacing);
-    const previousSession = selectCurrentSession(previousState.iRacing);
-    const currentResults = selectSessionResultsPositions(currentSession);
-    const previousResults = selectSessionResultsPositions(previousSession);
-
-    const newResults: Record<string, number> = currentResults
-      .filter(({ CarIdx, LapsComplete }) => {
-        const previousResult = find(
-          previousResults,
-          ({ CarIdx: resultCarIndex }) => resultCarIndex === CarIdx,
-        );
-
-        return !previousResult || LapsComplete > previousResult.LapsComplete;
-      })
-      .reduce((index, { CarIdx, LastTime }) => {
-        return LastTime >= 0 ? { ...index, [CarIdx]: LastTime } : index;
-      }, {});
-
-    if (!isEmpty(newResults)) {
-      listenerApi.dispatch(addTargetLapTimes(newResults));
-    }
-  },
+  predicate: currentSessionResultsDidChangePredicate,
+  effect: currentSessionResultsDidChangeEffect,
 });
 
 export default paceAnalysisSlice.reducer;

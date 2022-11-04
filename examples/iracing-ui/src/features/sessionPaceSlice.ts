@@ -17,7 +17,11 @@ import averagePaceReducer, {
   AddLapTimePayload,
 } from "./averagePaceSlice";
 import { RootState } from "src/app/store";
-import { startAppListening } from "src/app/middleware";
+import {
+  AppListenerEffect,
+  AppListenerPredicate,
+  startAppListening,
+} from "src/app/middleware";
 
 export interface SessionPaceState {
   [classId: string]: AveragePaceState;
@@ -263,68 +267,79 @@ export const selectRaceLengthContext = createSelector(
   },
 );
 
-startAppListening({
-  predicate: (_action, currentState, previousState) => {
-    const currentClassLeaders = selectCurrentSessionClassLeaders(
-      currentState.iRacing,
-    );
-    const previousClassLeaders = selectCurrentSessionClassLeaders(
-      previousState.iRacing,
-    );
+export const classLeadersDidChangePredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+  previousState,
+) => {
+  const currentClassLeaders = selectCurrentSessionClassLeaders(
+    currentState.iRacing,
+  );
+  const previousClassLeaders = selectCurrentSessionClassLeaders(
+    previousState.iRacing,
+  );
 
-    const classLeadersChanged = !isEqual(
-      currentClassLeaders,
-      previousClassLeaders,
-    );
+  const classLeadersChanged = !isEqual(
+    currentClassLeaders,
+    previousClassLeaders,
+  );
 
-    return classLeadersChanged;
-  },
-  effect: (_action, listenerApi) => {
-    const currentState = listenerApi.getState();
-    const iRacingState = currentState.iRacing;
-    const currentClassLeaders = selectCurrentSessionClassLeaders(iRacingState);
-    const isRacing =
-      currentState.iRacing.data?.SessionState || SessionState.Invalid;
-    const isRaceSession = selectCurrentSessionIsRaceSession(iRacingState);
+  return classLeadersChanged;
+};
 
-    Object.entries(currentClassLeaders).forEach(([classId, leader]) => {
-      const classPace = selectClassById(currentState, classId);
-      const averageLapTime = classPace ? selectAverageLapTime(classPace) : -1;
+export const classLeadersDidChangeEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
+  const currentState = listenerApi.getState();
+  const iRacingState = currentState.iRacing;
+  const currentClassLeaders = selectCurrentSessionClassLeaders(iRacingState);
+  const isRacing =
+    currentState.iRacing.data?.SessionState || SessionState.Invalid;
+  const isRaceSession = selectCurrentSessionIsRaceSession(iRacingState);
 
-      const isInvalid =
-        (isRaceSession && leader.LapsComplete < 2) ||
-        (isRaceSession && leader.LapsComplete <= classPace?.lapsComplete) ||
-        (!isRaceSession && leader.FastestTime <= averageLapTime);
+  Object.entries(currentClassLeaders).forEach(([classId, leader]) => {
+    const classPace = selectClassById(currentState, classId);
+    const averageLapTime = classPace ? selectAverageLapTime(classPace) : -1;
 
-      if (isInvalid) {
-        return;
-      }
+    const isInvalid =
+      (isRaceSession && leader.LapsComplete < 2) ||
+      (isRaceSession && leader.LapsComplete <= classPace?.lapsComplete) ||
+      (!isRaceSession && leader.FastestTime <= averageLapTime);
 
-      if (isRaceSession) {
-        listenerApi.dispatch(
-          setLapsCompleteForClass({
-            classId,
-            lapsComplete: leader.LapsComplete,
-          }),
-        );
-      }
+    if (isInvalid) {
+      return;
+    }
 
-      const shouldUpdateLapTimes = isRacing && leader.LastTime > 0;
-      if (shouldUpdateLapTimes) {
-        const payload = {
+    if (isRaceSession) {
+      listenerApi.dispatch(
+        setLapsCompleteForClass({
           classId,
-          lapTime: leader.LastTime,
-          sessionTimeRemaining: iRacingState.data?.SessionTimeRemain,
-        };
+          lapsComplete: leader.LapsComplete,
+        }),
+      );
+    }
 
-        listenerApi.dispatch(
-          isRaceSession
-            ? addLapTimeForClass(payload)
-            : setLapTimesForClass(payload),
-        );
-      }
-    });
-  },
+    const shouldUpdateLapTimes = isRacing && leader.LastTime > 0;
+    if (shouldUpdateLapTimes) {
+      const payload = {
+        classId,
+        lapTime: leader.LastTime,
+        sessionTimeRemaining: iRacingState.data?.SessionTimeRemain,
+      };
+
+      listenerApi.dispatch(
+        isRaceSession
+          ? addLapTimeForClass(payload)
+          : setLapTimesForClass(payload),
+      );
+    }
+  });
+};
+
+startAppListening({
+  predicate: classLeadersDidChangePredicate,
+  effect: classLeadersDidChangeEffect,
 });
 
 export default sessionPaceSlice.reducer;

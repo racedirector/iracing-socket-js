@@ -1,9 +1,4 @@
-import {
-  createSlice,
-  createSelector,
-  current,
-  isAllOf,
-} from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   Flags,
@@ -17,7 +12,11 @@ import {
   playerIsOnTrackChanged,
   playerOnPitRoadChanged,
 } from "../app/actions";
-import { startAppListening } from "../app/middleware";
+import {
+  AppListenerEffect,
+  AppListenerPredicate,
+  startAppListening,
+} from "../app/middleware";
 
 export const flagsResetLap = (flags: Flags) => {
   const randomWaving = flags & Flags.RandomWaving;
@@ -205,110 +204,148 @@ export const selectAverageRefuelAmount = createSelector(
 );
 
 // Listener for when a lap starts, reports the current fuel level.
+export const lapStartedPredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+  previousState,
+) => {
+  const isOnTrack = currentState.iRacing.data?.IsOnTrack;
+  const sessionFlags = currentState.iRacing.data?.SessionFlags;
+  const currentLapDistancePercentage = currentState.iRacing.data?.LapDistPct;
+  const previousLapDistancePercentage = previousState.iRacing.data?.LapDistPct;
+
+  const lapDistanceChanged =
+    previousLapDistancePercentage &&
+    previousLapDistancePercentage !== currentLapDistancePercentage;
+
+  const crossedTimingLine =
+    currentLapDistancePercentage < 0.1 && previousLapDistancePercentage > 0.9;
+
+  return (
+    isOnTrack &&
+    lapDistanceChanged &&
+    crossedTimingLine &&
+    !flagsResetLap(sessionFlags)
+  );
+};
+
+export const lapStartedEffect: AppListenerEffect = (_action, listenerApi) => {
+  const fuelLevel = listenerApi.getState().iRacing.data?.FuelLevel;
+  listenerApi.dispatch(lapStarted(fuelLevel));
+};
+
 startAppListening({
-  predicate: (_action, currentState, previousState) => {
-    const isOnTrack = currentState.iRacing.data?.IsOnTrack;
-    const sessionFlags = currentState.iRacing.data?.SessionFlags;
-    const currentLapDistancePercentage = currentState.iRacing.data?.LapDistPct;
-    const previousLapDistancePercentage =
-      previousState.iRacing.data?.LapDistPct;
-
-    const lapDistanceChanged =
-      previousLapDistancePercentage &&
-      previousLapDistancePercentage !== currentLapDistancePercentage;
-
-    const crossedTimingLine =
-      currentLapDistancePercentage < 0.1 && previousLapDistancePercentage > 0.9;
-
-    return (
-      isOnTrack &&
-      lapDistanceChanged &&
-      crossedTimingLine &&
-      !flagsResetLap(sessionFlags)
-    );
-  },
-  effect: (_action, listenerApi) => {
-    const fuelLevel = listenerApi.getState().iRacing.data?.FuelLevel;
-    listenerApi.dispatch(lapStarted(fuelLevel));
-  },
+  predicate: lapStartedPredicate,
+  effect: lapStartedEffect,
 });
 
 // Listener for when a lap changes and we're racing to update fuel usage
+export const updateFuelUsagePredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+) => {
+  const {
+    fuel: { lapChanged, lastFuelLevel },
+    iRacing: {
+      data: {
+        SessionState: sessionState = SessionState.Invalid,
+        SessionFlags: sessionFlags = 0x0,
+        OnPitRoad: isOnPitRoad,
+        FuelLevel: currentFuelLevel,
+      } = {},
+    },
+  } = currentState;
+
+  const isStateValid = lapChanged && sessionState === SessionState.Racing;
+  const isCautionOut = sessionFlags & (Flags.Caution | Flags.CautionWaving);
+  const isValidLap = !isOnPitRoad && !isCautionOut;
+  const isValidFuelLevel =
+    currentFuelLevel >= 0 && lastFuelLevel > currentFuelLevel;
+
+  return isValidLap && isValidFuelLevel && isStateValid;
+};
+
+export const updateFuelUsageEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
+  const {
+    fuel: { lastFuelLevel },
+    iRacing: { data: { FuelLevel: currentFuelLevel } = {} },
+  } = listenerApi.getState();
+
+  const usage = lastFuelLevel - currentFuelLevel;
+  listenerApi.dispatch(addUsage({ usage, fuelLevel: currentFuelLevel }));
+};
+
 startAppListening({
-  predicate: (_action, currentState) => {
-    return (
-      currentState.fuel.lapChanged &&
-      currentState.iRacing.data?.SessionState === SessionState.Racing
-    );
-  },
-  effect: (_action, listenerApi) => {
-    const {
-      fuel: { lastFuelLevel },
-      iRacing: {
-        data: {
-          SessionFlags: sessionFlags = 0x0,
-          OnPitRoad: isOnPitRoad,
-          FuelLevel: currentFuelLevel,
-        } = {},
-      },
-    } = listenerApi.getState();
-
-    const isCautionOut = sessionFlags & (Flags.Caution | Flags.CautionWaving);
-    const isValidLap = !isOnPitRoad && !isCautionOut;
-
-    if (
-      isValidLap &&
-      currentFuelLevel >= 0 &&
-      lastFuelLevel > currentFuelLevel
-    ) {
-      const usage = lastFuelLevel - currentFuelLevel;
-      listenerApi.dispatch(addUsage({ usage, fuelLevel: currentFuelLevel }));
-    }
-  },
+  predicate: updateFuelUsagePredicate,
+  effect: updateFuelUsageEffect,
 });
 
 // Listener for when the player properly enters the pit lane and enters the pit stall
-startAppListening({
-  predicate: (_action, currentState, previousState) => {
-    const isOnPitRoad = currentState.iRacing.data?.OnPitRoad || false;
-    const currentTrackLocation =
-      currentState.iRacing.data?.PlayerTrackSurface || TrackLocation.NotInWorld;
-    const previousTrackLocation =
-      previousState.iRacing.data?.PlayerTrackSurface ||
-      TrackLocation.NotInWorld;
+export const playerEnteredPitStallPredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+  previousState,
+) => {
+  const isOnPitRoad = currentState.iRacing.data?.OnPitRoad || false;
+  const currentTrackLocation =
+    currentState.iRacing.data?.PlayerTrackSurface || TrackLocation.NotInWorld;
+  const previousTrackLocation =
+    previousState.iRacing.data?.PlayerTrackSurface || TrackLocation.NotInWorld;
 
-    return (
-      isOnPitRoad &&
-      currentTrackLocation !== previousTrackLocation &&
-      currentTrackLocation === TrackLocation.InPitStall
-    );
-  },
-  effect: (_action, listenerApi) => {
-    console.log("Player is on pit road and track location became pit stall");
-    const fuelLevel = listenerApi.getState().iRacing.data?.FuelLevel;
-    listenerApi.dispatch(setFuelLevel(fuelLevel));
-  },
+  return (
+    isOnPitRoad &&
+    currentTrackLocation !== previousTrackLocation &&
+    currentTrackLocation === TrackLocation.InPitStall
+  );
+};
+
+export const playerEnteredPitStallEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
+  console.log("Player is on pit road and track location became pit stall");
+  const fuelLevel = listenerApi.getState().iRacing.data?.FuelLevel;
+  listenerApi.dispatch(setFuelLevel(fuelLevel));
+};
+
+startAppListening({
+  predicate: playerEnteredPitStallPredicate,
+  effect: playerEnteredPitStallEffect,
 });
 
 // Listener for when the player is in the garage and changes the fuel level
-startAppListening({
-  predicate: (_action, currentState, previousState) => {
-    const isInGarage = currentState.iRacing.data?.IsInGarage;
-    const currentFuelLevel = currentState.iRacing.data?.FuelLevel || 0;
-    const previousFuelLevel = previousState.iRacing.data?.FuelLevel;
+export const playerChangedFuelLevelFromGaragePredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+  previousState,
+) => {
+  const isInGarage = currentState.iRacing.data?.IsInGarage;
+  const currentFuelLevel = currentState.iRacing.data?.FuelLevel || 0;
+  const previousFuelLevel = previousState.iRacing.data?.FuelLevel;
 
-    return isInGarage && currentFuelLevel !== previousFuelLevel;
-  },
-  effect: (_action, listenerApi) => {
-    console.log("Player is in garage and changed the fuel level");
-    const fuelLevel = listenerApi.getState().iRacing.data?.FuelLevel;
-    listenerApi.dispatch(setFuelLevel(fuelLevel));
-  },
+  return isInGarage && currentFuelLevel !== previousFuelLevel;
+};
+
+export const playerChangedFuelLevelFromGarageEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
+  console.log("Player is in garage and changed the fuel level");
+  const fuelLevel = listenerApi.getState().iRacing.data?.FuelLevel;
+  listenerApi.dispatch(setFuelLevel(fuelLevel));
+};
+
+startAppListening({
+  predicate: playerChangedFuelLevelFromGaragePredicate,
+  effect: playerChangedFuelLevelFromGarageEffect,
 });
 
 // Listener for when the next fuel level is detected to be more than the previous
-startAppListening({
-  predicate: (_action, currentState, previousState) => {
+export const currentFuelLevelGreaterThanPreviousPredicate: AppListenerPredicate =
+  (_action, currentState, previousState) => {
     const currentFuelLevel = currentState.iRacing.data?.FuelLevel;
     const previousFuelLevel = previousState.iRacing.data?.FuelLevel;
 
@@ -317,10 +354,16 @@ startAppListening({
       previousFuelLevel &&
       currentFuelLevel > previousFuelLevel
     );
-  },
-  effect: () => {
+  };
+
+export const currentFuelLevelGreaterThanPreviousEffect: AppListenerEffect =
+  () => {
     console.log("The fuel level was detected to be more than the previous...");
-  },
+  };
+
+startAppListening({
+  predicate: currentFuelLevelGreaterThanPreviousPredicate,
+  effect: currentFuelLevelGreaterThanPreviousEffect,
 });
 
 export default fuelSlice.reducer;

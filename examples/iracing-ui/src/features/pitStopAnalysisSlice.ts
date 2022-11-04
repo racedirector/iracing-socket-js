@@ -6,7 +6,11 @@ import {
   TrackLocation,
 } from "@racedirector/iracing-socket-js";
 import { RootState } from "src/app/store";
-import { startAppListening } from "src/app/middleware";
+import {
+  AppListenerEffect,
+  AppListenerPredicate,
+  startAppListening,
+} from "src/app/middleware";
 import { playerTrackLocationChanged } from "src/app/actions";
 
 const serviceRequestForServiceFlags = (serviceFlags: PitServiceFlags) => ({
@@ -133,29 +137,37 @@ export const selectPitStopAnalysis = (state: RootState) =>
   state.pitStopAnalysis;
 
 // Listener for when the player pit service status changes
-startAppListening({
-  predicate: (_action, currentState, previousState) => {
+export const playerCarPitServiceStatusDidChangePredicate: AppListenerPredicate =
+  (_action, currentState, previousState) => {
     const currentServiceStatus =
       currentState.iRacing.data?.PlayerCarPitSvStatus || PitServiceStatus.None;
     const previousServiceStatus =
       previousState.iRacing.data?.PlayerCarPitSvStatus || PitServiceStatus.None;
 
     return currentServiceStatus !== previousServiceStatus;
-  },
-  effect: (_action, listenerApi) => {
-    const currentState = listenerApi.getState();
-    const sessionTime = currentState.iRacing.data?.SessionTime;
-    const currentStatus = currentState.iRacing.data?.PlayerCarPitSvStatus;
-    const currentLap = currentState.iRacing.data?.Lap;
+  };
 
-    listenerApi.dispatch(
-      updateServiceStatus({
-        status: currentStatus,
-        lapNumber: currentLap,
-        sessionTime,
-      }),
-    );
-  },
+export const playerCarPitServiceStatusDidChangeEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
+  const currentState = listenerApi.getState();
+  const sessionTime = currentState.iRacing.data?.SessionTime;
+  const currentStatus = currentState.iRacing.data?.PlayerCarPitSvStatus;
+  const currentLap = currentState.iRacing.data?.Lap;
+
+  listenerApi.dispatch(
+    updateServiceStatus({
+      status: currentStatus,
+      lapNumber: currentLap,
+      sessionTime,
+    }),
+  );
+};
+
+startAppListening({
+  predicate: playerCarPitServiceStatusDidChangePredicate,
+  effect: playerCarPitServiceStatusDidChangeEffect,
 });
 
 // startAppListening({
