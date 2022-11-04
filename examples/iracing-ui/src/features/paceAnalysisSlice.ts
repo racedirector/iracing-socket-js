@@ -1,7 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
-import { pick } from "lodash";
+import { find, isEmpty, isEqual, pick } from "lodash";
+import { startAppListening } from "src/app/middleware";
+import {
+  selectCurrentSession,
+  selectSessionResultsPositions,
+} from "@racedirector/iracing-socket-js";
 
 // !!!: This is copy-pasta from `averagePaceSlice`
 const averageLapTimes = (lapTimes: number[]) => {
@@ -123,5 +128,42 @@ export const selectLastLapTimesForTargets = (state: RootState) => {
     {},
   );
 };
+
+startAppListening({
+  predicate: (_action, currentState, previousState) => {
+    const currentSession = selectCurrentSession(currentState.iRacing);
+    const previousSession = selectCurrentSession(previousState.iRacing);
+
+    const currentResults = selectSessionResultsPositions(currentSession);
+    const previousResults = selectSessionResultsPositions(previousSession);
+
+    return !isEqual(currentResults, previousResults);
+  },
+  effect: (_action, listenerApi) => {
+    const currentState = listenerApi.getState();
+    const previousState = listenerApi.getOriginalState();
+    const currentSession = selectCurrentSession(currentState.iRacing);
+    const previousSession = selectCurrentSession(previousState.iRacing);
+    const currentResults = selectSessionResultsPositions(currentSession);
+    const previousResults = selectSessionResultsPositions(previousSession);
+
+    const newResults: Record<string, number> = currentResults
+      .filter(({ CarIdx, LapsComplete }) => {
+        const previousResult = find(
+          previousResults,
+          ({ CarIdx: resultCarIndex }) => resultCarIndex === CarIdx,
+        );
+
+        return !previousResult || LapsComplete > previousResult.LapsComplete;
+      })
+      .reduce((index, { CarIdx, LastTime }) => {
+        return LastTime >= 0 ? { ...index, [CarIdx]: LastTime } : index;
+      }, {});
+
+    if (!isEmpty(newResults)) {
+      listenerApi.dispatch(addTargetLapTimes(newResults));
+    }
+  },
+});
 
 export default paceAnalysisSlice.reducer;

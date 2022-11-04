@@ -2,7 +2,7 @@ import { useIRacingContext } from "@racedirector/iracing-socket-js";
 import React, { PropsWithChildren, useEffect, useMemo } from "react";
 import { useAppSelector } from "src/app/hooks";
 import { selectAverageRefuelAmount } from "src/features/fuelSlice";
-import { useRaceLength } from "../RaceLength";
+import { useRaceLength } from "../RaceLength/hooks";
 import { getRaceStrategyContext } from "./context";
 
 export interface RaceStrategyProviderProps {}

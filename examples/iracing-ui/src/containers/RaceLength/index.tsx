@@ -4,7 +4,7 @@ import {
   useCurrentSession,
   useIRacingContext,
 } from "@racedirector/iracing-socket-js";
-import { useRaceLength } from "src/contexts/RaceLength";
+import { useRaceLength } from "src/contexts/RaceLength/hooks";
 import { RaceLength as RaceLengthUI } from "../../components/RaceLength";
 
 const useAverageLapTime = () => {

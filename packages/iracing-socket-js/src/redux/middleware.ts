@@ -1,4 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
+import { isEmpty } from "lodash";
 import {
   iRacingClientConnectionEvents,
   iRacingSocket,
@@ -29,7 +30,7 @@ export const createIRacingSocketMiddleware = ({
   readIBT = false,
   reconnectTimeoutInterval = 5,
   autoconnect = true,
-} = {}) => {
+} = {}): Middleware => {
   let socket: iRacingSocket = null;
 
   // TODO: There's gotta be some way to make this like, not need all these params up front
@@ -79,7 +80,10 @@ export const createIRacingSocketMiddleware = ({
                 ([key]) => keys.includes(key),
               );
 
-              store.dispatch(updateIRacingData(Object.fromEntries(newEntries)));
+              const newData = Object.fromEntries(newEntries);
+              if (!isEmpty(newData)) {
+                store.dispatch(updateIRacingData(newData));
+              }
             });
 
             socket.open();

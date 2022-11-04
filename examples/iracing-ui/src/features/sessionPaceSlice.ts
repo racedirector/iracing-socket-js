@@ -1,14 +1,23 @@
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import {
+  selectCurrentSessionClassLeaders,
+  selectCurrentSessionIsRaceSession,
+  RaceTime,
+  SessionState,
+  selectCurrentSession,
+} from "@racedirector/iracing-socket-js";
+import { isEqual, omit } from "lodash";
 import averagePaceReducer, {
   addLapTime,
   AveragePaceState,
   selectAverageLapTime,
   setLapsComplete,
   setLapTimes,
+  AddLapTimePayload,
 } from "./averagePaceSlice";
-import { omit } from "lodash";
 import { RootState } from "src/app/store";
+import { startAppListening } from "src/app/middleware";
 
 export interface SessionPaceState {
   [classId: string]: AveragePaceState;
@@ -21,16 +30,12 @@ interface SetLapsCompleteForClassPayload {
   lapsComplete: number;
 }
 
-interface SetLapTimesForClassPayload {
+interface SetLapTimesForClassPayload extends AddLapTimePayload {
   classId: string;
-  sessionTimeRemaining: number;
-  lapTimes: number[];
 }
 
-interface AddLapTimeForClassPayload {
+interface AddLapTimeForClassPayload extends AddLapTimePayload {
   classId: string;
-  sessionTimeRemaining: number;
-  lapTime: number;
 }
 
 export const sessionPaceSlice = createSlice({
@@ -214,5 +219,112 @@ export const selectEstimatedLapsRemaining = (state: RootState) => {
     {},
   );
 };
+
+interface RaceLengthContext {
+  // The number of race laps reported by the sim
+  raceLaps: number | null;
+  // The laps remaining based on `estimatedLaps` and `lapsComplete`
+  lapsRemaining: Record<string, number>;
+  // The number of laps completed indexed by class ID
+  lapsComplete: Record<string, number>;
+  // The length of the race reported by the sim
+  sessionLength: RaceTime;
+  isRaceTimed: boolean;
+  // The total estimated laps indexed by class ID
+  estimatedLaps: Record<string, number>;
+}
+
+export const selectRaceLengthContext = createSelector(
+  [
+    selectEstimatedTotalLaps,
+    selectEstimatedLapsRemaining,
+    selectLapsCompleted,
+    ({ iRacing }) => selectCurrentSession(iRacing),
+  ],
+  (
+    totalLapsIndex,
+    lapsRemaining,
+    lapsComplete,
+    currentSession,
+  ): RaceLengthContext => {
+    const sessionLength: RaceTime =
+      currentSession.SessionTime === "unlimited"
+        ? currentSession.SessionTime
+        : parseInt(currentSession.SessionTime);
+
+    return {
+      raceLaps: parseInt(currentSession?.SessionLaps) || null,
+      lapsComplete,
+      sessionLength,
+      lapsRemaining: lapsRemaining,
+      isRaceTimed: typeof sessionLength === "number",
+      estimatedLaps: totalLapsIndex,
+    };
+  },
+);
+
+startAppListening({
+  predicate: (_action, currentState, previousState) => {
+    const currentClassLeaders = selectCurrentSessionClassLeaders(
+      currentState.iRacing,
+    );
+    const previousClassLeaders = selectCurrentSessionClassLeaders(
+      previousState.iRacing,
+    );
+
+    const classLeadersChanged = !isEqual(
+      currentClassLeaders,
+      previousClassLeaders,
+    );
+
+    return classLeadersChanged;
+  },
+  effect: (_action, listenerApi) => {
+    const currentState = listenerApi.getState();
+    const iRacingState = currentState.iRacing;
+    const currentClassLeaders = selectCurrentSessionClassLeaders(iRacingState);
+    const isRacing =
+      currentState.iRacing.data?.SessionState || SessionState.Invalid;
+    const isRaceSession = selectCurrentSessionIsRaceSession(iRacingState);
+
+    Object.entries(currentClassLeaders).forEach(([classId, leader]) => {
+      const classPace = selectClassById(currentState, classId);
+      const averageLapTime = classPace ? selectAverageLapTime(classPace) : -1;
+
+      const isInvalid =
+        (isRaceSession && leader.LapsComplete < 2) ||
+        (isRaceSession && leader.LapsComplete <= classPace?.lapsComplete) ||
+        (!isRaceSession && leader.FastestTime <= averageLapTime);
+
+      if (isInvalid) {
+        return;
+      }
+
+      if (isRaceSession) {
+        listenerApi.dispatch(
+          setLapsCompleteForClass({
+            classId,
+            lapsComplete: leader.LapsComplete,
+          }),
+        );
+      }
+
+      const shouldUpdateLapTimes = isRacing && leader.LastTime > 0;
+      if (shouldUpdateLapTimes) {
+        const payload = {
+          classId,
+          lapTime: leader.LastTime,
+          sessionTimeRemaining: iRacingState.data?.SessionTimeRemain,
+        };
+
+        listenerApi.dispatch(
+          isRaceSession
+            ? addLapTimeForClass(payload)
+            : setLapTimesForClass(payload),
+        );
+      }
+    });
+  },
+});
 
 export default sessionPaceSlice.reducer;

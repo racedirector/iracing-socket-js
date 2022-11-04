@@ -20,5 +20,19 @@ export {
   selectCurrentDriver,
   selectStrengthOfField,
   selectStrengthOfFieldByClass,
+  selectPitServiceRequest,
+  selectResultsForSessionNumber,
+  selectCurrentSessionResults,
+  selectResultsForSessionNumberByClass,
+  selectCurrentSessionResultsByClass,
+  selectClassLeadersFromResultsForSessionNumber,
+  selectCurrentSessionClassLeaders,
+  selectCurrentSessionIsRaceSession,
+  selectSessionIsRaceSession,
+  selectSessionLaps,
+  selectSessionResultsPositions,
+  selectSessionTime,
 } from "./state";
+export type { PitServiceRequest } from "./state";
+
 export { createIRacingSocketMiddleware } from "./middleware";

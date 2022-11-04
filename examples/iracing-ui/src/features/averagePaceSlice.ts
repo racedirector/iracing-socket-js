@@ -1,4 +1,4 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 const averageLapTimes = (lapTimes: number[]) => {
@@ -32,14 +32,9 @@ const initialState: AveragePaceState = {
   sessionTimeRemaining: -1,
 };
 
-interface AddLapTimePayload {
+export interface AddLapTimePayload {
   sessionTimeRemaining: number;
   lapTime: number;
-}
-
-interface SetLapTimesPayload {
-  sessionTimeRemaining: number;
-  lapTimes: number[];
 }
 
 export const averagePaceSlice = createSlice({
@@ -52,15 +47,21 @@ export const averagePaceSlice = createSlice({
     setLapsComplete: (state, action: PayloadAction<number>) => {
       state.lapsComplete = action.payload;
     },
-    setLapTimes: (state, action: PayloadAction<SetLapTimesPayload>) => {
-      const { lapTimes, sessionTimeRemaining } = action.payload;
-      state.lapTimes = lapTimes;
+    setLapTimes: (state, action: PayloadAction<AddLapTimePayload>) => {
+      const { lapTime, sessionTimeRemaining } = action.payload;
+      state.lapTimes = [lapTime];
       state.sessionTimeRemaining = sessionTimeRemaining;
     },
     addLapTime: (state, action: PayloadAction<AddLapTimePayload>) => {
       const { lapTime, sessionTimeRemaining } = action.payload;
       state.lapTimes.push(lapTime);
-      while (state.lapTimes.length > state.lapTimeLimit) state.lapTimes.shift();
+      while (
+        state.lapTimeLimit > 0 &&
+        state.lapTimes.length > state.lapTimeLimit
+      ) {
+        state.lapTimes.shift();
+      }
+
       state.sessionTimeRemaining = sessionTimeRemaining;
     },
   },
@@ -71,9 +72,10 @@ export const { setLapsComplete, addLapTime, setLapTimes } =
 
 export const selectLapTimes = (state: AveragePaceState) => state.lapTimes;
 
-export const selectAverageLapTime = createSelector(selectLapTimes, (lapTimes) =>
-  averageLapTimes(lapTimes),
-);
+export const selectAverageLapTime = (state: AveragePaceState) => {
+  const lapTimes = selectLapTimes(state);
+  return averageLapTimes(lapTimes);
+};
 
 export const selectLapTimeLimit = (state: AveragePaceState) =>
   state.lapTimeLimit;

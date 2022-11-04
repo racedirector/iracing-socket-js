@@ -5,14 +5,10 @@ import {
   useCurrentDriverResult,
   useIRacingContext,
 } from "@racedirector/iracing-socket-js";
-import invariant from "ts-invariant";
-import { getRaceLengthContext } from "./context";
+import { useAppSelector } from "src/app/hooks";
+import { selectRaceLengthContext } from "src/features/sessionPaceSlice";
 
-export const useRaceLength = () => {
-  const context = useContext(getRaceLengthContext());
-  invariant(!!context, "Wrap the root component in a <RaceLengthProvider>");
-  return context;
-};
+export const useRaceLength = () => useAppSelector(selectRaceLengthContext);
 
 export const useLapsRemainingForCurrentDriverClass = () => {
   const { lapsRemaining } = useRaceLength();
@@ -63,9 +59,7 @@ export const useEstimatedLapsForCurrentDriverClass = () => {
 };
 
 export const useTotalSessionTime = () => {
-  const { sessionLength, isRaceTimed, raceLaps } = useContext(
-    getRaceLengthContext(),
-  );
+  const { sessionLength, isRaceTimed, raceLaps } = useRaceLength();
 
   const {
     data: {
@@ -86,7 +80,7 @@ export const useTotalSessionTime = () => {
 };
 
 export const useTimeRemaining = (): RaceTime => {
-  const { sessionLength, isRaceTimed } = useContext(getRaceLengthContext());
+  const { sessionLength, isRaceTimed } = useRaceLength();
   const {
     data: {
       SessionInfo: sessionInfo,

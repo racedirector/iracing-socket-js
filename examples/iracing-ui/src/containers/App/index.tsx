@@ -5,18 +5,15 @@ import { IRacingSocketConnectionProvider } from "../../contexts/IRacingSocketCon
 import { IRacing } from "../IRacing";
 import { store } from "../../app/store";
 import { Provider } from "react-redux";
-import { StrengthOfFieldProvider } from "src/contexts/StrengthOfField";
 
 export const App: React.FC<Record<string, never>> = () => {
   return (
     <ChakraProvider>
       <Provider store={store}>
         <IRacingSocketConnectionProvider>
-          <StrengthOfFieldProvider>
-            <IRacing>
-              <AppUI />
-            </IRacing>
-          </StrengthOfFieldProvider>
+          <IRacing>
+            <AppUI />
+          </IRacing>
         </IRacingSocketConnectionProvider>
       </Provider>
     </ChakraProvider>

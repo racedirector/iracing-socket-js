@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
+import { listenerMiddleware } from "./middleware";
 import fuelReducer from "../features/fuelSlice";
 import sessionPaceReducer from "../features/sessionPaceSlice";
 import paceAnalysisReducer from "../features/paceAnalysisSlice";
@@ -22,22 +23,25 @@ export const store = configureStore({
     iRacing: iRacingReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([
-      logger,
-      createIRacingSocketMiddleware({
-        requestParameters: [
-          "CameraInfo",
-          "CarSetup",
-          "DriverInfo",
-          "QualifyResultsInfo",
-          "RadioInfo",
-          "SessionInfo",
-          "SplitTimeInfo",
-          "WeekendInfo",
-          "__all_telemetry__",
-        ],
-      }),
-    ]),
+    getDefaultMiddleware()
+      .prepend(listenerMiddleware.middleware)
+      .concat([
+        logger,
+        createIRacingSocketMiddleware({
+          server: "192.168.4.52:8182",
+          requestParameters: [
+            "CameraInfo",
+            "CarSetup",
+            "DriverInfo",
+            "QualifyResultsInfo",
+            "RadioInfo",
+            "SessionInfo",
+            "SplitTimeInfo",
+            "WeekendInfo",
+            "__all_telemetry__",
+          ],
+        }),
+      ]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

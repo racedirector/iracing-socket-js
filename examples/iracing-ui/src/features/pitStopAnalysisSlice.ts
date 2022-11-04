@@ -4,26 +4,13 @@ import {
   PitServiceFlags,
   PitServiceStatus,
   TrackLocation,
+  selectPitServiceRequest,
 } from "@racedirector/iracing-socket-js";
 import { RootState } from "src/app/store";
+import { startAppListening } from "src/app/middleware";
+import { playerTrackLocationChanged } from "src/app/actions";
 
-interface TireChangeRequest {
-  rightFront: boolean;
-  rightRear: boolean;
-  leftFront: boolean;
-  leftRear: boolean;
-}
-
-interface PitServiceRequest {
-  tearoff: boolean;
-  fastRepair: boolean;
-  tires: TireChangeRequest;
-  fuel: boolean;
-}
-
-const serviceRequestForServiceFlags = (
-  serviceFlags: PitServiceFlags,
-): PitServiceRequest => ({
+const serviceRequestForServiceFlags = (serviceFlags: PitServiceFlags) => ({
   tearoff: !!(serviceFlags & PitServiceFlags.WindshieldTearoff),
   fastRepair: !!(serviceFlags & PitServiceFlags.FastRepair),
   fuel: !!(serviceFlags & PitServiceFlags.Fuel),
@@ -59,11 +46,6 @@ const serviceRequestHasServiceRequest = (serviceFlags: PitServiceFlags) =>
       PitServiceFlags.WindshieldTearoff)
   );
 
-interface PitStopServiceRequest {
-  service: PitServiceFlags;
-  fuelAmount: number;
-}
-
 interface PitStopTiming {
   pitLaneEntryTime?: number;
   pitLaneExitTime?: number;
@@ -74,20 +56,11 @@ interface PitStopTiming {
 }
 
 export interface PitStopAnalysisState {
-  serviceState: PitServiceStatus;
-  playerTrackLocation: TrackLocation;
-  nextServiceRequest: PitStopServiceRequest;
   currentStopTiming: PitStopTiming;
   pastStopTiming: PitStopTiming[];
 }
 
 const initialState: PitStopAnalysisState = {
-  serviceState: PitServiceStatus.None,
-  playerTrackLocation: TrackLocation.NotInWorld,
-  nextServiceRequest: {
-    service: 0x0,
-    fuelAmount: -1,
-  },
   currentStopTiming: {},
   pastStopTiming: [],
 };
@@ -98,69 +71,10 @@ interface UpdateServiceStatePayload {
   lapNumber: number;
 }
 
-interface UpdateTrackLocationPayload {
-  trackLocation: TrackLocation;
-  sessionTime: number;
-  lapNumber: number;
-}
-
-interface UpdateServiceFlagsPayload {
-  serviceFlags: PitServiceFlags;
-  sessionTime: number;
-  fuelLevel?: number;
-}
-
 export const pitStopAnalaysisSlice = createSlice({
   name: "pitStopAnalysis",
   initialState,
   reducers: {
-    updateTrackLocation: (
-      state,
-      action: PayloadAction<UpdateTrackLocationPayload>,
-    ) => {
-      const { trackLocation: nextTrackLocation, sessionTime } = action.payload;
-      const previousTrackLocation = state.playerTrackLocation;
-
-      if (
-        previousTrackLocation === TrackLocation.OnTrack &&
-        nextTrackLocation === TrackLocation.ApproachingPits
-      ) {
-        state.currentStopTiming.pitLaneEntryTime = sessionTime;
-      } else if (
-        previousTrackLocation === TrackLocation.ApproachingPits &&
-        nextTrackLocation === TrackLocation.InPitStall
-      ) {
-        state.currentStopTiming.pitStallEntryTime = sessionTime;
-      } else if (
-        previousTrackLocation === TrackLocation.InPitStall &&
-        nextTrackLocation === TrackLocation.ApproachingPits
-      ) {
-        state.currentStopTiming.pitStallExitTime = sessionTime;
-      } else if (
-        previousTrackLocation === TrackLocation.ApproachingPits &&
-        nextTrackLocation === TrackLocation.OnTrack
-      ) {
-        state.currentStopTiming.pitLaneExitTime = sessionTime;
-        const previousPitTiming = { ...state.currentStopTiming };
-        state.currentStopTiming = {};
-
-        // Only track the timing if there was service taken
-        if (Object.keys(previousPitTiming).includes("pitServiceStartTime")) {
-          state.pastStopTiming.push(previousPitTiming);
-        }
-      }
-
-      state.playerTrackLocation = nextTrackLocation;
-    },
-    updateServiceFlags: (
-      state,
-      action: PayloadAction<UpdateServiceFlagsPayload>,
-    ) => {
-      const { serviceFlags, fuelLevel } = action.payload;
-      state.nextServiceRequest.service = serviceFlags;
-      state.nextServiceRequest.fuelAmount =
-        serviceFlags & PitServiceFlags.Fuel ? fuelLevel : -1;
-    },
     updateServiceStatus: (
       state,
       action: PayloadAction<UpdateServiceStatePayload>,
@@ -177,22 +91,91 @@ export const pitStopAnalaysisSlice = createSlice({
         default:
           break;
       }
-
-      state.serviceState = action.payload.status;
     },
   },
+  extraReducers: (builder) =>
+    builder.addCase(playerTrackLocationChanged, (state, action) => {
+      const { previousTrackLocation, currentTrackLocation, sessionTime } =
+        action.payload;
+      if (
+        previousTrackLocation === TrackLocation.OnTrack &&
+        currentTrackLocation === TrackLocation.ApproachingPits
+      ) {
+        state.currentStopTiming.pitLaneEntryTime = sessionTime;
+      } else if (
+        previousTrackLocation === TrackLocation.ApproachingPits &&
+        currentTrackLocation === TrackLocation.InPitStall
+      ) {
+        state.currentStopTiming.pitStallEntryTime = sessionTime;
+      } else if (
+        previousTrackLocation === TrackLocation.InPitStall &&
+        currentTrackLocation === TrackLocation.ApproachingPits
+      ) {
+        state.currentStopTiming.pitStallExitTime = sessionTime;
+      } else if (
+        previousTrackLocation === TrackLocation.ApproachingPits &&
+        currentTrackLocation === TrackLocation.OnTrack
+      ) {
+        state.currentStopTiming.pitLaneExitTime = sessionTime;
+        const previousPitTiming = { ...state.currentStopTiming };
+        state.currentStopTiming = {};
+
+        // Only track the timing if there was service taken
+        if (Object.keys(previousPitTiming).includes("pitServiceStartTime")) {
+          state.pastStopTiming.push(previousPitTiming);
+        }
+      }
+    }),
 });
 
-export const { updateServiceFlags, updateServiceStatus, updateTrackLocation } =
-  pitStopAnalaysisSlice.actions;
+export const { updateServiceStatus } = pitStopAnalaysisSlice.actions;
 
 export const selectPitStopAnalysis = (state: RootState) =>
   state.pitStopAnalysis;
 
-export const selectPitStopIsActive = (state: PitStopAnalysisState) =>
-  state.serviceState === PitServiceStatus.InProgress;
+// Listener for when the player pit service status changes
+startAppListening({
+  predicate: (_action, currentState, previousState) => {
+    const currentServiceStatus =
+      currentState.iRacing.data?.PlayerCarPitSvStatus || PitServiceStatus.None;
+    const previousServiceStatus =
+      previousState.iRacing.data?.PlayerCarPitSvStatus || PitServiceStatus.None;
 
-export const selectRequestedService = (state: PitStopAnalysisState) =>
-  serviceRequestForServiceFlags(state.nextServiceRequest.service);
+    return currentServiceStatus !== previousServiceStatus;
+  },
+  effect: (_action, listenerApi) => {
+    const currentState = listenerApi.getState();
+    const sessionTime = currentState.iRacing.data?.SessionTime;
+    const currentStatus = currentState.iRacing.data?.PlayerCarPitSvStatus;
+    const currentLap = currentState.iRacing.data?.Lap;
+
+    listenerApi.dispatch(
+      updateServiceStatus({
+        status: currentStatus,
+        lapNumber: currentLap,
+        sessionTime,
+      }),
+    );
+  },
+});
+
+startAppListening({
+  predicate: (_action, currentState, previousState) => {
+    const currentRequestedService =
+      currentState.iRacing.data?.PitSvFlags || 0x0;
+    const previousRequestedService =
+      previousState.iRacing.data?.PitSvFlags || 0x0;
+
+    // ???: Need to check what gets called as you request service...?
+    // ???: If i have tires checked and change pressures, does this still fire?
+
+    return currentRequestedService !== previousRequestedService;
+  },
+  effect: (_action, listenerApi) => {
+    const currentState = listenerApi.getState();
+    const requestedService = selectPitServiceRequest(currentState.iRacing);
+    console.log("Requested service has changed:", requestedService);
+  },
+});
 
 export default pitStopAnalaysisSlice.reducer;

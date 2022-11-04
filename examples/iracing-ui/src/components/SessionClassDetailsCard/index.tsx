@@ -88,32 +88,32 @@ export const SessionClassDetailsCard: React.FC<
         <Text>{`Lap ${lapsCompleted} of ${totalLaps}`}</Text>
         <Text>{`${totalLaps - lapsCompleted + 1} to go`}</Text>
         {normalizedFastestLap && (
-          <Text>
+          <>
             <Heading size="xs">Fastest Lap</Heading>
-            {normalizedFastestLap.toString()}
-          </Text>
+            <Text>{normalizedFastestLap.toString()}</Text>
+          </>
         )}
         {normalizedExpectedPace && (
-          <Text>
+          <>
             <Heading size="xs">Expected</Heading>
-            {normalizedExpectedPace.toString()}
-          </Text>
+            <Text>{normalizedExpectedPace.toString()}</Text>
+          </>
         )}
         {normalizedLeaderPace && (
-          <Text>
+          <>
             <Heading size="xs">{`Leader Pace${
               leaderPaceCount ? ` (Last ${leaderPaceCount})` : ""
             }`}</Heading>
-            {normalizedLeaderPace.toString()}
-          </Text>
+            <Text>{normalizedLeaderPace.toString()}</Text>
+          </>
         )}
         {normalizedFieldPace && (
-          <Text>
+          <>
             <Heading size="xs">{`Field Pace${
               fieldPaceCount ? ` (Last ${fieldPaceCount})` : ""
             }`}</Heading>
-            {normalizedFieldPace.toString()}
-          </Text>
+            <Text>{normalizedFieldPace.toString()}</Text>
+          </>
         )}
       </Flex>
     </Box>
