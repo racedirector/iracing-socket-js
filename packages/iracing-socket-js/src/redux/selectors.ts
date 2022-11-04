@@ -39,7 +39,9 @@ export const selectSessionForSessionNumber = (
   return undefined;
 };
 
-export const selectCurrentSession = (state: IRacingSocketState) => {
+export const selectCurrentSession = (
+  state: IRacingSocketState,
+): Session | undefined => {
   const sessionNumber = state.data?.SessionNum || -1;
   return selectSessionForSessionNumber(state, sessionNumber);
 };
@@ -162,6 +164,21 @@ export const selectCurrentSessionIsRaceSession = (
 ) => {
   const currentSession = selectCurrentSession(state);
   return selectSessionIsRaceSession(currentSession);
+};
+
+export const selectTrackLengthKilometers = (state: IRacingSocketState) => {
+  const trackLengthString = state.data?.WeekendInfo?.TrackLength;
+  const parsedTrackLength = parseFloat(trackLengthString);
+  if (!Number.isNaN(parsedTrackLength)) {
+    return parsedTrackLength;
+  } else {
+    return undefined;
+  }
+};
+
+export const selectTrackLengthMeters = (state: IRacingSocketState) => {
+  const trackLengthKilometers = selectTrackLengthKilometers(state) || 0;
+  return trackLengthKilometers * 1000;
 };
 
 export interface FilterDriversResults {

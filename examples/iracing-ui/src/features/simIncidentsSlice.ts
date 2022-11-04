@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from "src/app/store";
 import {
   Flags,
   selectActiveDriversByCarIndex,
+  selectTrackLengthMeters,
 } from "@racedirector/iracing-socket-js";
 import {
   activeDriversDidChangePredicate,
@@ -60,6 +61,17 @@ export const selectMaxSimIncidentWeight = (state: RootState) =>
 export const selectAllIncidents = (state: RootState) =>
   selectSimIncidents(state).incidents;
 
+export const selectAllIncidentsAfterSessionTime = (
+  state: RootState,
+  sessionTime: number,
+) => {
+  return selectAllIncidents(state).filter(
+    ({ sessionTime: incidentSessionTime }) => {
+      return incidentSessionTime >= sessionTime;
+    },
+  );
+};
+
 export const selectSimIncidentsForDriver = createSelector(
   [selectAllIncidents, (_state, driverId: number) => driverId],
   (incidents, driverId) =>
@@ -75,6 +87,72 @@ export const selectSimIncidentsForCarIndex = createSelector(
       ({ carIndex: incidentCarIndex }) => incidentCarIndex === carIndex,
     ),
 );
+
+export const selectClusteredSimIncidentsForTimeWindowSeconds = (
+  state: RootState,
+  timeWindowSeconds: number,
+  clusterDistanceMeters: number,
+): SimIncidentEvent[][] => {
+  const timeWindowLowerBound =
+    state.iRacing.data?.SessionTime - timeWindowSeconds;
+  const incidents = selectAllIncidentsAfterSessionTime(
+    state,
+    timeWindowLowerBound,
+  );
+  const trackLength = selectTrackLengthMeters(state.iRacing);
+  const clusterWindow = clusterDistanceMeters / 2;
+
+  return incidents.reduce<SimIncidentEvent[][]>(
+    (clusters, incident, _index, array) => {
+      const incidentLocationMeters = incident.lapPercentage * trackLength;
+      const lowerDistanceBound = incidentLocationMeters - clusterWindow;
+      const upperDistanceBound = incidentLocationMeters + clusterWindow;
+
+      const cluster = array.filter(({ lapPercentage }) => {
+        const location = lapPercentage * trackLength;
+        return location >= lowerDistanceBound && location <= upperDistanceBound;
+      });
+
+      if (cluster.length > 0) {
+        return [...clusters, cluster];
+      }
+
+      return clusters;
+    },
+    [],
+  );
+};
+
+export const selectHighestValueIncidentCluster = (
+  state: RootState,
+  timeWindowSeconds: number,
+  clusterDistanceMeters: number,
+) => {
+  const maxSimIncidentWeight = selectMaxSimIncidentWeight(state);
+  const clusters = selectClusteredSimIncidentsForTimeWindowSeconds(
+    state,
+    timeWindowSeconds,
+    clusterDistanceMeters,
+  );
+
+  let maxIncidentCount = 0;
+  return clusters.reduce<SimIncidentEvent[]>((highestValueCluster, cluster) => {
+    const clusterValue = cluster.reduce(
+      (value, { value: incidentValue }) =>
+        value + Math.min(incidentValue, maxSimIncidentWeight),
+      0,
+    );
+
+    // If this cluster is worth more, than return it
+    if (clusterValue > maxIncidentCount) {
+      maxIncidentCount = clusterValue;
+      return cluster;
+    }
+
+    // Otherwise return the previous cluster
+    return highestValueCluster;
+  }, []);
+};
 
 const incidentFilters = {
   includePaceCar: false,

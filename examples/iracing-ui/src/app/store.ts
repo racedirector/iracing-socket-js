@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import logger from "redux-logger";
 import { listenerMiddleware } from "./middleware";
 import fuelReducer from "../features/fuelSlice";
 import sessionPaceReducer from "../features/sessionPaceSlice";
@@ -26,19 +25,48 @@ export const store = configureStore({
     getDefaultMiddleware()
       .prepend(listenerMiddleware.middleware)
       .concat([
-        logger,
         createIRacingSocketMiddleware({
           server: "192.168.4.52:8182",
           requestParameters: [
             "CameraInfo",
-            "CarSetup",
             "DriverInfo",
             "QualifyResultsInfo",
-            "RadioInfo",
             "SessionInfo",
             "SplitTimeInfo",
             "WeekendInfo",
-            "__all_telemetry__",
+            "CarIdxSessionFlags",
+            "CarIdxLapDistPct",
+            "SessionNum",
+            "SessionTime",
+            "SessionTimeOfDay",
+            "SessionState",
+
+            // Player information
+            "PlayerCarClass",
+            "PlayerCarDriverIncidentCount",
+            "PlayerCarMyIncidentCount",
+            "PlayerCarTeamIncidentCount",
+            "PlayerCarIdx",
+            "PlayerCarInPitStall",
+            "PlayerCarPitSvStatus",
+            "PlayerCarTowTime",
+            "PlayerTrackSurface",
+            "PlayerTrackSurfaceMaterial",
+
+            // Other information?
+            "IsOnTrack",
+            "IsOnTrackCar",
+            "IsInGarage",
+            "OnPitRoad",
+
+            // Pit stop service
+            "PitSvFlags",
+            "PitSvFuel",
+            "PitSvLFP",
+            "PitSvRFP",
+            "PitSvLRP",
+            "PitSvRRP",
+            "PitSvTireCompound",
           ],
         }),
       ]),

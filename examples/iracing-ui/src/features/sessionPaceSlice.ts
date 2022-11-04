@@ -248,9 +248,9 @@ export const selectRaceLengthContext = createSelector(
     currentSession,
   ): RaceLengthContext => {
     const sessionLength: RaceTime =
-      currentSession.SessionTime === "unlimited"
-        ? currentSession.SessionTime
-        : parseInt(currentSession.SessionTime);
+      currentSession?.SessionTime === "unlimited"
+        ? currentSession?.SessionTime
+        : parseInt(currentSession?.SessionTime);
 
     return {
       raceLaps: parseInt(currentSession?.SessionLaps) || null,
