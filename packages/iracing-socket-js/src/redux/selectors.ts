@@ -181,6 +181,41 @@ export const selectTrackLengthMeters = (state: IRacingSocketState) => {
   return trackLengthKilometers * 1000;
 };
 
+export const selectTrackSurfaceForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxTrackSurface?.[driverIndex];
+
+export const selectLapDistancePercentageForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxLapDistPct?.[driverIndex];
+
+export const selectGearForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxGear?.[driverIndex];
+
+export const selectFlagsForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxSessionFlags?.[driverIndex];
+
+export const selectFastRepairsUsedForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxFastRepairsUsed?.[driverIndex];
+
+export const selectBestLapNumberForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxBestLapNum?.[driverIndex];
+
+export const selectBestLapTimeForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxBestLapTime?.[driverIndex];
+
 export interface FilterDriversResults {
   includeAI?: boolean;
   includePaceCar?: boolean;
@@ -210,14 +245,21 @@ export const filterDrivers = (
 export const selectCurrentDriverIndex = (state: IRacingSocketState) =>
   state.data.DriverInfo?.DriverCarIdx || -1;
 
-export const selectCurrentDriver = (state: IRacingSocketState) => {
-  const currentDriverIndex = selectCurrentDriverIndex(state);
+export const selectDriverForIndex = (
+  state: IRacingSocketState,
+  carIndex: number,
+) => {
   const activeDrivers = selectActiveDriversByCarIndex(state, {
     includeAI: false,
     includePaceCar: false,
   });
 
-  return activeDrivers?.[currentDriverIndex];
+  return activeDrivers?.[carIndex];
+};
+
+export const selectCurrentDriver = (state: IRacingSocketState) => {
+  const currentDriverIndex = selectCurrentDriverIndex(state);
+  return selectDriverForIndex(state, currentDriverIndex);
 };
 
 export const selectActiveDrivers = (

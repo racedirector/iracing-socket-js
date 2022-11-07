@@ -43,6 +43,14 @@ export type AppListenerEffect = ListenerEffect<
 
 // TODO: Find a way to export this middleware below from @racedirector/iracing-socket-js
 
+export const sessionTickDidChangePredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+  previousState,
+) =>
+  currentState.iRacing.data?.SessionTick !==
+  previousState.iRacing.data?.SessionTick;
+
 const incidentFilters = {
   includeAI: true,
   includeSpectators: false,

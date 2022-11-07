@@ -84,6 +84,38 @@ export const selectSimIncidentsForCarIndex = createSelector(
     ),
 );
 
+/**
+ * Interface representing an track location
+ */
+interface TrackLocation {
+  lapPercentage: number;
+}
+
+export const clusterTrackLocations = <T extends TrackLocation>(
+  locations: T[],
+  clusterDistanceMeters: number,
+  trackLengthMeters: number,
+) => {
+  const clusterWindow = clusterDistanceMeters / 2;
+
+  return locations.reduce<T[][]>((clusters, location, _index, array) => {
+    const incidentLocationMeters = location.lapPercentage * trackLengthMeters;
+    const lowerDistanceBound = incidentLocationMeters - clusterWindow;
+    const upperDistanceBound = incidentLocationMeters + clusterWindow;
+
+    const cluster = array.filter(({ lapPercentage }) => {
+      const location = lapPercentage * trackLengthMeters;
+      return location >= lowerDistanceBound && location <= upperDistanceBound;
+    });
+
+    if (cluster.length > 0) {
+      return [...clusters, cluster];
+    }
+
+    return clusters;
+  }, []);
+};
+
 export const selectClusteredSimIncidentsForTimeWindowSeconds = (
   state: RootState,
   timeWindowSeconds: number,
@@ -96,27 +128,8 @@ export const selectClusteredSimIncidentsForTimeWindowSeconds = (
     timeWindowLowerBound,
   );
   const trackLength = selectTrackLengthMeters(state.iRacing);
-  const clusterWindow = clusterDistanceMeters / 2;
 
-  return incidents.reduce<SimIncidentEvent[][]>(
-    (clusters, incident, _index, array) => {
-      const incidentLocationMeters = incident.lapPercentage * trackLength;
-      const lowerDistanceBound = incidentLocationMeters - clusterWindow;
-      const upperDistanceBound = incidentLocationMeters + clusterWindow;
-
-      const cluster = array.filter(({ lapPercentage }) => {
-        const location = lapPercentage * trackLength;
-        return location >= lowerDistanceBound && location <= upperDistanceBound;
-      });
-
-      if (cluster.length > 0) {
-        return [...clusters, cluster];
-      }
-
-      return clusters;
-    },
-    [],
-  );
+  return clusterTrackLocations(incidents, clusterDistanceMeters, trackLength);
 };
 
 export const selectHighestValueIncidentCluster = (
