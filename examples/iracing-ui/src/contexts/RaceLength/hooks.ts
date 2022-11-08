@@ -91,7 +91,6 @@ export const useTimeRemaining = (): RaceTime => {
     } = {},
   } = useIRacingContext();
 
-  console.log(sessionTime, sessionTimeRemaining);
   if (isRaceTimed) {
   } else {
     console.log("We should estimate how long this race will take");

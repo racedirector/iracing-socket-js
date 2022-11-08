@@ -72,7 +72,6 @@ export const SessionClassDetails: React.FC<SessionClassDetailsProps> = () => {
     selectAverageLapTimesForTargetsByClass(state, driverIndexesByClassId),
   );
 
-  console.log(raceLaps, estimatedLaps, lapsComplete);
   const classDetails = useMemo(() => {
     return Object.values(classes).map<SessionClassDetailsCardProps>(
       ({ color, shortName, id }) => ({

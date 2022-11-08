@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useAppSelector } from "src/app/hooks";
-import { selectHighestValueIncidentCluster } from "src/features/simIncidentsSlice";
+import { selectAllIncidents } from "src/features/simIncidentsSlice";
 import {
   IncidentsTable as IncidentsTableUI,
   IncidentsTableProps as IncidentsTableUIProps,
@@ -9,9 +9,7 @@ import {
 export interface IncidentsTableProps {}
 
 export const IncidentsTable: React.FC<IncidentsTableProps> = () => {
-  const incidents = useAppSelector((state) =>
-    selectHighestValueIncidentCluster(state, 10, 100),
-  );
+  const incidents = useAppSelector((state) => selectAllIncidents(state));
 
   const normalizedIncidents: IncidentsTableUIProps["incidents"] = useMemo(
     () =>

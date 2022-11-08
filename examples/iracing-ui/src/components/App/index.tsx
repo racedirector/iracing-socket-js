@@ -17,6 +17,7 @@ import { SessionInformation } from "../../containers/SessionInformation";
 import { Standings } from "../../containers/Standings";
 import { Cameras } from "../../containers/Cameras";
 import { IncidentsTable } from "../../containers/IncidentsTable";
+import { RaceStrategy } from "../../containers/RaceStrategy";
 
 const AppTabBar = () => (
   <Tabs isFitted variant="enclosed">
@@ -46,7 +47,7 @@ const AppTabBar = () => (
         <FuelCalculator />
       </TabPanel>
       <TabPanel>
-        <Heading>Coming soon</Heading>
+        <RaceStrategy />
       </TabPanel>
       <TabPanel>
         <Cameras />

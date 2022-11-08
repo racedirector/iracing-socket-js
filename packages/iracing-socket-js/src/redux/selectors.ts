@@ -41,10 +41,8 @@ export const selectSessionForSessionNumber = (
 
 export const selectCurrentSession = (
   state: IRacingSocketState,
-): Session | undefined => {
-  const sessionNumber = state.data?.SessionNum || -1;
-  return selectSessionForSessionNumber(state, sessionNumber);
-};
+): Session | undefined =>
+  selectSessionForSessionNumber(state, state.data?.SessionNum);
 
 export const selectSessionIsRaceSession = (session: Session) =>
   session?.SessionName === "RACE";
@@ -337,12 +335,23 @@ export interface PitServiceRequest {
   rightFrontPressure: number;
   rightRearPressure: number;
   tireCompound: number;
+
+  tireSetsAvailable: number;
+  tireSetsUsed: number;
+  leftTireSetsAvailable: number;
+  leftTireSetsUsed: number;
+  rightTireSetsAvailable: number;
+  rightTireSetsUsed: number;
+  frontTireSetsAvailable: number;
+  frontTireSetsUsed: number;
+  rearTireSetsAvailable: number;
+  rearTireSetsUsed: number;
 }
 
-export const selectPitServiceRequest = (
+export const selectPitServiceRequest: (
   state: IRacingSocketState,
-): PitServiceRequest => {
-  const {
+) => PitServiceRequest = ({
+  data: {
     PitSvFlags,
     PitSvFuel,
     PitSvLFP,
@@ -350,8 +359,18 @@ export const selectPitServiceRequest = (
     PitSvLRP,
     PitSvRRP,
     PitSvTireCompound,
-  } = state.data;
-
+    TireSetsAvailable,
+    TireSetsUsed,
+    LeftTireSetsAvailable,
+    LeftTireSetsUsed,
+    RightTireSetsAvailable,
+    RightTireSetsUsed,
+    FrontTireSetsAvailable,
+    FrontTireSetsUsed,
+    RearTireSetsAvailable,
+    RearTireSetsUsed,
+  } = {},
+}) => {
   return {
     flags: PitSvFlags,
     fuelLevel: PitSvFuel,
@@ -360,5 +379,15 @@ export const selectPitServiceRequest = (
     leftRearPressure: PitSvLRP,
     rightRearPressure: PitSvRRP,
     tireCompound: PitSvTireCompound,
+    tireSetsAvailable: TireSetsAvailable,
+    tireSetsUsed: TireSetsUsed,
+    leftTireSetsAvailable: LeftTireSetsAvailable,
+    leftTireSetsUsed: LeftTireSetsUsed,
+    rightTireSetsAvailable: RightTireSetsAvailable,
+    rightTireSetsUsed: RightTireSetsUsed,
+    frontTireSetsAvailable: FrontTireSetsAvailable,
+    frontTireSetsUsed: FrontTireSetsUsed,
+    rearTireSetsAvailable: RearTireSetsAvailable,
+    rearTireSetsUsed: RearTireSetsUsed,
   };
 };

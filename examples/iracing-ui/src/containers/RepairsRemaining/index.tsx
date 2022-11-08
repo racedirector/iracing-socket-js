@@ -11,6 +11,7 @@ export const RepairsRemaining: React.FC<RepairsRemainingProps> = () => {
       FastRepairUsed: usedFastRepairs,
       PitRepairLeft: requiredRepairTime,
       PitOptRepairLeft: optionalRepairTime,
+      PlayerCarTowTime: towTime,
     } = {},
   } = useIRacingContext();
 
