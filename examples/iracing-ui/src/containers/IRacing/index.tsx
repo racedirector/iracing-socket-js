@@ -1,8 +1,5 @@
 import React, { PropsWithChildren, useEffect } from "react";
-import {
-  connectAction,
-  disconnectAction,
-} from "@racedirector/iracing-socket-js";
+import { connect, disconnect } from "@racedirector/iracing-socket-js";
 import { useAppDispatch } from "src/app/hooks";
 
 export interface IRacingProps {}
@@ -15,7 +12,7 @@ export const IRacing: React.FC<PropsWithChildren<IRacingProps>> = ({
   useEffect(() => {
     console.log("Connect socket explicitly");
     dispatch(
-      connectAction({
+      connect({
         server: "192.168.4.52:8182",
         requestParameters: [
           "CameraInfo",
@@ -76,7 +73,7 @@ export const IRacing: React.FC<PropsWithChildren<IRacingProps>> = ({
 
     return () => {
       console.log("Disconnect socket explicitly...");
-      dispatch(disconnectAction());
+      dispatch(disconnect());
     };
   }, [dispatch]);
 

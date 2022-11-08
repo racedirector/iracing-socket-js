@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import {
+  cameraSwitchNumber,
   iRacingSocketCommands,
   useIRacingContext,
 } from "@racedirector/iracing-socket-js";
@@ -7,12 +8,13 @@ import {
   Drivers as DriversUI,
   DriversProps as DriversUIProps,
 } from "src/components/DriversTable";
+import { useAppDispatch } from "src/app/hooks";
 
 export interface DriversProps {}
 
 export const Drivers: React.FC<DriversProps> = () => {
+  const dispatch = useAppDispatch();
   const {
-    sendCommand,
     data: {
       DriverInfo: { Drivers = [] } = {},
       CamCameraNumber: cameraNumber = -1,
@@ -26,13 +28,15 @@ export const Drivers: React.FC<DriversProps> = () => {
 
   const onPressDriverCallback = useCallback(
     (carIndex) => {
-      sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
-        carIndex.toString(),
-        cameraGroupNumber,
-        cameraNumber,
-      ]);
+      dispatch(
+        cameraSwitchNumber({
+          number: carIndex.toString(),
+          cameraGroup: cameraGroupNumber,
+          cameraNumber,
+        }),
+      );
     },
-    [cameraGroupNumber, cameraNumber, sendCommand],
+    [cameraGroupNumber, cameraNumber, dispatch],
   );
 
   const drivers = useMemo<DriversUIProps["drivers"]>(() => {

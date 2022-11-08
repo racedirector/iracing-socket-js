@@ -260,6 +260,42 @@ export const selectCurrentDriver = (state: IRacingSocketState) => {
   return selectDriverForIndex(state, currentDriverIndex);
 };
 
+export const selectCurrentDriverCarClassContext = (
+  state: IRacingSocketState,
+) => {
+  const {
+    CarClassID,
+    CarClassColor,
+    CarClassDryTireSetLimit,
+    CarClassEstLapTime,
+    CarClassLicenseLevel,
+    CarClassMaxFuelPct,
+    CarClassPowerAdjust,
+    CarClassWeightPenalty,
+    CarClassRelSpeed,
+    CarClassShortName,
+  } = selectCurrentDriver(state);
+
+  return {
+    classId: CarClassID,
+    color: CarClassColor,
+    dryTireSetLimit: CarClassDryTireSetLimit,
+    estimatedLapTime: CarClassEstLapTime,
+    licenseLevel: CarClassLicenseLevel,
+    maxFuelPercentage: CarClassMaxFuelPct,
+    powerAdjustment: CarClassPowerAdjust,
+    weightPenalty: CarClassWeightPenalty,
+    relativeSpeed: CarClassRelSpeed,
+    shortName: CarClassShortName,
+  };
+};
+
+export const selectCurrentDriverResult = (state: IRacingSocketState) => {
+  const driverCarIndex = state.data.PlayerCarIdx;
+  const { ResultsPositions: results = [] } = selectCurrentSession(state);
+  return results.find(({ CarIdx }) => driverCarIndex === CarIdx);
+};
+
 export const selectActiveDrivers = (
   state: IRacingSocketState,
   filters: FilterDriversResults = {

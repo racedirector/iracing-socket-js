@@ -3,9 +3,11 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   selectCurrentSessionClassLeaders,
   selectCurrentSessionIsRaceSession,
+  selectCurrentDriverCarClassContext,
   RaceTime,
   SessionState,
   selectCurrentSession,
+  selectCurrentDriverResult,
 } from "@racedirector/iracing-socket-js";
 import { isEqual, omit } from "lodash";
 import averagePaceReducer, {
@@ -266,6 +268,42 @@ export const selectRaceLengthContext = createSelector(
     };
   },
 );
+
+export const selectLapsRemainingForCurrentDriverClass = (state: RootState) => {
+  const { lapsRemaining } = selectRaceLengthContext(state);
+  const { classId } = selectCurrentDriverCarClassContext(state.iRacing);
+  return lapsRemaining?.[classId];
+};
+
+export const selectLapsCompleteForCurrentDriverClass = (state: RootState) => {
+  const { lapsComplete } = selectRaceLengthContext(state);
+  const { classId } = selectCurrentDriverCarClassContext(state.iRacing);
+  return lapsComplete?.[classId];
+};
+
+export const selectEstimatedLapsForCurrentDriverClass = (state: RootState) => {
+  const { estimatedLaps } = selectRaceLengthContext(state);
+  const { classId } = selectCurrentDriverCarClassContext(state.iRacing);
+  return estimatedLaps?.[classId];
+};
+
+export const selectLapsRemainingForCurrentDriver = (state: RootState) => {
+  const { raceLaps } = selectRaceLengthContext(state);
+  const estimatedClassLaps = selectEstimatedLapsForCurrentDriverClass(state);
+  const remainingClassLaps = selectLapsRemainingForCurrentDriverClass(state);
+  const { LapsComplete: currentDriverLapsComplete } = selectCurrentDriverResult(
+    state.iRacing,
+  );
+
+  const totalRaceLaps = raceLaps || estimatedClassLaps;
+  const lapsCompleted = Math.max(
+    0,
+    remainingClassLaps,
+    currentDriverLapsComplete,
+  );
+
+  return totalRaceLaps - lapsCompleted;
+};
 
 export const classLeadersDidChangePredicate: AppListenerPredicate = (
   _action,

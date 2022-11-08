@@ -1,16 +1,17 @@
 import React, { useCallback } from "react";
 import {
-  iRacingSocketCommands,
   useIRacingContext,
   useDriverForCarIndex,
+  cameraSwitchNumber,
 } from "@racedirector/iracing-socket-js";
 import { Cameras as CamerasUI } from "src/components/Cameras";
+import { useAppDispatch } from "src/app/hooks";
 
 export interface CamerasProps {}
 
 export const Cameras: React.FC<CamerasProps> = () => {
+  const dispatch = useAppDispatch();
   const {
-    sendCommand,
     data: {
       CameraInfo: { Groups: groups = [] } = {},
       CamCarIdx: focusIndex = -1,
@@ -24,14 +25,16 @@ export const Cameras: React.FC<CamerasProps> = () => {
   const onCameraSelectCallback = useCallback(
     (groupNumber) => {
       if (selectedDriver) {
-        sendCommand(iRacingSocketCommands.CameraSwitchNumber, [
-          selectedDriver.CarNumber,
-          groupNumber,
-          cameraNumber,
-        ]);
+        dispatch(
+          cameraSwitchNumber({
+            number: selectedDriver.CarNumber,
+            cameraGroup: groupNumber,
+            cameraNumber,
+          }),
+        );
       }
     },
-    [cameraNumber, selectedDriver, sendCommand],
+    [cameraNumber, selectedDriver, dispatch],
   );
 
   return (

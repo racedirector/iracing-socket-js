@@ -1,19 +1,17 @@
-import {
-  iRacingSocketCommands,
-  useIRacingContext,
-} from "@racedirector/iracing-socket-js";
+import { chatCommandMacro } from "@racedirector/iracing-socket-js";
 import React, { useCallback } from "react";
+import { useAppDispatch } from "src/app/hooks";
 import { ChatMacros as ChatMacrosUI } from "../../components/ChatMacros";
 
 export interface ChatMacrosProps {}
 
 export const ChatMacros: React.FC<ChatMacrosProps> = () => {
-  const { sendCommand } = useIRacingContext();
+  const dispatch = useAppDispatch();
   const chatMacroCallback = useCallback(
-    (macroNumber) => {
-      sendCommand(iRacingSocketCommands.ChatCommandMacro, [macroNumber]);
+    (macroNumber: number) => {
+      dispatch(chatCommandMacro(macroNumber));
     },
-    [sendCommand],
+    [dispatch],
   );
 
   return <ChatMacrosUI onMacroPress={chatMacroCallback} />;
