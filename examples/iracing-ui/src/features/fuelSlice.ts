@@ -17,6 +17,7 @@ import {
   AppListenerPredicate,
   startAppListening,
 } from "../app/middleware";
+import { selectLapsRemainingForCurrentDriver } from "./sessionPaceSlice";
 
 export const flagsResetLap = (flags: Flags) => {
   const randomWaving = flags & Flags.RandomWaving;
@@ -201,6 +202,56 @@ export const selectAverageRefuelAmount = createSelector(
   ],
   (usage, fuelLevel, lapsRemaining) =>
     refuelAmount(lapsRemaining, usage, fuelLevel),
+);
+
+export const selectLiveAverageRefuelAmount = createSelector(
+  [
+    selectLapsRemainingForCurrentDriver,
+    selectAverageUsage,
+    selectLastFuelLevel,
+  ],
+  refuelAmount,
+);
+
+export const selectLiveLastLapRefuelAmount = createSelector(
+  [
+    selectLapsRemainingForCurrentDriver,
+    selectLastLapUsage,
+    selectLastFuelLevel,
+  ],
+  refuelAmount,
+);
+
+export const selectEstimatedAverageFuelStintsRemaining = createSelector(
+  [
+    selectAverageRefuelAmount,
+    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+  ],
+  (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
+);
+
+export const selectLiveEstimatedAverageFuelStintsRemaining = createSelector(
+  [
+    selectLiveAverageRefuelAmount,
+    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+  ],
+  (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
+);
+
+export const selectEstimatedLastFuelStintsRemaining = createSelector(
+  [
+    selectLastLapRefuelAmount,
+    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+  ],
+  (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
+);
+
+export const selectLiveEstimatedLastFuelStintsRemaining = createSelector(
+  [
+    selectLiveLastLapRefuelAmount,
+    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+  ],
+  (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
 );
 
 // Listener for when a lap starts, reports the current fuel level.
