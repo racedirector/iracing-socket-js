@@ -27,6 +27,9 @@ export const selectIRacingSessionInfo = (state: IRacingSocketState) =>
 export const selectIRacingSessions = (state: IRacingSocketState) =>
   state.data?.SessionInfo?.Sessions || [];
 
+export const selectIsMulticlass = (state: IRacingSocketState) =>
+  state.data?.WeekendInfo?.NumCarClasses > 1;
+
 export const selectSessionForSessionNumber = (
   state: IRacingSocketState,
   sessionNumber: number,

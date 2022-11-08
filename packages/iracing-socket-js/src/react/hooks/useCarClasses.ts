@@ -1,6 +1,5 @@
 import { chain } from "lodash";
 import { useMemo } from "react";
-import { useIRacingContext } from "../context";
 import { useDriversByCarIndex } from "./useDrivers";
 
 export interface CarClassDetail {
@@ -95,13 +94,6 @@ export const useBoPAdjustments = () => {
   }, [driversIndex]);
 
   return adjustments;
-};
-
-export const useIsMulticlass: () => boolean = () => {
-  const { data: { WeekendInfo: { NumCarClasses = 0 } = {} } = {} } =
-    useIRacingContext();
-
-  return useMemo(() => NumCarClasses > 1, [NumCarClasses]);
 };
 
 export default useCarClasses;
