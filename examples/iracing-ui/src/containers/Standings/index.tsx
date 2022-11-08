@@ -6,13 +6,14 @@ import {
   SessionResultsPosition,
   SessionState,
   iRacingSocketCommands,
+  selectIsMulticlass,
 } from "@racedirector/iracing-socket-js";
 import { useSessionStandings } from "../../hooks/useStandings";
 import {
   Standings as StandingsUI,
   StandingsProps as StandingsUIProps,
 } from "../../components/Standings";
-import { useIRacingContext } from "src/app/hooks";
+import { useAppSelector, useIRacingContext } from "src/app/hooks";
 
 const stringForGap = (
   sessionLeader: SessionResultsPosition,
@@ -56,17 +57,20 @@ const stringForGap = (
 export interface StandingsProps {}
 
 export const Standings: React.FC<StandingsProps> = () => {
-  const [sessionNumber, setSessionNumber] = useState(0);
   const {
     data: {
       CamCameraNumber: cameraNumber = -1,
       CamGroupNumber: cameraGroupNumber = -1,
       SessionInfo: { Sessions = [] } = {},
+      SessionNum,
     } = {},
   } = useIRacingContext();
+  const [sessionNumber, setSessionNumber] = useState(SessionNum);
   const driverIndex = useDriversByCarIndex();
   const standingsResult = useSessionStandings({ sessionNumber });
-  const isMulticlass = useIsMulticlass();
+  const isMulticlass = useAppSelector((state) =>
+    selectIsMulticlass(state.iRacing),
+  );
 
   const sessions = useMemo(
     () =>
