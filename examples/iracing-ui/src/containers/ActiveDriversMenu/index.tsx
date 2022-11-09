@@ -7,6 +7,7 @@ import {
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
+  MenuProps,
   UseMenuButtonProps,
   UseMenuOptionGroupProps,
 } from "@chakra-ui/react";
@@ -41,11 +42,11 @@ const selectActiveDriverMenuOptions = createSelector(
     })),
 );
 
-export interface ActiveDriversMenuProps {
+export interface ActiveDriversMenuProps extends Omit<MenuProps, "children"> {
   title: string;
   selectionType?: UseMenuOptionGroupProps["type"];
   colorScheme?: string;
-  onDriverSelect?: (carIndex: string) => void;
+  onDriverSelect?: (carIndex: string | string[]) => void;
 }
 
 export const ActiveDriversMenu: React.FC<ActiveDriversMenuProps> = ({
@@ -53,10 +54,11 @@ export const ActiveDriversMenu: React.FC<ActiveDriversMenuProps> = ({
   colorScheme,
   selectionType = "radio",
   onDriverSelect = () => {},
+  ...props
 }) => {
   const menuOptions = useAppSelector(selectActiveDriverMenuOptions);
   return (
-    <Menu closeOnSelect={true}>
+    <Menu {...props}>
       <MenuButton
         as={Button}
         colorScheme={colorScheme}
@@ -65,12 +67,15 @@ export const ActiveDriversMenu: React.FC<ActiveDriversMenuProps> = ({
         {title}
       </MenuButton>
       <MenuList minWidth="240px">
-        <MenuOptionGroup title="Drivers" type={selectionType}>
+        <MenuOptionGroup
+          title="Drivers"
+          type={selectionType}
+          onChange={(value) => onDriverSelect(value)}
+        >
           {menuOptions.map(({ name, value, carNumber }) => (
             <MenuItemOption
               key={name}
               value={value}
-              onClick={() => onDriverSelect(value)}
             >{`#${carNumber} ${name}`}</MenuItemOption>
           ))}
         </MenuOptionGroup>
