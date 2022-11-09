@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Grid, Heading, Text, Wrap } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, VStack, Wrap } from "@chakra-ui/react";
 
 export interface PaceComparisonDetailsProps {
   averageLapTime: number;
@@ -25,11 +25,11 @@ const PaceComparisonDetails: React.FC<PaceComparisonDetailsProps> = ({
         {teamName && <Text>{currentDriver}</Text>}
       </Flex>
 
-      <Grid>
+      <VStack>
         {averageLapTime && <Text>{`Average: ${averageLapTime}`}</Text>}
         {lastLapTime && <Text>{`Last: ${lastLapTime}`}</Text>}
         {bestLapTime && <Text>{`Best: ${bestLapTime}`}</Text>}
-      </Grid>
+      </VStack>
     </Box>
   );
 };
