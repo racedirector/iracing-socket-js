@@ -10,6 +10,8 @@ export const RaceLength: React.FC<RaceLengthProps> = () => {
     (state) => ({
       sessionTimeRemaining: state.iRacing.data?.SessionTimeRemain,
       sessionTime: state.iRacing.data?.SessionTime,
+      currentDriverLapsComplete: state.iRacing.data?.LapCompleted,
+      currentLap: state.iRacing.data?.Lap,
     }),
   );
 
