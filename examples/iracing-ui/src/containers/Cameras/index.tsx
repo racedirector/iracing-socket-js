@@ -1,48 +1,37 @@
 import React, { useCallback } from "react";
-import {
-  useIRacingContext,
-  useDriverForCarIndex,
-  cameraSwitchNumber,
-} from "@racedirector/iracing-socket-js";
-import { Cameras as CamerasUI } from "src/components/Cameras";
-import { useAppDispatch } from "src/app/hooks";
+import { cameraSwitchNumber } from "@racedirector/iracing-socket-js";
+import { useAppDispatch, useIRacingContext } from "src/app/hooks";
+import { ChangeCameraMenu } from "../ChangeCameraMenu";
+import ActiveDriversMenu from "../ActiveDriversMenu";
 
 export interface CamerasProps {}
 
 export const Cameras: React.FC<CamerasProps> = () => {
   const dispatch = useAppDispatch();
   const {
-    data: {
-      CameraInfo: { Groups: groups = [] } = {},
-      CamCarIdx: focusIndex = -1,
-      CamCameraNumber: cameraNumber,
-      CamGroupNumber: groupNumber,
-    } = {},
+    data: { CamCameraNumber: cameraNumber, CamGroupNumber: groupNumber } = {},
   } = useIRacingContext();
-
-  const selectedDriver = useDriverForCarIndex(focusIndex);
-
-  const onCameraSelectCallback = useCallback(
-    (groupNumber) => {
-      if (selectedDriver) {
-        dispatch(
-          cameraSwitchNumber({
-            number: selectedDriver.CarNumber,
-            cameraGroup: groupNumber,
-            cameraNumber,
-          }),
-        );
-      }
+  const onDriverSelectCallback = useCallback(
+    (carIndex) => {
+      dispatch(
+        cameraSwitchNumber({
+          number: carIndex,
+          cameraGroup: groupNumber,
+          cameraNumber: cameraNumber,
+        }),
+      );
     },
-    [cameraNumber, selectedDriver, dispatch],
+    [cameraNumber, dispatch, groupNumber],
   );
 
   return (
-    <CamerasUI
-      groups={groups}
-      selectedGroupNumber={groupNumber}
-      onCameraSelect={(groupNumber) => onCameraSelectCallback(groupNumber)}
-    />
+    <>
+      <ChangeCameraMenu />
+      <ActiveDriversMenu
+        title="Focused driver"
+        onDriverSelect={onDriverSelectCallback}
+      />
+    </>
   );
 };
 
