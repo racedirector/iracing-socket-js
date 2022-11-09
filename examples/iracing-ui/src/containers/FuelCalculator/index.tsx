@@ -53,17 +53,14 @@ export const FuelCalculator: React.FC<FuelCalculatorProps> = () => {
   );
 
   return (
-    <>
-      <RaceLength />
-      <FuelCalculatorUI
-        fuelLevel={lastFuelLevel.toFixed(2)}
-        fuelUnit={fuelUnit}
-        raceLaps={raceLaps}
-        raceLapsRemaining={lapsRemainingForCurrentDriver}
-        averageFuelUsage={averageFuelUsageProps}
-        lastFuelUsage={lastFuelUsageProps}
-      />
-    </>
+    <FuelCalculatorUI
+      fuelLevel={lastFuelLevel.toFixed(2)}
+      fuelUnit={fuelUnit}
+      raceLaps={raceLaps}
+      raceLapsRemaining={lapsRemainingForCurrentDriver}
+      averageFuelUsage={averageFuelUsageProps}
+      lastFuelUsage={lastFuelUsageProps}
+    />
   );
 };
 

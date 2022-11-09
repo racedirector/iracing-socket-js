@@ -1,103 +1,100 @@
-import React, { useMemo, useEffect } from "react";
+import React from "react";
+import { chain } from "lodash";
+import { createSelector } from "@reduxjs/toolkit";
 import {
   selectActiveDriversByCarClass,
+  selectCurrentSessionFastestLapByClass,
   selectStrengthOfFieldByClass,
-  useCurrentSessionClassFastestLap,
 } from "@racedirector/iracing-socket-js";
-import { SessionClassDetailsCardProps } from "src/components/SessionClassDetailsCard";
+import { SessionClassDetailsCardProps } from "../../components/SessionClassDetailsCard";
 import { SessionClassDetails as SessionClassDetailsUI } from "../../components/SessionClassDetails";
-import { useRaceLength } from "src/contexts/RaceLength/hooks";
-import { useAppSelector } from "src/app/hooks";
-import { selectAveragePace } from "src/features/sessionPaceSlice";
-import { selectAverageLapTimesForTargetsByClass } from "src/features/paceAnalysisSlice";
-import { chain } from "lodash";
+import { useAppSelector } from "../../app/hooks";
+import {
+  selectAveragePace,
+  selectRaceLengthContext,
+} from "../../features/sessionPaceSlice";
+import { selectAverageLapTimesForTargetsByClass } from "../../features/paceAnalysisSlice";
+import { RootState } from "../../app/store";
 
-export interface ClassDetail {
-  id: string;
-  color: number;
-  shortName: string;
-}
+const selectActiveDrivers = ({ iRacing }: RootState) =>
+  selectActiveDriversByCarClass(iRacing, {
+    includePaceCar: false,
+    includeSpectators: false,
+  });
+
+const selectActiveDriverIndexesByCarClass = createSelector(
+  [selectActiveDrivers],
+  (activeDrivers) => {
+    return Object.entries(activeDrivers).reduce(
+      (index, [classId, drivers]) => ({
+        ...index,
+        [classId]: drivers.map(({ CarIdx }) => CarIdx),
+      }),
+      {},
+    );
+  },
+);
+
+const selectAveragePaceByClass = (state: RootState) =>
+  selectAverageLapTimesForTargetsByClass(
+    state,
+    selectActiveDriverIndexesByCarClass(state),
+  );
+
+const selectSessionClassDetails = createSelector(
+  [
+    selectRaceLengthContext,
+    selectAveragePace,
+    selectActiveDrivers,
+    ({ iRacing }) => selectStrengthOfFieldByClass(iRacing),
+    selectAveragePaceByClass,
+    ({ iRacing }) => selectCurrentSessionFastestLapByClass(iRacing),
+  ],
+  (
+    { lapsComplete, raceLaps, estimatedLaps, isRaceTimed },
+    leaderPaceIndex,
+    activeDrivers,
+    strengthOfField,
+    averagePaceByClass,
+    fastestLapIndex,
+  ) => {
+    return chain(Object.values(activeDrivers))
+      .flatten()
+      .reduce<Record<string, SessionClassDetailsCardProps>>(
+        (
+          index,
+          {
+            CarClassID: classId,
+            CarClassColor: classColor,
+            CarClassShortName: classShortName,
+          },
+        ) => {
+          if (!index[classId]) {
+            index[classId] = {
+              color: `#${classColor.toString(16)}`,
+              className: classShortName,
+              strengthOfField: strengthOfField?.[classId] || 0,
+              lapsCompleted: lapsComplete?.[classId],
+              totalLaps: raceLaps || estimatedLaps?.[classId] || 0,
+              estimated: isRaceTimed,
+              fastestLap: fastestLapIndex?.[classId] || 0,
+              leaderPace: leaderPaceIndex?.[classId] || 0,
+              fieldPace: averagePaceByClass?.[classId] || 0,
+            };
+          }
+
+          return index;
+        },
+        {},
+      )
+      .values()
+      .valueOf();
+  },
+);
 
 export interface SessionClassDetailsProps {}
 
 export const SessionClassDetails: React.FC<SessionClassDetailsProps> = () => {
-  const { isRaceTimed, raceLaps, lapsComplete, estimatedLaps } =
-    useRaceLength();
-  const activeDrivers = useAppSelector((state) =>
-    selectActiveDriversByCarClass(state.iRacing, {
-      includePaceCar: false,
-      includeSpectators: false,
-    }),
-  );
-
-  const classes = useMemo<Record<number, ClassDetail>>(() => {
-    const index = chain(Object.values(activeDrivers))
-      .flatten()
-      .reduce((index, { CarClassID, CarClassColor, CarClassShortName }) => {
-        if (!index[CarClassID]) {
-          index[CarClassID] = {
-            id: CarClassID.toString(),
-            color: CarClassColor,
-            shortName: CarClassShortName,
-          };
-        }
-
-        return index;
-      }, {})
-      .valueOf();
-
-    return index;
-  }, [activeDrivers]);
-
-  const strengthOfField = useAppSelector((state) =>
-    selectStrengthOfFieldByClass(state.iRacing),
-  );
-  const fastestLapIndex = useCurrentSessionClassFastestLap();
-
-  const leaderPaceIndex = useAppSelector(selectAveragePace);
-
-  const driverIndexesByClassId = useMemo(
-    () =>
-      Object.entries(activeDrivers).reduce(
-        (index, [classId, drivers]) => ({
-          ...index,
-          [classId]: drivers.map(({ CarIdx }) => CarIdx),
-        }),
-        {},
-      ),
-    [activeDrivers],
-  );
-
-  const averagePaceByClass = useAppSelector((state) =>
-    selectAverageLapTimesForTargetsByClass(state, driverIndexesByClassId),
-  );
-
-  const classDetails = useMemo(() => {
-    return Object.values(classes).map<SessionClassDetailsCardProps>(
-      ({ color, shortName, id }) => ({
-        color: `#${color.toString(16)}`,
-        className: shortName,
-        strengthOfField: strengthOfField?.[id] || 0,
-        lapsCompleted: lapsComplete?.[id],
-        totalLaps: raceLaps || estimatedLaps?.[id] || 0,
-        raceLaps: raceLaps,
-        estimated: isRaceTimed,
-        fastestLap: fastestLapIndex?.[id] || 0,
-        leaderPace: leaderPaceIndex?.[id] || 0,
-        fieldPace: averagePaceByClass?.[id] || 0,
-      }),
-    );
-  }, [
-    averagePaceByClass,
-    classes,
-    estimatedLaps,
-    fastestLapIndex,
-    isRaceTimed,
-    lapsComplete,
-    leaderPaceIndex,
-    raceLaps,
-    strengthOfField,
-  ]);
-
+  const classDetails = useAppSelector(selectSessionClassDetails);
   return <SessionClassDetailsUI classDetails={classDetails} />;
 };

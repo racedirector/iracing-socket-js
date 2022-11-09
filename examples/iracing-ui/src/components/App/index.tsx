@@ -18,6 +18,8 @@ import { Standings } from "../../containers/Standings";
 import { Cameras } from "../../containers/Cameras";
 import { IncidentsTable } from "../../containers/IncidentsTable";
 import { RaceStrategy } from "../../containers/RaceStrategy";
+import RaceLength from "src/containers/RaceLength";
+import { SessionDetailsBadgeStack } from "src/containers/SessionDetailsBadgeStack";
 
 const AppTabBar = () => (
   <Tabs isFitted variant="enclosed">
@@ -73,7 +75,15 @@ const App: React.FC<Record<string, never>> = () => {
         <ConnectionStatus />
       </Flex>
 
-      {isIRacingConnected && <AppTabBar />}
+      {isIRacingConnected && (
+        <>
+          <Flex>
+            <RaceLength />
+            <SessionDetailsBadgeStack />
+          </Flex>
+          <AppTabBar />
+        </>
+      )}
     </div>
   );
 };

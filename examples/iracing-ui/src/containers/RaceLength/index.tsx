@@ -1,18 +1,19 @@
 import React, { useMemo } from "react";
 import { useRaceLength } from "src/contexts/RaceLength/hooks";
-import { RaceLength as RaceLengthUI } from "../../components/RaceLength";
+import { SessionLength as SessionLengthUI } from "../../components/SessionLength";
 import { useAppSelector } from "src/app/hooks";
+import { RootState } from "src/app/store";
+
+const selectSessionLengthContext = (state: RootState) => ({
+  sessionTimeRemaining: state.iRacing.data?.SessionTimeRemain,
+  sessionTime: state.iRacing.data?.SessionTime,
+});
 
 export interface RaceLengthProps {}
 
 export const RaceLength: React.FC<RaceLengthProps> = () => {
   const { sessionTimeRemaining = -1, sessionTime = -1 } = useAppSelector(
-    (state) => ({
-      sessionTimeRemaining: state.iRacing.data?.SessionTimeRemain,
-      sessionTime: state.iRacing.data?.SessionTime,
-      currentDriverLapsComplete: state.iRacing.data?.LapCompleted,
-      currentLap: state.iRacing.data?.Lap,
-    }),
+    selectSessionLengthContext,
   );
 
   const { sessionLength } = useRaceLength();
@@ -27,7 +28,9 @@ export const RaceLength: React.FC<RaceLengthProps> = () => {
     return null;
   }, [sessionTime, sessionTimeRemaining]);
 
-  return <RaceLengthUI timeElapsed={timeElapsed} totalTime={sessionLength} />;
+  return (
+    <SessionLengthUI timeElapsed={timeElapsed} totalTime={sessionLength} />
+  );
 };
 
 export default RaceLength;

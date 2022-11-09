@@ -9,7 +9,7 @@ import {
 } from "src/app/middleware";
 import {
   selectCurrentSession,
-  selectSessionResultsPositions,
+  getSessionResultsPositions,
 } from "@racedirector/iracing-socket-js";
 
 // !!!: This is copy-pasta from `averagePaceSlice`
@@ -20,6 +20,7 @@ const averageLapTimes = (lapTimes: number[]) => {
 
   const totalLapTime = validLaps.reduce(
     (aggregateLapTimes, lapTime) => aggregateLapTimes + lapTime,
+    0,
   );
 
   return totalLapTime / validLaps.length;
@@ -59,6 +60,11 @@ export const paceAnalysisSlice = createSlice({
 export const { setLapTimeLimit, addTargetLapTimes } = paceAnalysisSlice.actions;
 
 export const selectPaceAnalysis = (state: RootState) => state.paceAnalysis;
+
+export const selectAverageLapTimeForTarget = (
+  state: RootState,
+  targetIndex: string,
+) => averageLapTimes(state.paceAnalysis.targetLapTimes?.[targetIndex] || []);
 
 export const selectAverageLapTimesForTargets = (
   state: RootState,
@@ -141,8 +147,8 @@ export const currentSessionResultsDidChangePredicate: AppListenerPredicate = (
   const currentSession = selectCurrentSession(currentState.iRacing);
   const previousSession = selectCurrentSession(previousState.iRacing);
 
-  const currentResults = selectSessionResultsPositions(currentSession);
-  const previousResults = selectSessionResultsPositions(previousSession);
+  const currentResults = getSessionResultsPositions(currentSession);
+  const previousResults = getSessionResultsPositions(previousSession);
 
   return !isEqual(currentResults, previousResults);
 };
@@ -155,8 +161,8 @@ export const currentSessionResultsDidChangeEffect: AppListenerEffect = (
   const previousState = listenerApi.getOriginalState();
   const currentSession = selectCurrentSession(currentState.iRacing);
   const previousSession = selectCurrentSession(previousState.iRacing);
-  const currentResults = selectSessionResultsPositions(currentSession);
-  const previousResults = selectSessionResultsPositions(previousSession);
+  const currentResults = getSessionResultsPositions(currentSession);
+  const previousResults = getSessionResultsPositions(previousSession);
 
   const newResults: Record<string, number> = currentResults
     .filter(({ CarIdx, LapsComplete }) => {

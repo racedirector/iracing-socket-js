@@ -26,17 +26,11 @@ const formatSessionTime = (duration: moment.Duration) => {
 export interface SessionLengthProps {
   totalTime: RaceTime;
   timeElapsed: number;
-  sessionLaps: number;
-  currentLap: number;
-  lapsComplete: number;
 }
 
 export const SessionLength: React.FC<SessionLengthProps> = ({
   timeElapsed,
   totalTime,
-  sessionLaps,
-  currentLap,
-  lapsComplete,
 }) => {
   const normalizedTimeElapsed = useMemo(() => {
     const timeElapsedDuration = moment.duration(timeElapsed, "seconds");
@@ -49,17 +43,12 @@ export const SessionLength: React.FC<SessionLengthProps> = ({
       return -1;
     } else {
       const totalTimeDuration = moment.duration(totalTime, "seconds");
-      return formatSessionTime(totalTimeDuration);
+      return moment.utc(totalTimeDuration.asMilliseconds()).format("HH:mm:ss");
     }
   }, [totalTime]);
 
   return (
-    <>
-      <Heading>{`${normalizedTimeElapsed} / ${normalizedTotalTime}`}</Heading>
-      <Heading>{sessionLaps}</Heading>
-      <Heading>{currentLap}</Heading>
-      <Heading>{lapsComplete}</Heading>
-    </>
+    <Heading>{`${normalizedTimeElapsed} / ${normalizedTotalTime}`}</Heading>
   );
 };
 

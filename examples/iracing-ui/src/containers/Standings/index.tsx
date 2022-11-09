@@ -1,11 +1,8 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import {
   useDriversByCarIndex,
-  useStandingsForSession,
-  useIsMulticlass,
   SessionResultsPosition,
   SessionState,
-  iRacingSocketCommands,
   selectIsMulticlass,
 } from "@racedirector/iracing-socket-js";
 import { useSessionStandings } from "../../hooks/useStandings";

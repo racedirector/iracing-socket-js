@@ -291,9 +291,8 @@ export const selectLapsRemainingForCurrentDriver = (state: RootState) => {
   const { raceLaps } = selectRaceLengthContext(state);
   const estimatedClassLaps = selectEstimatedLapsForCurrentDriverClass(state);
   const remainingClassLaps = selectLapsRemainingForCurrentDriverClass(state);
-  const { LapsComplete: currentDriverLapsComplete } = selectCurrentDriverResult(
-    state.iRacing,
-  );
+  const { LapsComplete: currentDriverLapsComplete = 0 } =
+    selectCurrentDriverResult(state.iRacing) || {};
 
   const totalRaceLaps = raceLaps || estimatedClassLaps;
   const lapsCompleted = Math.max(
