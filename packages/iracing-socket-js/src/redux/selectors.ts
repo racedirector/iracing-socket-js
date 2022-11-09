@@ -1,3 +1,4 @@
+import { createSelector } from "@reduxjs/toolkit";
 import { find, keyBy, groupBy } from "lodash";
 import {
   Driver,
@@ -5,6 +6,12 @@ import {
   Session,
   SessionResultsPosition,
 } from "../types";
+import {
+  getFastestLap,
+  getSessionResultsPositions,
+  getStrengthOfDrivers,
+  sessionIsRaceSession,
+} from "../utilities";
 import { IRacingSocketState } from "./state";
 
 export const selectIRacingSocketConnecting = (state: IRacingSocketState) =>
@@ -47,31 +54,6 @@ export const selectCurrentSession = (
 ): Session | undefined =>
   selectSessionForSessionNumber(state, state.data?.SessionNum);
 
-export const selectSessionIsRaceSession = (session: Session) =>
-  session?.SessionName === "RACE";
-
-export const selectSessionTime = ({
-  SessionTime: sessionTime = "unknown",
-}: Session) => {
-  if (sessionTime === "unlimited") {
-    return sessionTime;
-  }
-
-  const totalTime = parseInt(sessionTime);
-  return Number.isNaN(totalTime) ? null : totalTime;
-};
-
-export const selectSessionLaps = ({
-  SessionLaps: sessionLaps = "unknown",
-}: Session) => {
-  const lapCount = parseInt(sessionLaps);
-  return Number.isNaN(lapCount) ? null : lapCount;
-};
-
-export const selectSessionResultsPositions = (session: Session) => {
-  return session?.ResultsPositions || [];
-};
-
 type ClassResultsIndex = Record<string, SessionResultsPosition[]>;
 
 const selectResultsByClass = (
@@ -109,7 +91,7 @@ export const selectResultsForSessionNumber = (
   sessionNumber: number,
 ) => {
   const session = selectSessionForSessionNumber(state, sessionNumber);
-  return selectSessionResultsPositions(session);
+  return getSessionResultsPositions(session);
 };
 
 export const selectResultsForSessionNumberByClass = (
@@ -139,7 +121,7 @@ export const selectClassLeadersFromResultsForSessionNumber = (
 
 export const selectCurrentSessionResults = (state: IRacingSocketState) => {
   const currentSession = selectCurrentSession(state);
-  return selectSessionResultsPositions(currentSession);
+  return getSessionResultsPositions(currentSession);
 };
 
 export const selectCurrentSessionResultsByClass = (
@@ -160,11 +142,39 @@ export const selectCurrentSessionClassLeaders = (state: IRacingSocketState) => {
   return selectClassLeadersFromResults(classResults);
 };
 
+export const selectCurrentSessionClassLeaderForCurrentDriverClass = (
+  state: IRacingSocketState,
+) => {
+  const classLeaders = selectCurrentSessionClassLeaders(state);
+  return classLeaders?.[state.data?.PlayerCarClass];
+};
+
 export const selectCurrentSessionIsRaceSession = (
   state: IRacingSocketState,
 ) => {
   const currentSession = selectCurrentSession(state);
-  return selectSessionIsRaceSession(currentSession);
+  return sessionIsRaceSession(currentSession);
+};
+
+export const selectCurrentSessionFastestLap = (state: IRacingSocketState) => {
+  const currentSession = selectCurrentSession(state);
+  return currentSession.ResultsFastestLap?.[0];
+};
+
+export const selectCurrentSessionFastestLapTime = (state: IRacingSocketState) =>
+  selectCurrentSessionFastestLap(state).FastestLap;
+
+export const selectCurrentSessionFastestLapByClass = (
+  state: IRacingSocketState,
+) => {
+  const results = selectCurrentSessionResultsByClass(state);
+  return Object.entries(results).reduce(
+    (index, [classId, classResults]) => ({
+      ...index,
+      [classId]: getFastestLap(classResults),
+    }),
+    {},
+  );
 };
 
 export const selectTrackLengthKilometers = (state: IRacingSocketState) => {
@@ -263,6 +273,11 @@ export const selectCurrentDriver = (state: IRacingSocketState) => {
   return selectDriverForIndex(state, currentDriverIndex);
 };
 
+export const selectCurrentDriverIsSpectator = (state: IRacingSocketState) => {
+  const currentDriver = selectCurrentDriver(state);
+  return currentDriver?.IsSpectator || false;
+};
+
 export const selectCurrentDriverCarClassContext = (
   state: IRacingSocketState,
 ) => {
@@ -293,11 +308,16 @@ export const selectCurrentDriverCarClassContext = (
   };
 };
 
-export const selectCurrentDriverResult = (state: IRacingSocketState) => {
-  const driverCarIndex = state.data.PlayerCarIdx;
-  const { ResultsPositions: results = [] } = selectCurrentSession(state);
-  return results.find(({ CarIdx }) => driverCarIndex === CarIdx);
-};
+export const selectResultForCarIndex = createSelector(
+  [selectCurrentSession, (_state, carIndex) => carIndex],
+  (currentSession, carIndex) =>
+    (currentSession?.ResultsPositions || []).find(
+      ({ CarIdx }) => carIndex === CarIdx,
+    ),
+);
+
+export const selectCurrentDriverResult = (state: IRacingSocketState) =>
+  selectResultForCarIndex(state, state.data?.PlayerCarIdx);
 
 export const selectActiveDrivers = (
   state: IRacingSocketState,
@@ -323,19 +343,8 @@ export const selectActiveDriversForClass = (
   classId: string,
 ) => selectActiveDriversByCarClass(state)?.[classId];
 
-const MAGIC_NUMBER = 1600;
-const getStrengthOfDrivers = (drivers: Driver[]) => {
-  const total = drivers.reduce(
-    (totalIRating, { IRating }) =>
-      totalIRating + Math.pow(2, -IRating / MAGIC_NUMBER),
-    0,
-  );
-
-  const strength =
-    (MAGIC_NUMBER / Math.log(2)) * Math.log(drivers.length / total);
-
-  return strength / 1000;
-};
+export const selectIsTeamRacing = (state: IRacingSocketState): boolean =>
+  !!state.data?.WeekendInfo?.TeamRacing;
 
 export const selectStrengthOfField = (state: IRacingSocketState) => {
   const drivers = selectActiveDrivers(state, {

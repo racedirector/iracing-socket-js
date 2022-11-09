@@ -1,3 +1,4 @@
+import { Driver, Session } from "../types";
 import { canUseSymbol } from "./globals";
 export * from "./position";
 
@@ -79,4 +80,43 @@ export const getFastestLap = <T extends FastestLapTimeProvider>(
 
     return fastestLapTime;
   }, -1);
+};
+
+export const sessionIsRaceSession = (session: Session) =>
+  session?.SessionName === "RACE";
+
+export const getSessionTime = ({
+  SessionTime: sessionTime = "unknown",
+}: Session) => {
+  if (sessionTime === "unlimited") {
+    return sessionTime;
+  }
+
+  const totalTime = parseInt(sessionTime);
+  return Number.isNaN(totalTime) ? null : totalTime;
+};
+
+export const getSessionLaps = ({
+  SessionLaps: sessionLaps = "unknown",
+}: Session) => {
+  const lapCount = parseInt(sessionLaps);
+  return Number.isNaN(lapCount) ? null : lapCount;
+};
+
+export const getSessionResultsPositions = (session: Session) => {
+  return session?.ResultsPositions || [];
+};
+
+const MAGIC_NUMBER = 1600;
+export const getStrengthOfDrivers = (drivers: Driver[]) => {
+  const total = drivers.reduce(
+    (totalIRating, { IRating }) =>
+      totalIRating + Math.pow(2, -IRating / MAGIC_NUMBER),
+    0,
+  );
+
+  const strength =
+    (MAGIC_NUMBER / Math.log(2)) * Math.log(drivers.length / total);
+
+  return strength / 1000;
 };

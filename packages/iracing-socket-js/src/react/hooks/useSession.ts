@@ -7,12 +7,8 @@ import { useCurrentDriver, useDriversInCurrentDriverClass } from "./useDriver";
 import {
   expectedRaceLengthForPositionData,
   getFastestLap,
+  sessionIsRaceSession,
 } from "../../utilities";
-
-const sessionIsRaceSession = ({ SessionName = "" }: Session) =>
-  sessionNameIsRaceSession(SessionName);
-
-const sessionNameIsRaceSession = (name: string) => name === "RACE";
 
 export const useSession = (sessionNumber) => {
   const { data: { SessionInfo: { Sessions: sessions = [] } = {} } = {} } =
@@ -168,8 +164,8 @@ export type UseCurrentSessionIsRaceSessionHook = () => boolean;
 
 export const useCurrentSessionIsRaceSession: UseCurrentSessionIsRaceSessionHook =
   () => {
-    const { SessionName = "" } = useCurrentSession() || {};
-    return useMemo(() => sessionNameIsRaceSession(SessionName), [SessionName]);
+    const session = useCurrentSession();
+    return useMemo(() => sessionIsRaceSession(session), [session]);
   };
 
 /**
