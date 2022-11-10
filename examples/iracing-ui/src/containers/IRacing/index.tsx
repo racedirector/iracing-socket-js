@@ -1,6 +1,7 @@
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren, useCallback, useEffect } from "react";
 import { connect, disconnect } from "@racedirector/iracing-socket-js";
 import { useAppDispatch } from "src/app/hooks";
+import { useIRacingSocketConnectionContext } from "src/contexts/IRacingSocketConnection";
 
 const REQUEST_PARAMETERS = [
   "CameraInfo",
@@ -14,6 +15,9 @@ const REQUEST_PARAMETERS = [
   "WeekendInfo",
   "CarIdxSessionFlags",
   "CarIdxLapDistPct",
+  "CarIdxBestLapTime",
+  "CarIdxLastLapTime",
+  "CarIdxLapCompleted",
   "SessionNum",
   "SessionTime",
   "SessionTick",
@@ -64,27 +68,45 @@ const REQUEST_PARAMETERS = [
   "RightTireSetsAvailable",
 ];
 
+export const useIRacingSocket = () => {
+  const dispatch = useAppDispatch();
+  const { server } = useIRacingSocketConnectionContext();
+
+  const connectCallback = useCallback(() => {
+    console.log("Connect socket explicitly");
+    dispatch(
+      connect({
+        server,
+        requestParameters: REQUEST_PARAMETERS,
+      }),
+    );
+  }, [dispatch, server]);
+
+  const disconnectCallback = useCallback(() => {
+    console.log("Disconnect socket explicitly...");
+    dispatch(disconnect());
+  }, [dispatch]);
+
+  return {
+    connect: connectCallback,
+    disconnect: disconnectCallback,
+  };
+};
+
 export interface IRacingProps {}
 
 export const IRacing: React.FC<PropsWithChildren<IRacingProps>> = ({
   children = null,
 }) => {
-  const dispatch = useAppDispatch();
+  const { connect, disconnect } = useIRacingSocket();
 
   useEffect(() => {
-    console.log("Connect socket explicitly");
-    dispatch(
-      connect({
-        server: "192.168.4.52:8182",
-        requestParameters: REQUEST_PARAMETERS,
-      }),
-    );
+    connect();
 
     return () => {
-      console.log("Disconnect socket explicitly...");
-      dispatch(disconnect());
+      disconnect();
     };
-  }, [dispatch]);
+  });
 
   return <>{children}</>;
 };

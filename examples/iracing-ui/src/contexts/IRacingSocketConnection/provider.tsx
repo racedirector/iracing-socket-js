@@ -1,9 +1,4 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
+import React, { PropsWithChildren, useMemo, useState } from "react";
 import {
   IRacingSocketConnectionContext,
   IRacingSocketConnectionContextType,
@@ -14,32 +9,18 @@ export interface IRacingSocketConnectionProviderProps {}
 export const IRacingSocketConnectionProvider: React.FC<
   PropsWithChildren<IRacingSocketConnectionProviderProps>
 > = ({ children = null }) => {
-  const [state, setState] = useState({
-    host: "192.168.4.52",
-    port: "8182",
-  });
+  const [server, setServer] = useState("192.168.4.52:8182");
 
-  const setPortCallback = useCallback(
-    (port) => setState((previous) => ({ ...previous, port })),
-    [setState],
-  );
-
-  const setHostCallback = useCallback(
-    (host) => setState((previous) => ({ ...previous, host })),
-    [setState],
-  );
-
-  const providerState: IRacingSocketConnectionContextType = useMemo(
+  const context: IRacingSocketConnectionContextType = useMemo(
     () => ({
-      ...state,
-      setPort: setPortCallback,
-      setHost: setHostCallback,
+      server,
+      setServer,
     }),
-    [state, setPortCallback, setHostCallback],
+    [server, setServer],
   );
 
   return (
-    <IRacingSocketConnectionContext.Provider value={providerState}>
+    <IRacingSocketConnectionContext.Provider value={context}>
       {children}
     </IRacingSocketConnectionContext.Provider>
   );

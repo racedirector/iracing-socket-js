@@ -1,10 +1,8 @@
 import { useContext, createContext } from "react";
 
 export interface IRacingSocketConnectionContextType {
-  host: string;
-  port: string;
-  setHost: (host: string) => void;
-  setPort: (port: string) => void;
+  server: string;
+  setServer: (server: string) => void;
 }
 
 export const IRacingSocketConnectionContext =

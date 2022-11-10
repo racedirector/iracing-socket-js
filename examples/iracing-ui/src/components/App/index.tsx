@@ -20,6 +20,7 @@ import { IncidentsTable } from "../../containers/IncidentsTable";
 import { RaceStrategy } from "../../containers/RaceStrategy";
 import RaceLength from "src/containers/RaceLength";
 import { SessionDetailsBadgeStack } from "src/containers/SessionDetailsBadgeStack";
+import IRacingSocketConnectionInput from "src/containers/IRacingSocketConnectionInput";
 
 const AppTabBar = () => (
   <Tabs isFitted variant="enclosed">
@@ -65,12 +66,14 @@ const App: React.FC<Record<string, never>> = () => {
     <div style={{ flex: 1 }}>
       <Flex
         align="center"
-        backgroundColor="#282c34"
+        backgroundColor="gray.800"
         color="white"
-        paddingBottom={2.5}
-        paddingTop={2.5}
+        paddingY={2.5}
+        paddingX={5}
       >
         <Heading>iRacing Socket UI</Heading>
+        <Spacer />
+        <IRacingSocketConnectionInput />
         <Spacer />
         <ConnectionStatus />
       </Flex>
