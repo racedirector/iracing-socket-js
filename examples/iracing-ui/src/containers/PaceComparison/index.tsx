@@ -1,7 +1,7 @@
+import { Box, Flex, Spacer } from "@chakra-ui/react";
 import {
   selectDriverForIndex,
   selectIsTeamRacing,
-  selectResultForCarIndex,
 } from "@racedirector/iracing-socket-js";
 import { createSelector } from "@reduxjs/toolkit";
 import React, { useState } from "react";
@@ -26,6 +26,8 @@ const selectTargetPace = createSelector(
       state.iRacing.data?.CarIdxLastLapTime?.[carIndex],
     (state: RootState, carIndex: number) =>
       state.iRacing.data?.CarIdxBestLapTime?.[carIndex],
+    (state: RootState, carIndex: number) =>
+      state.iRacing.data?.CarIdxLapCompleted?.[carIndex],
   ],
   (
     isTeamRacing,
@@ -33,6 +35,7 @@ const selectTargetPace = createSelector(
     averageLapTime,
     lastLapTime,
     bestLapTime,
+    lapsComplete,
   ): PaceComparisonDetailsProps => {
     return {
       averageLapTime,
@@ -40,6 +43,7 @@ const selectTargetPace = createSelector(
       bestLapTime,
       currentDriver: driver?.UserName,
       teamName: isTeamRacing ? driver?.TeamName : undefined,
+      lapsComplete,
     };
   },
 );
@@ -55,15 +59,15 @@ export interface PaceComparisonProps {
 
 export const PaceComparison: React.FC<PaceComparisonProps> = ({
   targetIndex: targetIndexProp,
-  compareIndexes: comapreIndexesProp,
+  compareIndexes: comapreIndexesProp = [],
 }) => {
   const [targetIndex, setTargetIndex] = useState<number>(targetIndexProp);
   const [compareIndexes, setCompareIndexes] =
     useState<number[]>(comapreIndexesProp);
 
-  const target = useAppSelector((state) =>
-    selectTargetPace(state, targetIndex),
-  );
+  const target = useAppSelector((state) => {
+    return targetIndex ? selectTargetPace(state, targetIndex) : undefined;
+  });
 
   const comparisons = useAppSelector((state) =>
     selectPaceForTargets(state, compareIndexes),
@@ -88,16 +92,14 @@ export const PaceComparison: React.FC<PaceComparisonProps> = ({
   );
 
   return (
-    <>
-      <PaceComparisonUI target={target} comparisons={comparisons} />
-
-      <>
+    <Box>
+      <Flex>
         <ActiveDriversMenu
           title="Set target"
           colorScheme="red"
           onDriverSelect={onTargetChangeCallback}
         />
-
+        <Spacer />
         <ActiveDriversMenu
           title="Select comparisons"
           colorScheme="blue"
@@ -105,8 +107,9 @@ export const PaceComparison: React.FC<PaceComparisonProps> = ({
           closeOnSelect={false}
           onDriverSelect={onComparisonChangeCallback}
         />
-      </>
-    </>
+      </Flex>
+      <PaceComparisonUI target={target} comparisons={comparisons} />
+    </Box>
   );
 };
 

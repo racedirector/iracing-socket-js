@@ -336,6 +336,10 @@ export const classLeadersDidChangeEffect: AppListenerEffect = (
   const isRaceSession = selectCurrentSessionIsRaceSession(iRacingState);
 
   Object.entries(currentClassLeaders).forEach(([classId, leader]) => {
+    if (!leader) {
+      return;
+    }
+
     const classPace = selectClassById(currentState, classId);
     const averageLapTime = classPace ? selectAverageLapTime(classPace) : -1;
 

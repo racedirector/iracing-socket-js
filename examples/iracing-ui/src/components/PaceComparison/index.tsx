@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Flex, Heading, Text, VStack, Wrap } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 
 export interface PaceComparisonDetailsProps {
   averageLapTime: number;
@@ -7,6 +15,7 @@ export interface PaceComparisonDetailsProps {
   teamName?: string;
   lastLapTime: number;
   bestLapTime: number;
+  lapsComplete?: number;
   color?: string;
 }
 
@@ -16,19 +25,21 @@ const PaceComparisonDetails: React.FC<PaceComparisonDetailsProps> = ({
   bestLapTime,
   currentDriver,
   teamName,
+  lapsComplete,
   color,
 }) => {
   return (
     <Box flex={1} borderWidth="1px" borderRadius="lg" overflow="hidden">
       <Flex bg={color}>
-        <Heading>{teamName || currentDriver}</Heading>
+        <Heading size="md">{teamName || currentDriver}</Heading>
         {teamName && <Text>{currentDriver}</Text>}
       </Flex>
 
       <VStack>
-        {averageLapTime && <Text>{`Average: ${averageLapTime}`}</Text>}
-        {lastLapTime && <Text>{`Last: ${lastLapTime}`}</Text>}
-        {bestLapTime && <Text>{`Best: ${bestLapTime}`}</Text>}
+        {lapsComplete > 0 && <Text>{`Laps: ${lapsComplete}`}</Text>}
+        {averageLapTime > 0 && <Text>{`Average: ${averageLapTime}`}</Text>}
+        {lastLapTime > 0 && <Text>{`Last: ${lastLapTime}`}</Text>}
+        {bestLapTime > 0 && <Text>{`Best: ${bestLapTime}`}</Text>}
       </VStack>
     </Box>
   );
@@ -44,19 +55,24 @@ export const PaceComparison: React.FC<PaceComparisonProps> = ({
   comparisons,
 }) => {
   return (
-    <Flex>
+    <Box>
       <Box>
+        <Heading>Target</Heading>
         <PaceComparisonDetails {...target} color="teal" />
       </Box>
-      <Wrap>
+
+      <Heading>Comparisons</Heading>
+      <Grid templateColumns="repeat(3, 1fr)">
         {comparisons.map((props) => (
-          <PaceComparisonDetails
-            key={`${props.currentDriver}-${props.teamName}`}
-            {...props}
-          />
+          <GridItem>
+            <PaceComparisonDetails
+              key={`${props.currentDriver}-${props.teamName}`}
+              {...props}
+            />
+          </GridItem>
         ))}
-      </Wrap>
-    </Flex>
+      </Grid>
+    </Box>
   );
 };
 

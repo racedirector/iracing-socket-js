@@ -58,6 +58,19 @@ interface PitStopTiming {
   pitStallExitTime?: number;
 }
 
+const pitStopTimingSummary = ({
+  pitLaneEntryTime = 0,
+  pitLaneExitTime = 0,
+  pitServiceEndTime = 0,
+  pitServiceStartTime = 0,
+  pitStallEntryTime = 0,
+  pitStallExitTime = 0,
+}) => ({
+  pitLaneTime: pitLaneExitTime - pitLaneEntryTime,
+  serviceTime: pitServiceEndTime - pitServiceStartTime,
+  pitStallTime: pitStallExitTime - pitStallEntryTime,
+});
+
 export interface PitStopAnalysisState {
   currentStopTiming: PitStopTiming;
   pastStopTiming: PitStopTiming[];
@@ -67,6 +80,11 @@ const initialState: PitStopAnalysisState = {
   currentStopTiming: {},
   pastStopTiming: [],
 };
+
+interface UpdateServiceFlagsPayload {
+  flags: PitServiceFlags;
+  sessionTime: number;
+}
 
 interface UpdateServiceStatePayload {
   status: PitServiceStatus;
@@ -78,6 +96,10 @@ export const pitStopAnalaysisSlice = createSlice({
   name: "pitStopAnalysis",
   initialState,
   reducers: {
+    updateServiceFlags: (
+      _state,
+      _action: PayloadAction<UpdateServiceFlagsPayload>,
+    ) => {},
     updateServiceStatus: (
       state,
       action: PayloadAction<UpdateServiceStatePayload>,
@@ -131,10 +153,52 @@ export const pitStopAnalaysisSlice = createSlice({
     }),
 });
 
+const { updateServiceFlags } = pitStopAnalaysisSlice.actions;
 export const { updateServiceStatus } = pitStopAnalaysisSlice.actions;
 
 export const selectPitStopAnalysis = (state: RootState) =>
   state.pitStopAnalysis;
+
+export const selectCurrentStopTiming = (state: RootState) =>
+  state.pitStopAnalysis.currentStopTiming;
+
+export const selectPastStopTiming = (state: RootState) =>
+  state.pitStopAnalysis.pastStopTiming;
+
+export const selectLastStopTiming = (state: RootState) => {
+  const timing = selectPastStopTiming(state);
+  return timing?.[timing.length - 1];
+};
+
+export const selectCurrentStopTimingSummary = (state: RootState) =>
+  pitStopTimingSummary(selectCurrentStopTiming(state));
+
+export const selectLastStopTimingSummary = (state: RootState) =>
+  pitStopTimingSummary(selectLastStopTiming(state));
+
+export const selectPitStopTimingSummary = (state: RootState) =>
+  selectPastStopTiming(state).map(pitStopTimingSummary);
+
+export const playerCarPitServiceFlagsDidChangePredicate: AppListenerPredicate =
+  (_action, currentState, previousState) => {
+    const currentServiceStatus = currentState.iRacing.data?.PitSvFlags || 0x0;
+    const previousServiceStatus = previousState.iRacing.data?.PitSvFlags || 0x0;
+
+    return currentServiceStatus !== previousServiceStatus;
+  };
+
+export const playerCarPitServiceFlagsDidChangeEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
+  const currentState = listenerApi.getState();
+  listenerApi.dispatch(
+    updateServiceFlags({
+      flags: currentState.iRacing.data?.PitSvFlags,
+      sessionTime: currentState.iRacing.data?.SessionTime,
+    }),
+  );
+};
 
 // Listener for when the player pit service status changes
 export const playerCarPitServiceStatusDidChangePredicate: AppListenerPredicate =
@@ -169,23 +233,5 @@ startAppListening({
   predicate: playerCarPitServiceStatusDidChangePredicate,
   effect: playerCarPitServiceStatusDidChangeEffect,
 });
-
-// startAppListening({
-//   predicate: (_action, currentState, previousState) => {
-//     const currentRequestedService =
-//       currentState.iRacing.data?.PitSvFlags || 0x0;
-//     const previousRequestedService =
-//       previousState.iRacing.data?.PitSvFlags || 0x0;
-
-//     // ???: Need to check what gets called as you request service...?
-//     // ???: If i have tires checked and change pressures, does this still fire?
-
-//     return currentRequestedService !== previousRequestedService;
-//   },
-//   effect: (_action, listenerApi) => {
-//     const currentState = listenerApi.getState();
-//     const requestedService = selectPitServiceRequest(currentState.iRacing);
-//   },
-// });
 
 export default pitStopAnalaysisSlice.reducer;

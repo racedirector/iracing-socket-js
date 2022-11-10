@@ -18,9 +18,9 @@ import { Standings } from "../../containers/Standings";
 import { Cameras } from "../../containers/Cameras";
 import { IncidentsTable } from "../../containers/IncidentsTable";
 import { RaceStrategy } from "../../containers/RaceStrategy";
-import RaceLength from "src/containers/RaceLength";
-import { SessionDetailsBadgeStack } from "src/containers/SessionDetailsBadgeStack";
-import IRacingSocketConnectionInput from "src/containers/IRacingSocketConnectionInput";
+import RaceLength from "../../containers/RaceLength";
+import { SessionDetailsBadgeStack } from "../../containers/SessionDetailsBadgeStack";
+import IRacingSocketConnectionInput from "../../containers/IRacingSocketConnectionInput";
 
 const AppTabBar = () => (
   <Tabs isFitted variant="enclosed">
