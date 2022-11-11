@@ -394,6 +394,15 @@ export interface PitServiceRequest {
   frontTireSetsUsed: number;
   rearTireSetsAvailable: number;
   rearTireSetsUsed: number;
+
+  leftFrontTiresAvailable: number;
+  leftFrontTiresUsed: number;
+  rightFrontTiresAvailable: number;
+  rightFrontTiresUsed: number;
+  leftRearTiresAvailable: number;
+  leftRearTiresUsed: number;
+  rightRearTiresAvailable: number;
+  rightRearTiresUsed: number;
 }
 
 export const selectPitServiceRequest: (
@@ -417,6 +426,14 @@ export const selectPitServiceRequest: (
     FrontTireSetsUsed,
     RearTireSetsAvailable,
     RearTireSetsUsed,
+    LFTiresAvailable,
+    LFTiresUsed,
+    LRTiresAvailable,
+    LRTiresUsed,
+    RFTiresAvailable,
+    RFTiresUsed,
+    RRTiresAvailable,
+    RRTiresUsed,
   } = {},
 }) => {
   return {
@@ -437,5 +454,13 @@ export const selectPitServiceRequest: (
     frontTireSetsUsed: FrontTireSetsUsed,
     rearTireSetsAvailable: RearTireSetsAvailable,
     rearTireSetsUsed: RearTireSetsUsed,
+    leftFrontTiresAvailable: LFTiresAvailable,
+    leftFrontTiresUsed: LFTiresUsed,
+    leftRearTiresAvailable: LRTiresAvailable,
+    leftRearTiresUsed: LRTiresUsed,
+    rightFrontTiresAvailable: RFTiresAvailable,
+    rightFrontTiresUsed: RFTiresUsed,
+    rightRearTiresAvailable: RRTiresAvailable,
+    rightRearTiresUsed: RRTiresUsed,
   };
 };

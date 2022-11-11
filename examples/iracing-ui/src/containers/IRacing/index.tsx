@@ -66,6 +66,14 @@ const REQUEST_PARAMETERS = [
   "LeftTireSetsAvailable",
   "RightTireSetsUsed",
   "RightTireSetsAvailable",
+  "RFTireSetsUsed",
+  "RFTireSetsAvailable",
+  "RRTireSetsUsed",
+  "RRTireSetsAvailable",
+  "LFTireSetsUsed",
+  "LFTireSetsAvailable",
+  "LRTireSetsUsed",
+  "LRTireSetsAvailable",
 ];
 
 export const useIRacingSocket = () => {
