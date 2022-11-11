@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/iracing-ui/static/css/main.2f2f34ec.css",
-    "main.js": "/iracing-ui/static/js/main.b00fb888.js",
-    "index.html": "/iracing-ui/index.html",
-    "main.2f2f34ec.css.map": "/iracing-ui/static/css/main.2f2f34ec.css.map",
-    "main.b00fb888.js.map": "/iracing-ui/static/js/main.b00fb888.js.map"
+    "main.css": "/iracing-socket-js/static/css/main.2f2f34ec.css",
+    "main.js": "/iracing-socket-js/static/js/main.b00fb888.js",
+    "index.html": "/iracing-socket-js/index.html",
+    "main.2f2f34ec.css.map": "/iracing-socket-js/static/css/main.2f2f34ec.css.map",
+    "main.b00fb888.js.map": "/iracing-socket-js/static/js/main.b00fb888.js.map"
   },
   "entrypoints": [
     "static/css/main.2f2f34ec.css",
