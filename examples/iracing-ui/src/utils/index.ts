@@ -24,3 +24,29 @@ export function getContext<T>(
 
   return context;
 }
+
+export const normalizeLapTime = (duration: moment.Duration) => {
+  return formatLapTime(
+    duration.minutes(),
+    duration.seconds(),
+    duration.milliseconds(),
+  );
+};
+
+export const formatLapTime = (
+  minutes: number,
+  seconds: number,
+  milliseconds: number,
+) => {
+  const normalizedMs = Math.round(milliseconds);
+  let normalizedMilliseconds = normalizedMs.toString();
+  if (normalizedMs < 10) {
+    normalizedMilliseconds = `00${normalizedMs}`;
+  } else if (milliseconds < 100) {
+    normalizedMilliseconds = `0${normalizedMs}`;
+  }
+
+  return `${minutes}:${
+    seconds < 10 ? `0${seconds}` : seconds
+  }.${normalizedMilliseconds}`;
+};

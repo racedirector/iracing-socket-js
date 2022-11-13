@@ -2,22 +2,7 @@ import React, { useMemo } from "react";
 import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 import moment from "moment";
 import styles from "./styles";
-
-const normalizeLapTime = (duration: moment.Duration) => {
-  const minutes = duration.minutes();
-  const seconds = duration.seconds();
-  const milliseconds = Math.round(duration.milliseconds());
-  let normalizedMilliseconds = milliseconds.toString();
-  if (milliseconds < 10) {
-    normalizedMilliseconds = `00${milliseconds}`;
-  } else if (milliseconds < 100) {
-    normalizedMilliseconds = `0${milliseconds}`;
-  }
-
-  return `${minutes}:${
-    seconds < 10 ? `0${seconds}` : seconds
-  }.${normalizedMilliseconds}`;
-};
+import { normalizeLapTime } from "src/utils";
 
 export interface SessionClassDetailsCardProps {
   color: string;
