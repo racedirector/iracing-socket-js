@@ -9,7 +9,7 @@ export interface IRacingSocketConnectionProviderProps {}
 export const IRacingSocketConnectionProvider: React.FC<
   PropsWithChildren<IRacingSocketConnectionProviderProps>
 > = ({ children = null }) => {
-  const [server, setServer] = useState("192.168.4.52:8182");
+  const [server, setServer] = useState("localhost:8182");
 
   const context: IRacingSocketConnectionContextType = useMemo(
     () => ({

@@ -73,7 +73,6 @@ export const useIRacingSocket = () => {
   const { server } = useIRacingSocketConnectionContext();
 
   const connectCallback = useCallback(() => {
-    console.log("Connect socket explicitly");
     dispatch(
       connect({
         server,
@@ -83,7 +82,6 @@ export const useIRacingSocket = () => {
   }, [dispatch, server]);
 
   const disconnectCallback = useCallback(() => {
-    console.log("Disconnect socket explicitly...");
     dispatch(disconnect());
   }, [dispatch]);
 
@@ -106,7 +104,7 @@ export const IRacing: React.FC<PropsWithChildren<IRacingProps>> = ({
     return () => {
       disconnect();
     };
-  });
+  }, []);
 
   return <>{children}</>;
 };
