@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/iracing-socket-js/static/css/main.2f2f34ec.css",
-    "main.js": "/iracing-socket-js/static/js/main.3170bef8.js",
+    "main.js": "/iracing-socket-js/static/js/main.670199a4.js",
     "index.html": "/iracing-socket-js/index.html",
     "main.2f2f34ec.css.map": "/iracing-socket-js/static/css/main.2f2f34ec.css.map",
-    "main.3170bef8.js.map": "/iracing-socket-js/static/js/main.3170bef8.js.map"
+    "main.670199a4.js.map": "/iracing-socket-js/static/js/main.670199a4.js.map"
   },
   "entrypoints": [
     "static/css/main.2f2f34ec.css",
-    "static/js/main.3170bef8.js"
+    "static/js/main.670199a4.js"
   ]
 }
