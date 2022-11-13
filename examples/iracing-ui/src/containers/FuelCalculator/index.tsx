@@ -6,8 +6,7 @@ import {
 } from "../../components/FuelCalculator";
 import { useFuelUnit } from "../../hooks/useFuelUnit";
 import { useFuel } from "../../contexts/Fuel";
-import { useRaceLength } from "../../contexts/RaceLength/hooks";
-import { RaceLength } from "../RaceLength";
+import { useRaceLength } from "../../hooks/useRaceLength";
 
 export interface FuelCalculatorProps {}
 

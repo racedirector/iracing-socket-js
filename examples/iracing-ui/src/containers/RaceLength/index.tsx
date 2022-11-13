@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import { useRaceLength } from "src/contexts/RaceLength/hooks";
 import { SessionLength as SessionLengthUI } from "../../components/SessionLength";
 import { useAppSelector } from "src/app/hooks";
 import { RootState } from "src/app/store";
+import { useRaceLength } from "src/hooks/useRaceLength";
 
 const selectSessionLengthContext = (state: RootState) => ({
   sessionTimeRemaining: state.iRacing.data?.SessionTimeRemain,

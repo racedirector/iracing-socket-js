@@ -30,7 +30,7 @@ export const createIRacingSocketMiddleware = (): Middleware => {
 
   return (store) => (next) => (action: Action) => {
     if (connect.match(action)) {
-      if (socket !== null) {
+      if (socket) {
         socket.close();
       }
 
@@ -64,7 +64,7 @@ export const createIRacingSocketMiddleware = (): Middleware => {
 
       socket.open();
     } else if (disconnect.match(action)) {
-      if (socket !== null) {
+      if (socket) {
         socket.close();
       }
 
