@@ -1,6 +1,6 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice, nanoid } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "src/app/store";
+import store, { RootState } from "src/app/store";
 import {
   Flags,
   selectActiveDriversByCarIndex,
@@ -13,6 +13,7 @@ import {
 } from "src/app/middleware";
 
 export interface SimIncidentEvent {
+  id: string;
   value: number;
   sessionFlags: Flags;
   lapPercentage: number;
@@ -23,39 +24,53 @@ export interface SimIncidentEvent {
   carIndex: number;
 }
 
-export interface SimIncidentsState {
-  maxSimIncidentWeight: number;
-  incidents: SimIncidentEvent[];
-}
+const simIncidentsAdapter = createEntityAdapter<SimIncidentEvent>({
+  selectId: ({ id }) => id,
+  sortComparer: (a, b) => {
+    if (a.sessionTime < b.sessionTime) {
+      return -1;
+    } else if (a.sessionTime > b.sessionTime) {
+      return 1;
+    }
 
-const initialState: SimIncidentsState = {
-  maxSimIncidentWeight: 2,
-  incidents: [],
-};
-
-interface AddIncidentPayload extends SimIncidentEvent {}
+    return 0;
+  },
+});
 
 export const simIncidentsSlice = createSlice({
   name: "simIncidents",
-  initialState,
+  initialState: simIncidentsAdapter.getInitialState({
+    maxSimIncidentWeight: 0,
+  }),
   reducers: {
+    addIncident: simIncidentsAdapter.addOne,
+    addIncidents: simIncidentsAdapter.addMany,
+    setIncidents: simIncidentsAdapter.setMany,
+    setAllIncidents: simIncidentsAdapter.setAll,
+    setIncident: simIncidentsAdapter.setOne,
     setMaxSimIncidentWeight: (state, action: PayloadAction<number>) => {
       state.maxSimIncidentWeight = action.payload;
-    },
-    addIncident: (state, action: PayloadAction<AddIncidentPayload>) => {
-      state.incidents.push(action.payload);
     },
   },
 });
 
-export const { setMaxSimIncidentWeight, addIncident } =
-  simIncidentsSlice.actions;
+export const {
+  setMaxSimIncidentWeight,
+  addIncident,
+  addIncidents,
+  setIncident,
+  setAllIncidents,
+  setIncidents,
+} = simIncidentsSlice.actions;
 
-export const selectSimIncidents = (state: RootState) => state.simIncidents;
+const simIncidentsSelectors = simIncidentsAdapter.getSelectors<RootState>(
+  (state) => state.incidents,
+);
+
+export const selectSimIncidents = simIncidentsSelectors.selectAll;
 export const selectMaxSimIncidentWeight = (state: RootState) =>
-  selectSimIncidents(state).maxSimIncidentWeight;
-export const selectAllIncidents = (state: RootState) =>
-  selectSimIncidents(state).incidents;
+  state.incidents.maxSimIncidentWeight;
+export const selectAllIncidents = simIncidentsSelectors.selectAll;
 
 export const selectAllIncidentsAfterSessionTime = (
   state: RootState,
@@ -68,21 +83,21 @@ export const selectAllIncidentsAfterSessionTime = (
   );
 };
 
-export const selectSimIncidentsForDriver = createSelector(
-  [selectAllIncidents, (_state, driverId: number) => driverId],
-  (incidents, driverId) =>
-    incidents.filter(
-      ({ driverId: incidentDriverId }) => incidentDriverId === driverId,
-    ),
-);
+export const selectSimIncidentsForDriver = (
+  state: RootState,
+  driverId: number,
+) =>
+  selectAllIncidents(state).filter(
+    ({ driverId: incidentDriverId }) => incidentDriverId === driverId,
+  );
 
-export const selectSimIncidentsForCarIndex = createSelector(
-  [selectAllIncidents, (_state, carIndex: number) => carIndex],
-  (incidents, carIndex) =>
-    incidents.filter(
-      ({ carIndex: incidentCarIndex }) => incidentCarIndex === carIndex,
-    ),
-);
+export const selectSimIncidentsForCarIndex = (
+  state: RootState,
+  carIndex: number,
+) =>
+  selectAllIncidents(state).filter(
+    ({ carIndex: incidentCarIndex }) => incidentCarIndex === carIndex,
+  );
 
 /**
  * Interface representing an track location
@@ -210,6 +225,7 @@ export const checkIncidentsEffect: AppListenerEffect = (
       if (incidentCount > 0) {
         listenerApi.dispatch(
           addIncident({
+            id: nanoid(),
             carIndex: parseInt(carIndex),
             value: incidentCount,
             sessionFlags: CarIdxSessionFlags?.[carIndex] || 0x0,
