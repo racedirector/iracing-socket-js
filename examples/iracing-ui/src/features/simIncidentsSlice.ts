@@ -64,12 +64,12 @@ export const {
 } = simIncidentsSlice.actions;
 
 const simIncidentsSelectors = simIncidentsAdapter.getSelectors<RootState>(
-  (state) => state.incidents,
+  (state) => state.simIncidents,
 );
 
 export const selectSimIncidents = simIncidentsSelectors.selectAll;
 export const selectMaxSimIncidentWeight = (state: RootState) =>
-  state.incidents.maxSimIncidentWeight;
+  state.simIncidents.maxSimIncidentWeight;
 export const selectAllIncidents = simIncidentsSelectors.selectAll;
 
 export const selectAllIncidentsAfterSessionTime = (
