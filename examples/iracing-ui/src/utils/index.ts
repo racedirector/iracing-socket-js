@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import moment from "moment";
 
 export const metersPerSecondToKilometersPerHour = (mps: number) => mps * 3.6;
 
@@ -25,7 +26,11 @@ export function getContext<T>(
   return context;
 }
 
-export const normalizeLapTime = (duration: moment.Duration) => {
+export const normalizeLapTime = (time: number) => {
+  return normalizeLapDuration(moment.duration(time, "seconds"));
+};
+
+export const normalizeLapDuration = (duration: moment.Duration) => {
   return formatLapTime(
     duration.minutes(),
     duration.seconds(),

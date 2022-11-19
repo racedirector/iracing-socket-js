@@ -2,7 +2,8 @@ import React, { useMemo } from "react";
 import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 import moment from "moment";
 import styles from "./styles";
-import { normalizeLapTime } from "src/utils";
+import { normalizeLapDuration } from "src/utils";
+import { DeltaLabel } from "../DeltaLabel";
 
 export interface SessionClassDetailsCardProps {
   color: string;
@@ -13,13 +14,18 @@ export interface SessionClassDetailsCardProps {
   estimated: boolean;
 
   fastestLap?: number;
+  // A signed number indicating the delta
+  fastestLapDelta?: number;
   leaderPaceCount?: number;
   leaderPace?: number;
+  // A signed number indicating the delta
+  leaderPaceDelta?: number;
   fieldPaceCount?: number;
   fieldPace?: number;
+  // A signed number indicating the delta
+  fieldPaceDelta?: number;
   expectedLapTime?: number;
-
-  // TODO: Deltas?
+  expectedLapTimeDelta?: number;
 }
 
 export const SessionClassDetailsCard: React.FC<
@@ -31,33 +37,37 @@ export const SessionClassDetailsCard: React.FC<
   totalLaps,
   color,
   fastestLap = -1,
+  fastestLapDelta = undefined,
   leaderPaceCount,
   leaderPace = -1,
+  leaderPaceDelta = undefined,
   fieldPaceCount,
   fieldPace = -1,
+  fieldPaceDelta = undefined,
   expectedLapTime = -1,
+  expectedLapTimeDelta = undefined,
 }) => {
   const normalizedFastestLap = useMemo(() => {
     return fastestLap > 0
-      ? normalizeLapTime(moment.duration(fastestLap, "seconds"))
+      ? normalizeLapDuration(moment.duration(fastestLap, "seconds"))
       : null;
   }, [fastestLap]);
 
   const normalizedLeaderPace = useMemo(() => {
     return leaderPace > 0
-      ? normalizeLapTime(moment.duration(leaderPace, "seconds"))
+      ? normalizeLapDuration(moment.duration(leaderPace, "seconds"))
       : null;
   }, [leaderPace]);
 
   const normalizedFieldPace = useMemo(() => {
     return fieldPace > 0
-      ? normalizeLapTime(moment.duration(fieldPace, "seconds"))
+      ? normalizeLapDuration(moment.duration(fieldPace, "seconds"))
       : null;
   }, [fieldPace]);
 
   const normalizedExpectedPace = useMemo(() => {
     return expectedLapTime > 0
-      ? normalizeLapTime(moment.duration(expectedLapTime, "seconds"))
+      ? normalizeLapDuration(moment.duration(expectedLapTime, "seconds"))
       : null;
   }, [expectedLapTime]);
 
@@ -76,12 +86,16 @@ export const SessionClassDetailsCard: React.FC<
           <>
             <Heading size="xs">Fastest Lap</Heading>
             <Text>{normalizedFastestLap.toString()}</Text>
+            {fastestLapDelta && <DeltaLabel timeDelta={fastestLapDelta} />}
           </>
         )}
         {normalizedExpectedPace && (
           <>
             <Heading size="xs">Expected</Heading>
             <Text>{normalizedExpectedPace.toString()}</Text>
+            {expectedLapTimeDelta && (
+              <DeltaLabel timeDelta={expectedLapTimeDelta} />
+            )}
           </>
         )}
         {normalizedLeaderPace && (
@@ -90,6 +104,7 @@ export const SessionClassDetailsCard: React.FC<
               leaderPaceCount ? ` (Last ${leaderPaceCount})` : ""
             }`}</Heading>
             <Text>{normalizedLeaderPace.toString()}</Text>
+            {leaderPaceDelta && <DeltaLabel timeDelta={leaderPaceDelta} />}
           </>
         )}
         {normalizedFieldPace && (
@@ -98,6 +113,7 @@ export const SessionClassDetailsCard: React.FC<
               fieldPaceCount ? ` (Last ${fieldPaceCount})` : ""
             }`}</Heading>
             <Text>{normalizedFieldPace.toString()}</Text>
+            {fieldPaceDelta && <DeltaLabel timeDelta={fieldPaceDelta} />}
           </>
         )}
       </Flex>

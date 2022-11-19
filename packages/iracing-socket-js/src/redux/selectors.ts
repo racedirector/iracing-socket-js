@@ -37,6 +37,12 @@ export const selectIRacingSessions = (state: IRacingSocketState) =>
 export const selectIsMulticlass = (state: IRacingSocketState) =>
   state.data?.WeekendInfo?.NumCarClasses > 1;
 
+export const selectDriverInfo = (state: IRacingSocketState) =>
+  state.data?.DriverInfo;
+
+export const selectDriverInfoDrivers = (state: IRacingSocketState) =>
+  state.data.DriverInfo?.Drivers || [];
+
 export const selectSessionForSessionNumber = (
   state: IRacingSocketState,
   sessionNumber: number,
@@ -319,24 +325,30 @@ export const selectResultForCarIndex = createSelector(
 export const selectCurrentDriverResult = (state: IRacingSocketState) =>
   selectResultForCarIndex(state, state.data?.PlayerCarIdx);
 
-export const selectActiveDrivers = (
-  state: IRacingSocketState,
-  filters: FilterDriversResults = {
-    includeAI: true,
-    includePaceCar: true,
-    includeSpectators: true,
-  },
-) => filterDrivers(state.data?.DriverInfo?.Drivers || [], filters);
+export const selectActiveDrivers = createSelector(
+  [
+    selectDriverInfoDrivers,
+    (
+      _state,
+      filters: FilterDriversResults = {
+        includeAI: true,
+        includePaceCar: true,
+        includeSpectators: true,
+      },
+    ) => filters,
+  ],
+  (drivers, filters: FilterDriversResults) => filterDrivers(drivers, filters),
+);
 
-export const selectActiveDriversByCarIndex = (
-  state: IRacingSocketState,
-  filters?: FilterDriversResults,
-) => keyBy(selectActiveDrivers(state, filters), "CarIdx");
+export const selectActiveDriversByCarIndex = createSelector(
+  [selectActiveDrivers],
+  (drivers) => keyBy(drivers, "CarIdx"),
+);
 
-export const selectActiveDriversByCarClass = (
-  state: IRacingSocketState,
-  filters?: FilterDriversResults,
-) => groupBy(selectActiveDrivers(state, filters), "CarClassID");
+export const selectActiveDriversByCarClass = createSelector(
+  [selectActiveDrivers],
+  (drivers) => groupBy(drivers, "CarClassID"),
+);
 
 export const selectActiveDriversForClass = (
   state: IRacingSocketState,

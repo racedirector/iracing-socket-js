@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { normalizeLapTime } from "src/utils";
+import { normalizeLapDuration } from "src/utils";
 import moment from "moment";
 
 export interface PaceComparisonDetailsProps {
@@ -40,17 +40,17 @@ const PaceComparisonDetails: React.FC<PaceComparisonDetailsProps> = ({
       <VStack>
         {lapsComplete > 0 && <Text>{`Laps: ${lapsComplete}`}</Text>}
         {averageLapTime > 0 && (
-          <Text>{`Average: ${normalizeLapTime(
+          <Text>{`Average: ${normalizeLapDuration(
             moment.duration(averageLapTime, "seconds"),
           )}`}</Text>
         )}
         {lastLapTime > 0 && (
-          <Text>{`Last: ${normalizeLapTime(
+          <Text>{`Last: ${normalizeLapDuration(
             moment.duration(lastLapTime, "seconds"),
           )}`}</Text>
         )}
         {bestLapTime > 0 && (
-          <Text>{`Best: ${normalizeLapTime(
+          <Text>{`Best: ${normalizeLapDuration(
             moment.duration(bestLapTime, "seconds"),
           )}`}</Text>
         )}
