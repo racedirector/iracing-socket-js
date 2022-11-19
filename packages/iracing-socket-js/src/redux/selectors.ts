@@ -350,6 +350,11 @@ export const selectActiveDriversByCarClass = createSelector(
   (drivers) => groupBy(drivers, "CarClassID"),
 );
 
+export const selectActiveDriversByUserId = createSelector(
+  [selectActiveDrivers],
+  (drivers) => keyBy(drivers, "UserID"),
+);
+
 export const selectActiveDriversForClass = (
   state: IRacingSocketState,
   classId: string,
