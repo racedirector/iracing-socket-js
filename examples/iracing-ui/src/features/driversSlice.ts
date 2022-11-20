@@ -48,7 +48,6 @@ const driversFilters = {
 
 const checkDriverUpdateEffect: AppListenerEffect = (_action, listenerApi) => {
   const currentState = listenerApi.getState();
-  // const previousState = listenerApi.getOriginalState();
 
   const currentActiveDrivers = selectActiveDriversByUserId(
     currentState.iRacing,
