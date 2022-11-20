@@ -21,6 +21,11 @@ import {
   TrackLocation,
 } from "@racedirector/iracing-socket-js";
 import { isEqual } from "lodash";
+import { checkIncidentsEffect } from "src/features/simIncidentsSlice";
+import {
+  checkDriverSwapEffect,
+  checkDriverUpdateEffect,
+} from "../features/driversSlice";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -269,5 +274,19 @@ startAppListening({
           listenerApi.getOriginalState().iRacing.data?.SessionState,
       }),
     );
+  },
+});
+
+// Updates that should happen when the driver changes.
+// ???: Grouped together, should probably be separate?
+// ???: Like some are dependent, others are not... why force requirements?
+startAppListening({
+  predicate: activeDriversDidChangePredicate,
+  effect: (action, listener) => {
+    // Update the drivers index
+    checkDriverUpdateEffect(action, listener);
+    // Check for driver swaps
+    checkDriverSwapEffect(action, listener);
+    checkIncidentsEffect(action, listener);
   },
 });

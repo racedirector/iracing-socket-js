@@ -9,11 +9,7 @@ import {
   selectActiveDriversByUserId,
 } from "@racedirector/iracing-socket-js";
 import { RootState } from "src/app/store";
-import {
-  activeDriversDidChangePredicate,
-  AppListenerEffect,
-  startAppListening,
-} from "src/app/middleware";
+import { AppListenerEffect } from "src/app/middleware";
 import { groupBy } from "lodash";
 
 const driversAdapter = createEntityAdapter<Driver>({
@@ -65,7 +61,10 @@ const driversFilters = {
   includeSpectators: false,
 };
 
-const checkDriverUpdateEffect: AppListenerEffect = (_action, listenerApi) => {
+export const checkDriverUpdateEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
   const currentState = listenerApi.getState();
 
   const currentActiveDrivers = selectActiveDriversByUserId(
@@ -92,7 +91,10 @@ const checkDriverUpdateEffect: AppListenerEffect = (_action, listenerApi) => {
   }
 };
 
-const checkDriverSwapEffect: AppListenerEffect = (_action, listenerApi) => {
+export const checkDriverSwapEffect: AppListenerEffect = (
+  _action,
+  listenerApi,
+) => {
   const currentState = listenerApi.getState();
   const previousState = listenerApi.getOriginalState();
 
@@ -128,15 +130,5 @@ const checkDriverSwapEffect: AppListenerEffect = (_action, listenerApi) => {
     }
   });
 };
-
-startAppListening({
-  predicate: activeDriversDidChangePredicate,
-  effect: (action, listener) => {
-    // Update the drivers index
-    checkDriverUpdateEffect(action, listener);
-    // Check for driver swaps
-    checkDriverSwapEffect(action, listener);
-  },
-});
 
 export default driversSlice.reducer;

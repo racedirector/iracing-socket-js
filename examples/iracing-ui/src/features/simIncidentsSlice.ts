@@ -6,11 +6,7 @@ import {
   selectActiveDriversByCarIndex,
   selectTrackLengthMeters,
 } from "@racedirector/iracing-socket-js";
-import {
-  activeDriversDidChangePredicate,
-  AppListenerEffect,
-  startAppListening,
-} from "src/app/middleware";
+import { AppListenerEffect } from "src/app/middleware";
 
 export interface SimIncidentEvent {
   // The id of the incident
@@ -198,8 +194,6 @@ const incidentFilters = {
   includeSpectators: false,
 };
 
-export const checkIncidentsPredicate = activeDriversDidChangePredicate;
-
 export const checkIncidentsEffect: AppListenerEffect = (
   _action,
   listenerApi,
@@ -254,10 +248,5 @@ export const checkIncidentsEffect: AppListenerEffect = (
     }
   });
 };
-
-startAppListening({
-  predicate: checkIncidentsPredicate,
-  effect: checkIncidentsEffect,
-});
 
 export default simIncidentsSlice.reducer;
