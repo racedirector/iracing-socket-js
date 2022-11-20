@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, nanoid } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import store, { RootState } from "src/app/store";
+import { RootState } from "src/app/store";
 import {
   Flags,
   selectActiveDriversByCarIndex,
@@ -13,14 +13,23 @@ import {
 } from "src/app/middleware";
 
 export interface SimIncidentEvent {
+  // The id of the incident
   id: string;
+  // The sim value of the incident
   value: number;
+  // The present session flags at the session time of the incident detection.
   sessionFlags: Flags;
+  // The lap percentage at the session time of incident detection.
   lapPercentage: number;
+  // The session number at the session time of incident detciont.
   sessionNumber: number;
+  // The session time.
   sessionTime: number;
+  // The session time of day.
   sessionTimeOfDay: number;
+  // The driver that is detected to have had an incident.
   driverId: number;
+  // The car index which is detected to have had an incident.
   carIndex: number;
 }
 
@@ -45,9 +54,9 @@ export const simIncidentsSlice = createSlice({
   reducers: {
     addIncident: simIncidentsAdapter.addOne,
     addIncidents: simIncidentsAdapter.addMany,
+    setIncident: simIncidentsAdapter.setOne,
     setIncidents: simIncidentsAdapter.setMany,
     setAllIncidents: simIncidentsAdapter.setAll,
-    setIncident: simIncidentsAdapter.setOne,
     setMaxSimIncidentWeight: (state, action: PayloadAction<number>) => {
       state.maxSimIncidentWeight = action.payload;
     },
