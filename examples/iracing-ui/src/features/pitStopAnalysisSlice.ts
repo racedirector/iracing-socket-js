@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   PitServiceFlags,
@@ -92,14 +92,14 @@ interface UpdateServiceStatePayload {
   lapNumber: number;
 }
 
+export const updateServiceFlags = createAction<UpdateServiceFlagsPayload>(
+  "pitStopAnalysis/updateServiceFlags",
+);
+
 export const pitStopAnalaysisSlice = createSlice({
   name: "pitStopAnalysis",
   initialState,
   reducers: {
-    updateServiceFlags: (
-      _state,
-      _action: PayloadAction<UpdateServiceFlagsPayload>,
-    ) => {},
     updateServiceStatus: (
       state,
       action: PayloadAction<UpdateServiceStatePayload>,
@@ -153,7 +153,6 @@ export const pitStopAnalaysisSlice = createSlice({
     }),
 });
 
-const { updateServiceFlags } = pitStopAnalaysisSlice.actions;
 export const { updateServiceStatus } = pitStopAnalaysisSlice.actions;
 
 export const selectPitStopAnalysis = (state: RootState) =>
