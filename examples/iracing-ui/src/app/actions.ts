@@ -61,6 +61,7 @@ export const playerOnPitRoadChanged =
 interface SessionStateChangedPayload {
   currentSessionState: SessionState;
   previousSessionState: SessionState;
+  sessionTime: number;
 }
 
 export const sessionStateChanged = createAction<SessionStateChangedPayload>(

@@ -4,9 +4,9 @@ import fuelReducer from "../features/fuelSlice";
 import sessionPaceReducer from "../features/sessionPaceSlice";
 import paceAnalysisReducer from "../features/paceAnalysisSlice";
 import pitStopAnalysisReducer from "../features/pitStopAnalysisSlice";
-import teamReducer from "../features/teamSlice";
 import simIncidentsReducer from "../features/simIncidentsSlice";
 import driversReducer from "../features/driversSlice";
+import raceEventsReducer from "../features/raceEventsSlice";
 import {
   createIRacingSocketMiddleware,
   reducer as iRacingReducer,
@@ -18,8 +18,8 @@ const rootReducer = combineReducers({
   sessionPace: sessionPaceReducer,
   paceAnalysis: paceAnalysisReducer,
   pitStopAnalysis: pitStopAnalysisReducer,
+  raceEvents: raceEventsReducer,
   simIncidents: simIncidentsReducer,
-  team: teamReducer,
   iRacing: iRacingReducer,
 });
 

@@ -8,7 +8,6 @@
     "@chakra-ui/react": "^2.3.4",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@racedirector/iracing-sim-incident-emitter": "^2.0.0",
     "@racedirector/iracing-socket-js": "^2.0.0",
     "@reduxjs/toolkit": "^1.8.6",
     "framer-motion": "^6",

@@ -45,6 +45,7 @@ const REQUEST_PARAMETERS = [
   "IsOnTrackCar",
   "IsInGarage",
   "OnPitRoad",
+  "SessionFlags",
 
   // Pit stop service
   "PitSvFlags",

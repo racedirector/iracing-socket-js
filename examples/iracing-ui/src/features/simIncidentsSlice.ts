@@ -33,17 +33,22 @@ export interface SimIncidentEvent {
   carIndex: number;
 }
 
+const sortSimIncidentEvents = (
+  eventA: SimIncidentEvent,
+  eventB: SimIncidentEvent,
+) => {
+  if (eventA.sessionTime < eventB.sessionTime) {
+    return -1;
+  } else if (eventA.sessionTime > eventB.sessionTime) {
+    return 1;
+  }
+
+  return 0;
+};
+
 const simIncidentsAdapter = createEntityAdapter<SimIncidentEvent>({
   selectId: ({ id }) => id,
-  sortComparer: (a, b) => {
-    if (a.sessionTime < b.sessionTime) {
-      return -1;
-    } else if (a.sessionTime > b.sessionTime) {
-      return 1;
-    }
-
-    return 0;
-  },
+  sortComparer: sortSimIncidentEvents,
 });
 
 export const simIncidentsSlice = createSlice({

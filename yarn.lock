@@ -4229,7 +4229,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-sim-incident-emitter@^2.0.0, @racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter":
+"@racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter"
   dependencies:
@@ -10823,7 +10823,6 @@ __metadata:
     "@chakra-ui/react": ^2.3.4
     "@emotion/react": ^11
     "@emotion/styled": ^11
-    "@racedirector/iracing-sim-incident-emitter": ^2.0.0
     "@racedirector/iracing-socket-js": ^2.0.0
     "@reduxjs/toolkit": ^1.8.6
     "@testing-library/jest-dom": ^5.16.5

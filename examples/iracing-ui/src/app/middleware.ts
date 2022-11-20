@@ -245,18 +245,25 @@ startAppListening({
   effect: playerIsOnPitRoadDidChangeEffect,
 });
 
+export const sessionStateDidChangePredicate: AppListenerPredicate = (
+  _action,
+  currentState,
+  previousState,
+) => {
+  const currentSessionState =
+    currentState.iRacing.data?.SessionState || SessionState.Invalid;
+  const previousSessionState =
+    previousState.iRacing.data?.SessionState || SessionState.Invalid;
+  return currentSessionState !== previousSessionState;
+};
+
 // Listener for session state changes
 startAppListening({
-  predicate: (_action, currentState, previousState) => {
-    const currentSessionState =
-      currentState.iRacing.data?.SessionState || SessionState.Invalid;
-    const previousSessionState =
-      previousState.iRacing.data?.SessionState || SessionState.Invalid;
-    return currentSessionState !== previousSessionState;
-  },
+  predicate: sessionStateDidChangePredicate,
   effect: (_action, listenerApi) => {
     listenerApi.dispatch(
       sessionStateChanged({
+        sessionTime: listenerApi.getState().iRacing.data?.SessionTime,
         currentSessionState: listenerApi.getState().iRacing.data?.SessionState,
         previousSessionState:
           listenerApi.getOriginalState().iRacing.data?.SessionState,
