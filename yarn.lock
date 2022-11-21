@@ -4163,89 +4163,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@racedirector/iracing-driver-swap-emitter@workspace:packages/consumers/driver-swap-emitter":
-  version: 0.0.0-use.local
-  resolution: "@racedirector/iracing-driver-swap-emitter@workspace:packages/consumers/driver-swap-emitter"
-  dependencies:
-    "@racedirector/iracing-socket-js": ^2.0.0
-    jest-websocket-mock: ^2.3.0
-    lodash: ^4.17.21
-    websocket-polyfill: ^0.0.3
-    winston: ^3.6.0
-    yargs: ^17.4.0
-  peerDependencies:
-    lodash: "*"
-  bin:
-    iracing-driver-swaps: dist/cli.js
-  languageName: unknown
-  linkType: soft
-
-"@racedirector/iracing-flags-emitter@workspace:packages/consumers/flags-emitter":
-  version: 0.0.0-use.local
-  resolution: "@racedirector/iracing-flags-emitter@workspace:packages/consumers/flags-emitter"
-  dependencies:
-    "@racedirector/iracing-socket-js": ^2.0.0
-    "@racedirector/iracing-utilities": ^1.0.0
-    "@types/lodash": ^4
-    jest-websocket-mock: ^2.3.0
-    lodash: ^4.17.21
-    websocket-polyfill: ^0.0.3
-    winston: ^3.6.0
-    yargs: ^17.4.0
-  peerDependencies:
-    lodash: "*"
-  bin:
-    iracing-flags: dist/cli.js
-  languageName: unknown
-  linkType: soft
-
-"@racedirector/iracing-laps-emitter@workspace:packages/consumers/laps-emitter":
-  version: 0.0.0-use.local
-  resolution: "@racedirector/iracing-laps-emitter@workspace:packages/consumers/laps-emitter"
-  dependencies:
-    "@racedirector/iracing-socket-js": ^2.0.0
-    "@racedirector/iracing-utilities": ^1.0.0
-    jest-websocket-mock: ^2.3.0
-    websocket-polyfill: ^0.0.3
-    winston: ^3.6.0
-    yargs: ^17.4.0
-  bin:
-    iracing-laps: dist/cli.js
-  languageName: unknown
-  linkType: soft
-
-"@racedirector/iracing-pit-timing-emitter@workspace:packages/consumers/pit-timing-emitter":
-  version: 0.0.0-use.local
-  resolution: "@racedirector/iracing-pit-timing-emitter@workspace:packages/consumers/pit-timing-emitter"
-  dependencies:
-    "@racedirector/iracing-socket-js": ^2.0.0
-    jest-websocket-mock: 2.3.0
-    timekeeper: 2.2.0
-    websocket-polyfill: ^0.0.3
-    winston: ^3.6.0
-    yargs: ^17.4.0
-  bin:
-    iracing-pit-timing: dist/cli.js
-  languageName: unknown
-  linkType: soft
-
-"@racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter":
-  version: 0.0.0-use.local
-  resolution: "@racedirector/iracing-sim-incident-emitter@workspace:packages/consumers/sim-incident-emitter"
-  dependencies:
-    "@racedirector/iracing-socket-js": ^2.0.0
-    jest-websocket-mock: ^2.3.0
-    lodash: ^4.17.21
-    websocket-polyfill: ^0.0.3
-    winston: ^3.6.0
-    yargs: ^17.4.0
-  peerDependencies:
-    lodash: ^4
-  bin:
-    iracing-sim-incidents: dist/cli.js
-  languageName: unknown
-  linkType: soft
-
 "@racedirector/iracing-socket-js@^2.0.0, @racedirector/iracing-socket-js@workspace:packages/iracing-socket-js":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-socket-js@workspace:packages/iracing-socket-js"
@@ -4277,7 +4194,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-utilities@^1.0.0, @racedirector/iracing-utilities@workspace:packages/iracing-utilities":
+"@racedirector/iracing-utilities@workspace:packages/iracing-utilities":
   version: 0.0.0-use.local
   resolution: "@racedirector/iracing-utilities@workspace:packages/iracing-utilities"
   dependencies:
@@ -11813,7 +11730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-websocket-mock@npm:2.3.0, jest-websocket-mock@npm:^2.3.0":
+"jest-websocket-mock@npm:^2.3.0":
   version: 2.3.0
   resolution: "jest-websocket-mock@npm:2.3.0"
   dependencies:
@@ -16839,13 +16756,6 @@ __metadata:
   version: 1.1.0
   resolution: "thunky@npm:1.1.0"
   checksum: 993096c472b6b8f30e29dc777a8d17720e4cab448375041f20c0cb802a09a7fb2217f2a3e8cdc11851faa71c957e2db309357367fc9d7af3cb7a4d00f4b66034
-  languageName: node
-  linkType: hard
-
-"timekeeper@npm:2.2.0":
-  version: 2.2.0
-  resolution: "timekeeper@npm:2.2.0"
-  checksum: e23f2c1529afcba2f6fe3efcab75069ee88f2f53bb631a60b94113a20ecaa8201c49c2221dba1b41512b4703f156b5207855f00fb5f1774eea4367ec6571554f
   languageName: node
   linkType: hard
 
