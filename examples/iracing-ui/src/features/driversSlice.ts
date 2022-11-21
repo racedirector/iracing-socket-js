@@ -10,7 +10,7 @@ import {
 } from "@racedirector/iracing-socket-js";
 import { RootState } from "src/app/store";
 import { AppListenerEffect } from "src/app/middleware";
-import { groupBy } from "lodash";
+import { groupBy, isEmpty } from "lodash";
 
 const driversAdapter = createEntityAdapter<Driver>({
   selectId: (driver) => driver.UserID,
@@ -86,7 +86,7 @@ export const checkDriverUpdateEffect: AppListenerEffect = (
 
   const newDrivers = Object.fromEntries(newDriverEntries);
 
-  if (newDrivers) {
+  if (!isEmpty(newDrivers)) {
     listenerApi.dispatch(driversUpsert(newDrivers));
   }
 };

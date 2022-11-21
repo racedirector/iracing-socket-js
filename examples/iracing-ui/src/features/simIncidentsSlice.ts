@@ -8,31 +8,12 @@ import {
 } from "@racedirector/iracing-socket-js";
 import { AppListenerEffect } from "src/app/middleware";
 
-export interface SimIncidentEvent {
-  // The id of the incident
-  id: string;
-  // The sim value of the incident
-  value: number;
-  // The present session flags at the session time of the incident detection.
-  sessionFlags: Flags;
-  // The lap percentage at the session time of incident detection.
-  lapPercentage: number;
-  // The session number at the session time of incident detciont.
+interface SessionEvent {
   sessionNumber: number;
-  // The session time.
   sessionTime: number;
-  // The session time of day.
-  sessionTimeOfDay: number;
-  // The driver that is detected to have had an incident.
-  driverId: number;
-  // The car index which is detected to have had an incident.
-  carIndex: number;
 }
 
-const sortSimIncidentEvents = (
-  eventA: SimIncidentEvent,
-  eventB: SimIncidentEvent,
-) => {
+const sortSessionEvents = <T extends SessionEvent>(eventA: T, eventB: T) => {
   if (eventA.sessionTime < eventB.sessionTime) {
     return -1;
   } else if (eventA.sessionTime > eventB.sessionTime) {
@@ -42,9 +23,26 @@ const sortSimIncidentEvents = (
   return 0;
 };
 
+export interface SimIncidentEvent extends SessionEvent {
+  // The id of the incident
+  id: string;
+  // The sim value of the incident
+  value: number;
+  // The present session flags at the session time of the incident detection.
+  sessionFlags: Flags;
+  // The lap percentage at the session time of incident detection.
+  lapPercentage: number;
+  // The session time of day.
+  sessionTimeOfDay: number;
+  // The driver that is detected to have had an incident.
+  driverId: number;
+  // The car index which is detected to have had an incident.
+  carIndex: number;
+}
+
 const simIncidentsAdapter = createEntityAdapter<SimIncidentEvent>({
   selectId: ({ id }) => id,
-  sortComparer: sortSimIncidentEvents,
+  sortComparer: sortSessionEvents,
 });
 
 export const simIncidentsSlice = createSlice({
@@ -226,7 +224,11 @@ export const checkIncidentsEffect: AppListenerEffect = (
     // !!!: Ensuring that the driver exists and matches the current user ID
     //      ensures that incidents are processed iff we already know what drivers
     //      are on track.
-    if (existingDriver && existingDriver.UserID === driver.UserID) {
+    if (
+      existingDriver &&
+      existingDriver.UserID === driver.UserID &&
+      existingDriver.CurDriverIncidentCount !== driver.CurDriverIncidentCount
+    ) {
       const incidentCount =
         driver.CurDriverIncidentCount - existingDriver.CurDriverIncidentCount;
 

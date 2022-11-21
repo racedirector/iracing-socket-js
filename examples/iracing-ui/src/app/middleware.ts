@@ -16,11 +16,14 @@ import {
   sessionStateChanged,
 } from "./actions";
 import {
-  selectActiveDriversByCarIndex,
-  SessionState,
-  TrackLocation,
+  flagsDidChangePredicate,
+  playerTrackSurfaceDidChangePredicate,
+  playerIsOnTrackDidChangePredicate,
+  playerIsInGarageDidChangePredicate,
+  activeDriversDidChangePredicate,
+  playerIsOnPitRoadDidChangePredicate,
+  sessionStateDidChangePredicate,
 } from "@racedirector/iracing-socket-js";
-import { isEqual } from "lodash";
 import { checkIncidentsEffect } from "src/features/simIncidentsSlice";
 import {
   checkDriverSwapEffect,
@@ -46,49 +49,7 @@ export type AppListenerEffect = ListenerEffect<
   AppDispatch
 >;
 
-// TODO: Find a way to export this middleware below from @racedirector/iracing-socket-js
-
-export const sessionTickDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) =>
-  currentState.iRacing.data?.SessionTick !==
-  previousState.iRacing.data?.SessionTick;
-
-const incidentFilters = {
-  includeAI: true,
-  includeSpectators: false,
-  includePaceCar: false,
-};
-
-export const activeDriversDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentActiveDrivers = selectActiveDriversByCarIndex(
-    currentState.iRacing,
-    incidentFilters,
-  );
-  const previousActiveDrivers = selectActiveDriversByCarIndex(
-    previousState.iRacing,
-    incidentFilters,
-  );
-
-  return !isEqual(currentActiveDrivers, previousActiveDrivers);
-};
-
 // Listener for flag changes
-export const flagsDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentFlags = currentState.iRacing.data?.SessionFlags || 0x0;
-  const previousFlags = previousState.iRacing.data?.SessionFlags || 0x0;
-  return currentFlags !== previousFlags;
-};
 
 export const flagsDidChangeEffect: AppListenerEffect = (
   _action,
@@ -110,23 +71,16 @@ export const flagsDidChangeEffect: AppListenerEffect = (
 };
 
 startAppListening({
-  predicate: flagsDidChangePredicate,
+  predicate: (action, currentState, previousState) =>
+    flagsDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
   effect: flagsDidChangeEffect,
 });
 
 // Listener for player track surface changes
-export const playerTrackSurfaceDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentTrackLocation =
-    currentState.iRacing.data?.PlayerTrackSurface || TrackLocation.NotInWorld;
-  const previousTrackLocation =
-    previousState.iRacing.data?.PlayerTrackSurface || TrackLocation.NotInWorld;
-  return currentTrackLocation !== previousTrackLocation;
-};
-
 export const playerTrackSurfaceDidChangeEffect: AppListenerEffect = (
   _action,
   listenerApi,
@@ -147,21 +101,16 @@ export const playerTrackSurfaceDidChangeEffect: AppListenerEffect = (
 };
 
 startAppListening({
-  predicate: playerTrackSurfaceDidChangePredicate,
+  predicate: (action, currentState, previousState) =>
+    playerTrackSurfaceDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
   effect: playerTrackSurfaceDidChangeEffect,
 });
 
 // Listener for player is on track changes
-export const playerIsOnTrackDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentIsOnTrack = currentState.iRacing.data?.IsOnTrack || false;
-  const previousIsOnTrack = previousState.iRacing.data?.IsOnTrack || false;
-  return currentIsOnTrack !== previousIsOnTrack;
-};
-
 export const playerIsOnTrackDidChangeEffect: AppListenerEffect = (
   _action,
   listenerApi,
@@ -182,21 +131,16 @@ export const playerIsOnTrackDidChangeEffect: AppListenerEffect = (
 };
 
 startAppListening({
-  predicate: playerIsOnTrackDidChangePredicate,
+  predicate: (action, currentState, previousState) =>
+    playerIsOnTrackDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
   effect: playerIsOnTrackDidChangeEffect,
 });
 
 // Listener for player is in garage changes
-export const playerIsInGarageDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentIsInGarage = currentState.iRacing.data?.IsInGarage || false;
-  const previousIsInGarage = previousState.iRacing.data?.IsInGarage || false;
-  return currentIsInGarage !== previousIsInGarage;
-};
-
 export const playerIsInGarageDidChangeEffect: AppListenerEffect = (
   _action,
   listenerApi,
@@ -211,20 +155,14 @@ export const playerIsInGarageDidChangeEffect: AppListenerEffect = (
 };
 
 startAppListening({
-  predicate: playerIsInGarageDidChangePredicate,
+  predicate: (action, currentState, previousState) =>
+    playerIsInGarageDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
   effect: playerIsInGarageDidChangeEffect,
 });
-
-// Listener for player is on pit road changes
-export const playerIsOnPitRoadDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentOnPitRoad = currentState.iRacing.data?.OnPitRoad || false;
-  const previousOnPitRoad = previousState.iRacing.data?.OnPitRoad || false;
-  return currentOnPitRoad !== previousOnPitRoad;
-};
 
 export const playerIsOnPitRoadDidChangeEffect: AppListenerEffect = (
   _action,
@@ -246,25 +184,23 @@ export const playerIsOnPitRoadDidChangeEffect: AppListenerEffect = (
 };
 
 startAppListening({
-  predicate: playerIsOnPitRoadDidChangePredicate,
+  predicate: (action, currentState, previousState) =>
+    playerIsOnPitRoadDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
   effect: playerIsOnPitRoadDidChangeEffect,
 });
 
-export const sessionStateDidChangePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentSessionState =
-    currentState.iRacing.data?.SessionState || SessionState.Invalid;
-  const previousSessionState =
-    previousState.iRacing.data?.SessionState || SessionState.Invalid;
-  return currentSessionState !== previousSessionState;
-};
-
 // Listener for session state changes
 startAppListening({
-  predicate: sessionStateDidChangePredicate,
+  predicate: (action, currentState, previousState) =>
+    sessionStateDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
   effect: (_action, listenerApi) => {
     listenerApi.dispatch(
       sessionStateChanged({
@@ -278,10 +214,13 @@ startAppListening({
 });
 
 // Updates that should happen when the driver changes.
-// ???: Grouped together, should probably be separate?
-// ???: Like some are dependent, others are not... why force requirements?
 startAppListening({
-  predicate: activeDriversDidChangePredicate,
+  predicate: (action, currentState, previousState) =>
+    activeDriversDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
   effect: (action, listener) => {
     // Update the drivers index
     checkDriverUpdateEffect(action, listener);

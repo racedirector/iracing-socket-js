@@ -198,10 +198,75 @@ export const selectTrackLengthMeters = (state: IRacingSocketState) => {
   return trackLengthKilometers * 1000;
 };
 
+export const selectP2PStatusForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxP2P_Status?.[driverIndex];
+
+export const selectP2PCountForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxP2P_Count?.[driverIndex];
+
+export const selectClassForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxClass?.[driverIndex];
+
+export const selectTireCompoundForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxTireCompound?.[driverIndex];
+
+export const selectClassPositionForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxClassPosition?.[driverIndex];
+
+export const selectEstimatedTimeForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxEstTime?.[driverIndex];
+
+export const selectF2TimeForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxF2Time?.[driverIndex];
+
+export const selectLapForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxLap?.[driverIndex];
+
+export const selectLapCompletedForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxLapCompleted?.[driverIndex];
+
+export const selectPositionForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxPosition?.[driverIndex];
+
+export const selectSteeringAngleForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxSteer?.[driverIndex];
+
+export const selectIsOnPitRoadForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxOnPitRoad?.[driverIndex];
+
 export const selectTrackSurfaceForDriverIndex = (
   state: IRacingSocketState,
   driverIndex: number,
 ) => state.data?.CarIdxTrackSurface?.[driverIndex];
+
+export const selectTrackSurfaceMaterialForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxTrackSurfaceMaterial?.[driverIndex];
 
 export const selectLapDistancePercentageForDriverIndex = (
   state: IRacingSocketState,
@@ -212,6 +277,11 @@ export const selectGearForDriverIndex = (
   state: IRacingSocketState,
   driverIndex: number,
 ) => state.data?.CarIdxGear?.[driverIndex];
+
+export const selectRPMForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxRPM?.[driverIndex];
 
 export const selectFlagsForDriverIndex = (
   state: IRacingSocketState,
@@ -232,6 +302,26 @@ export const selectBestLapTimeForDriverIndex = (
   state: IRacingSocketState,
   driverIndex: number,
 ) => state.data?.CarIdxBestLapTime?.[driverIndex];
+
+export const selectLastLapTimeForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxLastLapTime?.[driverIndex];
+
+export const selectPaceFlagsForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxPaceFlags?.[driverIndex];
+
+export const selectPaceLineForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxPaceLine?.[driverIndex];
+
+export const selectPaceRowForDriverIndex = (
+  state: IRacingSocketState,
+  driverIndex: number,
+) => state.data?.CarIdxPaceRow?.[driverIndex];
 
 export interface FilterDriversResults {
   includeAI?: boolean;
