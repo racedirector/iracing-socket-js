@@ -4,6 +4,7 @@ import {
   AnyListenerPredicate,
   ListenerEffect,
   AnyAction,
+  createSelector,
 } from "@reduxjs/toolkit";
 import type { TypedStartListening, TypedAddListener } from "@reduxjs/toolkit";
 import { RootState, AppDispatch } from "./store";
@@ -29,6 +30,7 @@ import {
   checkDriverSwapEffect,
   checkDriverUpdateEffect,
 } from "../features/driversSlice";
+import { stat } from "fs";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -49,6 +51,14 @@ export type AppListenerEffect = ListenerEffect<
   AppDispatch
 >;
 
+const selectSessionEventData = createSelector(
+  [
+    (state) => state.iRacing.data?.SessionNum,
+    (state) => state.iRacing.data?.SessionTime,
+  ],
+  (sessionNumber, sessionTime) => ({ sessionNumber, sessionTime }),
+);
+
 // Listener for flag changes
 
 export const flagsDidChangeEffect: AppListenerEffect = (
@@ -56,7 +66,7 @@ export const flagsDidChangeEffect: AppListenerEffect = (
   listenerApi,
 ) => {
   const currentState = listenerApi.getState();
-  const sessionTime = currentState.iRacing.data?.SessionTime;
+  const { sessionNumber, sessionTime } = selectSessionEventData(currentState);
   const currentSessionFlags = currentState.iRacing.data?.SessionFlags;
   const previousSessionFlags =
     listenerApi.getOriginalState().iRacing.data?.SessionFlags;
@@ -65,6 +75,7 @@ export const flagsDidChangeEffect: AppListenerEffect = (
     flagsChanged({
       currentFlags: currentSessionFlags,
       previousFlags: previousSessionFlags,
+      sessionNumber,
       sessionTime,
     }),
   );
@@ -86,7 +97,7 @@ export const playerTrackSurfaceDidChangeEffect: AppListenerEffect = (
   listenerApi,
 ) => {
   const currentState = listenerApi.getState();
-  const sessionTime = currentState.iRacing.data?.SessionTime;
+  const { sessionNumber, sessionTime } = selectSessionEventData(currentState);
   const currentTrackLocation = currentState.iRacing.data?.PlayerTrackSurface;
   const previousTrackLocation =
     listenerApi.getOriginalState().iRacing.data?.PlayerTrackSurface;
@@ -95,6 +106,7 @@ export const playerTrackSurfaceDidChangeEffect: AppListenerEffect = (
     playerTrackLocationChanged({
       currentTrackLocation,
       previousTrackLocation,
+      sessionNumber,
       sessionTime,
     }),
   );
@@ -116,7 +128,7 @@ export const playerIsOnTrackDidChangeEffect: AppListenerEffect = (
   listenerApi,
 ) => {
   const currentState = listenerApi.getState();
-  const sessionTime = currentState.iRacing.data?.SessionTime;
+  const { sessionNumber, sessionTime } = selectSessionEventData(currentState);
   const currentIsOnTrack = currentState.iRacing.data?.IsOnTrack;
   const previousIsOnTrack =
     listenerApi.getOriginalState().iRacing.data?.IsOnTrack;
@@ -125,6 +137,7 @@ export const playerIsOnTrackDidChangeEffect: AppListenerEffect = (
     playerIsOnTrackChanged({
       currentIsOnTrack,
       previousIsOnTrack,
+      sessionNumber,
       sessionTime,
     }),
   );
@@ -169,7 +182,7 @@ export const playerIsOnPitRoadDidChangeEffect: AppListenerEffect = (
   listenerApi,
 ) => {
   const currentState = listenerApi.getState();
-  const sessionTime = currentState.iRacing.data?.SessionTime;
+  const { sessionNumber, sessionTime } = selectSessionEventData(currentState);
   const currentOnPitRoad = currentState.iRacing.data?.OnPitRoad;
   const previousOnPitRoad =
     listenerApi.getOriginalState().iRacing.data?.OnPitRoad;
@@ -178,6 +191,7 @@ export const playerIsOnPitRoadDidChangeEffect: AppListenerEffect = (
     playerOnPitRoadChanged({
       currentOnPitRoad,
       previousOnPitRoad,
+      sessionNumber,
       sessionTime,
     }),
   );
@@ -202,10 +216,14 @@ startAppListening({
       previousState.iRacing,
     ),
   effect: (_action, listenerApi) => {
+    const currentState = listenerApi.getState();
+    const { sessionNumber, sessionTime } = selectSessionEventData(currentState);
+
     listenerApi.dispatch(
       sessionStateChanged({
-        sessionTime: listenerApi.getState().iRacing.data?.SessionTime,
-        currentSessionState: listenerApi.getState().iRacing.data?.SessionState,
+        sessionNumber,
+        sessionTime,
+        currentSessionState: currentState.iRacing.data?.SessionState,
         previousSessionState:
           listenerApi.getOriginalState().iRacing.data?.SessionState,
       }),

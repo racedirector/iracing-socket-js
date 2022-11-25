@@ -5,6 +5,7 @@ import sessionPaceReducer from "../features/sessionPaceSlice";
 import paceAnalysisReducer from "../features/paceAnalysisSlice";
 import pitStopAnalysisReducer from "../features/pitStopAnalysisSlice";
 import simIncidentsReducer from "../features/simIncidentsSlice";
+import telemetryIncidentsReducer from "../features/telemetryIncidentsSlice";
 import driversReducer from "../features/driversSlice";
 import raceEventsReducer from "../features/raceEventsSlice";
 import {
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   pitStopAnalysis: pitStopAnalysisReducer,
   raceEvents: raceEventsReducer,
   simIncidents: simIncidentsReducer,
+  // telemetryIncidents: telemetryIncidentsReducer,
   iRacing: iRacingReducer,
 });
 

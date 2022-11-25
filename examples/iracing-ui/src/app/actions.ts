@@ -5,20 +5,23 @@ import {
 } from "@racedirector/iracing-socket-js";
 import { createAction } from "@reduxjs/toolkit";
 
-interface FlagsChangedPayload {
+interface SessionEvent {
+  sessionTime: number;
+  sessionNumber: number;
+}
+
+interface FlagsChangedPayload extends SessionEvent {
   currentFlags: Flags;
   previousFlags: Flags;
-  sessionTime: number;
 }
 
 export const flagsChanged = createAction<FlagsChangedPayload>(
   "iRacingMiddleware/flagsChanged",
 );
 
-interface PlayerTrackLocationChangedPayload {
+interface PlayerTrackLocationChangedPayload extends SessionEvent {
   currentTrackLocation: TrackLocation;
   previousTrackLocation: TrackLocation;
-  sessionTime: number;
 }
 
 export const playerTrackLocationChanged =
@@ -26,10 +29,9 @@ export const playerTrackLocationChanged =
     "iRacingMiddleware/playerTrackLocationChanged",
   );
 
-interface PlayerIsOnTrackChangedPayload {
+interface PlayerIsOnTrackChangedPayload extends SessionEvent {
   currentIsOnTrack: boolean;
   previousIsOnTrack: boolean;
-  sessionTime: number;
 }
 
 export const playerIsOnTrackChanged =
@@ -47,10 +49,9 @@ export const playerIsInGarageChanged =
     "iRacingMiddleware/playerIsInGarageChanged",
   );
 
-interface PlayerOnPitRoadChangedPayload {
+interface PlayerOnPitRoadChangedPayload extends SessionEvent {
   currentOnPitRoad: boolean;
   previousOnPitRoad: boolean;
-  sessionTime: number;
 }
 
 export const playerOnPitRoadChanged =
@@ -58,10 +59,9 @@ export const playerOnPitRoadChanged =
     "iRacingMiddleware/playerOnPitRoadChanged",
   );
 
-interface SessionStateChangedPayload {
+interface SessionStateChangedPayload extends SessionEvent {
   currentSessionState: SessionState;
   previousSessionState: SessionState;
-  sessionTime: number;
 }
 
 export const sessionStateChanged = createAction<SessionStateChangedPayload>(

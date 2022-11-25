@@ -17,6 +17,7 @@ interface RaceEvent {
   id: string;
   type: RaceEventType;
   sessionTime: number;
+  sessionNumber: number;
 }
 
 const raceEventsAdapter = createEntityAdapter<RaceEvent>({
@@ -32,7 +33,8 @@ const raceEventsSlice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(flagsChanged, (state, action) => {
-        const { currentFlags, previousFlags, sessionTime } = action.payload;
+        const { currentFlags, previousFlags, sessionTime, sessionNumber } =
+          action.payload;
         const isCautionStart =
           currentFlags & Flags.CautionWaving &&
           !(previousFlags & Flags.CautionWaving);
@@ -47,6 +49,7 @@ const raceEventsSlice = createSlice({
           raceEventsAdapter.addOne(state, {
             id: nanoid(),
             type: "green",
+            sessionNumber,
             sessionTime,
           });
         }
@@ -55,6 +58,7 @@ const raceEventsSlice = createSlice({
           raceEventsAdapter.addOne(state, {
             id: nanoid(),
             type: "caution_start",
+            sessionNumber,
             sessionTime,
           });
         }
@@ -63,17 +67,20 @@ const raceEventsSlice = createSlice({
           raceEventsAdapter.addOne(state, {
             id: nanoid(),
             type: "caution",
+            sessionNumber,
             sessionTime,
           });
         }
       })
       .addCase(sessionStateChanged, (state, action) => {
-        const { currentSessionState, sessionTime } = action.payload;
+        const { currentSessionState, sessionTime, sessionNumber } =
+          action.payload;
         switch (currentSessionState) {
           case SessionState.ParadeLaps:
             raceEventsAdapter.addOne(state, {
               id: nanoid(),
               type: "parade",
+              sessionNumber,
               sessionTime,
             });
             break;
@@ -81,6 +88,7 @@ const raceEventsSlice = createSlice({
             raceEventsAdapter.addOne(state, {
               id: nanoid(),
               type: "race_start",
+              sessionNumber,
               sessionTime,
             });
             break;
@@ -89,6 +97,7 @@ const raceEventsSlice = createSlice({
             raceEventsAdapter.addOne(state, {
               id: nanoid(),
               type: "checkered",
+              sessionNumber,
               sessionTime,
             });
             break;
@@ -96,6 +105,7 @@ const raceEventsSlice = createSlice({
             raceEventsAdapter.addOne(state, {
               id: nanoid(),
               type: "cooldown",
+              sessionNumber,
               sessionTime,
             });
             break;
