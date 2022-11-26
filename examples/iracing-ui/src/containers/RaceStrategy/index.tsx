@@ -6,6 +6,7 @@ import { PitService } from "../PitService";
 import PaceComparison from "../PaceComparison";
 import { selectCurrentSessionClassLeaderForCurrentDriverClass } from "@racedirector/iracing-socket-js";
 import PitStopTiming from "../PitStopTiming";
+import RaceEventsTable from "../RaceEventsTable";
 
 export interface RaceStrategyProps {}
 
@@ -20,6 +21,7 @@ export const RaceStrategy: React.FC<RaceStrategyProps> = () => {
 
   return (
     <>
+      <RaceEventsTable />
       <Text>{`Fuel stints remaining: ${averageUsageFuelStintsRemaining}`}</Text>
       <PaceComparison targetIndex={classLeader?.CarIdx} />
       <PitService />
