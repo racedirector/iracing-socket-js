@@ -34,6 +34,17 @@ export const selectIRacingSessionInfo = (state: IRacingSocketState) =>
 export const selectIRacingSessions = (state: IRacingSocketState) =>
   state.data?.SessionInfo?.Sessions || [];
 
+export const selectSessionNumber = (state: IRacingSocketState) =>
+  state.data?.SessionNum;
+
+export const selectSessionTime = (state: IRacingSocketState) =>
+  state.data?.SessionTime;
+
+export const selectSessionEventData = (state: IRacingSocketState) => ({
+  sessionNumber: selectSessionNumber(state),
+  sessionTime: selectSessionTime(state),
+});
+
 export const selectIsMulticlass = (state: IRacingSocketState) =>
   state.data?.WeekendInfo?.NumCarClasses > 1;
 
@@ -58,7 +69,7 @@ export const selectSessionForSessionNumber = (
 export const selectCurrentSession = (
   state: IRacingSocketState,
 ): Session | undefined =>
-  selectSessionForSessionNumber(state, state.data?.SessionNum);
+  selectSessionForSessionNumber(state, selectSessionNumber(state));
 
 type ClassResultsIndex = Record<string, SessionResultsPosition[]>;
 

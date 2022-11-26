@@ -13,7 +13,7 @@ type RaceEventType =
   | "checkered"
   | "cooldown";
 
-interface RaceEvent {
+export interface RaceEvent {
   id: string;
   type: RaceEventType;
   sessionTime: number;
@@ -123,6 +123,15 @@ export const allRaceEvents = raceEventsSelectors.selectAll;
 export const raceEventsByType = (state: RootState, type: RaceEventType) =>
   allRaceEvents(state).filter(
     ({ type: raceEventType }) => raceEventType === type,
+  );
+
+export const raceEventsBySessionNumber = (
+  state: RootState,
+  sessionNumber: number,
+) =>
+  allRaceEvents(state).filter(
+    ({ sessionNumber: raceEventSessionNumber }) =>
+      raceEventSessionNumber === sessionNumber,
   );
 
 export const lastGreenFlagRunLength = () => {};

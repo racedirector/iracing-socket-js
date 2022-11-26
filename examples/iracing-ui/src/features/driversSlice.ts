@@ -7,6 +7,7 @@ import {
   Driver,
   selectActiveDriversByCarIndex,
   selectActiveDriversByUserId,
+  selectSessionEventData,
 } from "@racedirector/iracing-socket-js";
 import { RootState } from "src/app/store";
 import { AppListenerEffect } from "src/app/middleware";
@@ -19,6 +20,8 @@ const driversAdapter = createEntityAdapter<Driver>({
 interface DriverSwapPayload {
   from?: number;
   to: number;
+  teamId: number;
+  sessionNumber: number;
   sessionTime: number;
   carIndex: number;
 }
@@ -98,6 +101,10 @@ export const checkDriverSwapEffect: AppListenerEffect = (
   const currentState = listenerApi.getState();
   const previousState = listenerApi.getOriginalState();
 
+  const { sessionNumber, sessionTime } = selectSessionEventData(
+    currentState.iRacing,
+  );
+
   const currentActiveDrivers = selectActiveDriversByCarIndex(
     currentState.iRacing,
     driversFilters,
@@ -123,7 +130,9 @@ export const checkDriverSwapEffect: AppListenerEffect = (
         driverSwap({
           from: existingDriver?.UserID,
           to: driver.UserID,
-          sessionTime: currentState.iRacing.data?.SessionTime,
+          teamId: driver.TeamID,
+          sessionNumber,
+          sessionTime,
           carIndex: driver.CarIdx,
         }),
       );
