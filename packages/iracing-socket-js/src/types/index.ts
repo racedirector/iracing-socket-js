@@ -907,6 +907,25 @@ export enum PitCommandMode {
   FR,
 }
 
+export enum ReplaySearchCommand {
+  ToStart = 0,
+  ToEnd,
+  ToPreviousSession,
+  ToNextSession,
+  PreviousLap,
+  NextLap,
+  PreviousFrame,
+  NextFrame,
+  PreviousIncident,
+  NextIncident,
+}
+
+export enum ReplayPlayPosition {
+  Begin = 0,
+  Current,
+  End,
+}
+
 export enum TelemetryCommand {
   Start = 0,
   Stop,
@@ -938,7 +957,7 @@ export interface SocketCommandEventMap {
   [iRacingSocketCommands.CameraSetState]: [CameraState];
   [iRacingSocketCommands.ReplaySetPlaySpeed]: [number, boolean];
   [iRacingSocketCommands.ReplaySetPlayPosition]: [number, number];
-  [iRacingSocketCommands.ReplaySearch]: [];
+  [iRacingSocketCommands.ReplaySearch]: [ReplaySearchCommand];
   [iRacingSocketCommands.ReplaySetState]: [0];
   [iRacingSocketCommands.ReloadAllTextures]: undefined;
   [iRacingSocketCommands.ReloadTexture]: [number];

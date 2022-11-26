@@ -15,7 +15,17 @@ import {
   chatCommandMacro,
   connect,
   disconnect,
+  ffbCommand,
+  pitCommand,
   reloadAllTextures,
+  reloadTexture,
+  replaySearch,
+  replaySearchSessionTime,
+  replaySetPlayPosition,
+  replaySetPlaySpeed,
+  replaySetState,
+  telemetryCommand,
+  videoCapture,
 } from "./actions";
 import {
   setSocketConnected,
@@ -95,6 +105,42 @@ export const createIRacingSocketMiddleware = (): Middleware => {
       ]);
     } else if (reloadAllTextures.match(action)) {
       socket.sendCommand(iRacingSocketCommands.ReloadAllTextures, undefined);
+    } else if (reloadTexture.match(action)) {
+      socket.sendCommand(iRacingSocketCommands.ReloadTexture, [action.payload]);
+    } else if (telemetryCommand.match(action)) {
+      socket.sendCommand(iRacingSocketCommands.TelemetryCommand, [
+        action.payload,
+      ]);
+    } else if (ffbCommand.match(action)) {
+      const { command, maxForce } = action.payload;
+      socket.sendCommand(iRacingSocketCommands.FFBCommand, [command, maxForce]);
+    } else if (videoCapture.match(action)) {
+      socket.sendCommand(iRacingSocketCommands.VideoCapture, [action.payload]);
+    } else if (replaySetPlaySpeed.match(action)) {
+      const { speed, slowMotion } = action.payload;
+      socket.sendCommand(iRacingSocketCommands.ReplaySetPlaySpeed, [
+        speed,
+        slowMotion,
+      ]);
+    } else if (replaySetPlayPosition.match(action)) {
+      const { playPosition, frameNumber } = action.payload;
+      socket.sendCommand(iRacingSocketCommands.ReplaySetPlayPosition, [
+        playPosition,
+        frameNumber,
+      ]);
+    } else if (replaySetState.match(action)) {
+      socket.sendCommand(iRacingSocketCommands.ReplaySetState, [0]);
+    } else if (replaySearchSessionTime.match(action)) {
+      const { sessionNumber, sessionTime } = action.payload;
+      socket.sendCommand(iRacingSocketCommands.ReplaySearchSessionTime, [
+        sessionNumber,
+        Math.floor(sessionTime),
+      ]);
+    } else if (replaySearch.match(action)) {
+      socket.sendCommand(iRacingSocketCommands.ReplaySearch, [action.payload]);
+    } else if (pitCommand.match(action)) {
+      const { command, fuel } = action.payload;
+      socket.sendCommand(iRacingSocketCommands.PitCommand, [command, fuel]);
     }
 
     return next(action);
