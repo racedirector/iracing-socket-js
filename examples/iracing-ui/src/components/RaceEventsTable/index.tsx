@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  IconButton,
   Table,
   TableCaption,
   TableContainer,
@@ -10,6 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { RaceEvent } from "../../features/raceEventsSlice";
+import { ViewIcon } from "@chakra-ui/icons";
 
 export interface RaceEventsTableProps {
   events: RaceEvent[];
@@ -33,16 +35,25 @@ export const RaceEventsTable: React.FC<RaceEventsTableProps> = ({
             <Th>Session Number</Th>
             <Th>Session time</Th>
             <Th>Type</Th>
+            <Th>Replay</Th>
           </Tr>
         </Thead>
 
         <Tbody>
           {events.map(({ id, sessionNumber, sessionTime, type }) => (
-            <Tr onClick={() => onPressEvent(id)}>
+            <Tr>
               <Td>{id}</Td>
               <Td>{sessionNumber}</Td>
               <Td>{sessionTime}</Td>
               <Td>{type}</Td>
+              <Td>
+                <IconButton
+                  aria-label="View replay"
+                  colorScheme="green"
+                  icon={<ViewIcon />}
+                  onClick={() => onPressEvent(id)}
+                />
+              </Td>
             </Tr>
           ))}
         </Tbody>

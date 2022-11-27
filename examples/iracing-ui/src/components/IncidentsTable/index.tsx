@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  IconButton,
   Table,
   TableCaption,
   TableContainer,
@@ -9,45 +10,26 @@ import {
   Td,
   Tbody,
 } from "@chakra-ui/react";
+import { ViewIcon } from "@chakra-ui/icons";
 import { Flags } from "@racedirector/iracing-socket-js";
 
 interface IncidentRowProps {
+  id: string;
   driverId: number;
   carIndex: number;
   trackPercentage: number;
   flags: Flags;
   sessionTime: number;
   value: number;
-  onPress: () => void;
 }
-
-const IncidentRow: React.FC<IncidentRowProps> = ({
-  driverId,
-  carIndex,
-  trackPercentage,
-  flags,
-  sessionTime,
-  value,
-  onPress,
-}) => {
-  return (
-    <Tr onClick={onPress}>
-      <Td>{driverId}</Td>
-      <Td>{carIndex}</Td>
-      <Td>{trackPercentage}</Td>
-      <Td>{value}</Td>
-      <Td>{`0x${flags.toString(16)}`}</Td>
-      <Td>{sessionTime}</Td>
-    </Tr>
-  );
-};
-
 export interface IncidentsTableProps {
-  incidents: Omit<IncidentRowProps, "onPress">[];
+  incidents: IncidentRowProps[];
+  onPressIncident?: (incidentId: string) => void;
 }
 
 export const IncidentsTable: React.FC<IncidentsTableProps> = ({
   incidents = [],
+  onPressIncident = () => {},
 }) => {
   return (
     <TableContainer>
@@ -63,16 +45,39 @@ export const IncidentsTable: React.FC<IncidentsTableProps> = ({
             <Th>Value</Th>
             <Th>Flags</Th>
             <Th>Session Time</Th>
+            <Th>Replay</Th>
           </Tr>
         </Thead>
 
         <Tbody>
-          {incidents.map((props) => (
-            <IncidentRow
-              {...props}
-              onPress={() => console.log("Pressed the incident", props)}
-            />
-          ))}
+          {incidents.map(
+            ({
+              id,
+              driverId,
+              carIndex,
+              trackPercentage,
+              value,
+              flags,
+              sessionTime,
+            }) => (
+              <Tr>
+                <Td>{driverId}</Td>
+                <Td>{carIndex}</Td>
+                <Td>{trackPercentage}</Td>
+                <Td>{value}</Td>
+                <Td>{`0x${flags.toString(16)}`}</Td>
+                <Td>{sessionTime}</Td>
+                <Td>
+                  <IconButton
+                    aria-label="View replay"
+                    colorScheme="green"
+                    icon={<ViewIcon />}
+                    onClick={() => onPressIncident(id)}
+                  />
+                </Td>
+              </Tr>
+            ),
+          )}
         </Tbody>
       </Table>
     </TableContainer>
