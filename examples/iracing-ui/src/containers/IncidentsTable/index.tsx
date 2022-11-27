@@ -12,7 +12,7 @@ export interface IncidentsTableProps {}
 
 export const IncidentsTable: React.FC<IncidentsTableProps> = () => {
   const dispatch = useAppDispatch();
-  const incidents = useAppSelector((state) => selectAllIncidents(state));
+  const incidents = useAppSelector(selectAllIncidents);
 
   const normalizedIncidents: IncidentsTableUIProps["incidents"] = useMemo(
     () =>
