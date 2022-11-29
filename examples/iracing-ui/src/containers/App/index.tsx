@@ -12,9 +12,9 @@ import { useIRacingConnectionState } from "src/app/hooks";
 import AppTabBar from "src/components/AppTabBar";
 import { SessionInformation } from "../SessionInformation";
 import { IncidentsTable } from "../../containers/IncidentsTable";
-import { Cameras } from "../../containers/Cameras";
 import { RaceStrategy } from "../../containers/RaceStrategy";
 import FuelCalculator from "../FuelCalculator";
+import { ReplayControls } from "../ReplayControls";
 
 const AppProvider: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
   children,
@@ -68,7 +68,7 @@ const AppUI: React.FC<Record<string, never>> = () => {
             incidents={<IncidentsTable />}
             raceStrategy={<RaceStrategy />}
             fuelCalculator={<FuelCalculator />}
-            replay={<Cameras />}
+            replay={<ReplayControls />}
           />
         </>
       )}
