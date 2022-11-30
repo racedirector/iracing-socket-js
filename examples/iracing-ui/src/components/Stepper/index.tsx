@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Heading, Button } from "@chakra-ui/react";
+import { Flex, Heading, Button, ButtonGroup, Spacer } from "@chakra-ui/react";
 
 export interface StepperProps {
   title: string;
@@ -17,10 +17,13 @@ export const Stepper: React.FC<StepperProps> = ({
   decrementCallback = () => {},
 }) => {
   return (
-    <Flex>
-      <Heading>{title}</Heading>
-      <Button onClick={decrementCallback}>{decrementButtonTitle}</Button>
-      <Button onClick={incrementCallback}>{incrementButtonTitle}</Button>
+    <Flex flex={1} paddingY={2}>
+      <Heading size="md">{title}</Heading>
+      <Spacer />
+      <ButtonGroup gap={2}>
+        <Button onClick={decrementCallback}>{decrementButtonTitle}</Button>
+        <Button onClick={incrementCallback}>{incrementButtonTitle}</Button>
+      </ButtonGroup>
     </Flex>
   );
 };
