@@ -1,9 +1,5 @@
 name: Deployment
 
-concurrency:
-  group: production
-  cancel-in-progress: true
-
 on:
   push:
     branches:
