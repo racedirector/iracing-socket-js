@@ -4194,14 +4194,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@racedirector/iracing-utilities@workspace:packages/iracing-utilities":
-  version: 0.0.0-use.local
-  resolution: "@racedirector/iracing-utilities@workspace:packages/iracing-utilities"
-  dependencies:
-    "@racedirector/iracing-socket-js": ^2.0.0
-  languageName: unknown
-  linkType: soft
-
 "@reduxjs/toolkit@npm:^1.8.6":
   version: 1.8.6
   resolution: "@reduxjs/toolkit@npm:1.8.6"
