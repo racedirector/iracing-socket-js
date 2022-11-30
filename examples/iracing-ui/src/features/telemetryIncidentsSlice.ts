@@ -139,8 +139,8 @@ export const telemetryIncidentsSlice = createSlice({
 export const { setConfig, setTelemetryStateForCarIndex } =
   telemetryIncidentsSlice.actions;
 
-export const selectTelemetryIncidents = (state: RootState) =>
-  state.incidents.telemetry;
+// export const selectTelemetryIncidents = (state: RootState) =>
+//   state.telemetryIncidents;
 
 export const selectTelemetryForDriverIndex = (
   state: RootState,
@@ -278,62 +278,62 @@ const telemetryIncidentsDriversFilters = {
   includeSpectators: false,
 };
 
-export const checkTelemetryIncidentsEffect: AppListenerEffect = (
-  _action,
-  listenerApi,
-) => {
-  const currentState = listenerApi.getState();
-  const previousState = listenerApi.getOriginalState();
+// export const checkTelemetryIncidentsEffect: AppListenerEffect = (
+//   _action,
+//   listenerApi,
+// ) => {
+//   const currentState = listenerApi.getState();
+//   const previousState = listenerApi.getOriginalState();
 
-  const trackLength = selectTrackLengthMeters(currentState.iRacing);
+//   const trackLength = selectTrackLengthMeters(currentState.iRacing);
 
-  const currentDriversIndex = selectActiveDriversByCarIndex(
-    currentState.iRacing,
-    telemetryIncidentsDriversFilters,
-  );
-  const previousDriversIndex = selectActiveDriversByCarIndex(
-    previousState.iRacing,
-    telemetryIncidentsDriversFilters,
-  );
+//   const currentDriversIndex = selectActiveDriversByCarIndex(
+//     currentState.iRacing,
+//     telemetryIncidentsDriversFilters,
+//   );
+//   const previousDriversIndex = selectActiveDriversByCarIndex(
+//     previousState.iRacing,
+//     telemetryIncidentsDriversFilters,
+//   );
 
-  Object.entries(currentDriversIndex).forEach(([carIndex, driver]) => {
-    const normalizedCarIndex = parseInt(carIndex);
-    if (!normalizedCarIndex) {
-      return;
-    }
+//   Object.entries(currentDriversIndex).forEach(([carIndex, driver]) => {
+//     const normalizedCarIndex = parseInt(carIndex);
+//     if (!normalizedCarIndex) {
+//       return;
+//     }
 
-    const currentTelemetry = selectTelemetryForDriverIndex(
-      currentState,
-      normalizedCarIndex,
-    );
+//     const currentTelemetry = selectTelemetryForDriverIndex(
+//       currentState,
+//       normalizedCarIndex,
+//     );
 
-    const previousTelemetry = selectTelemetryForDriverIndex(
-      previousState,
-      normalizedCarIndex,
-    );
+//     const previousTelemetry = selectTelemetryForDriverIndex(
+//       previousState,
+//       normalizedCarIndex,
+//     );
 
-    const previousChangeMeta =
-      currentState.incidents.telemetry.telemetryState[carIndex];
-    const telemetryChangeMeta = getTelemetryIncidentsMeta(
-      currentTelemetry,
-      previousTelemetry,
-      trackLength,
-      5,
-    );
+//     const previousChangeMeta =
+//       currentState.telemetryIncidents.telemetryState[carIndex];
+//     const telemetryChangeMeta = getTelemetryIncidentsMeta(
+//       currentTelemetry,
+//       previousTelemetry,
+//       trackLength,
+//       5,
+//     );
 
-    if (!previousChangeMeta) {
-      listenerApi.dispatch(
-        setTelemetryStateForCarIndex({
-          carIndex,
-          telemetryMeta: telemetryChangeMeta,
-        }),
-      );
-    } else if (
-      isSignificantMetaEvent(telemetryChangeMeta, previousChangeMeta)
-    ) {
-    }
-  });
-};
+//     if (!previousChangeMeta) {
+//       listenerApi.dispatch(
+//         setTelemetryStateForCarIndex({
+//           carIndex,
+//           telemetryMeta: telemetryChangeMeta,
+//         }),
+//       );
+//     } else if (
+//       isSignificantMetaEvent(telemetryChangeMeta, previousChangeMeta)
+//     ) {
+//     }
+//   });
+// };
 
 export const carsInReversePredicate: AppListenerPredicate = (
   _action,
