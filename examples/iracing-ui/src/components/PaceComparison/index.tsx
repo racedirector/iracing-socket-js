@@ -5,8 +5,11 @@ import {
   Grid,
   GridItem,
   Heading,
+  Stat,
+  StatGroup,
+  StatLabel,
   Text,
-  VStack,
+  StatNumber,
 } from "@chakra-ui/react";
 import { normalizeLapDuration } from "src/utils";
 import moment from "moment";
@@ -37,24 +40,38 @@ const PaceComparisonDetails: React.FC<PaceComparisonDetailsProps> = ({
         {teamName && <Text>{currentDriver}</Text>}
       </Flex>
 
-      <VStack>
-        {lapsComplete > 0 && <Text>{`Laps: ${lapsComplete}`}</Text>}
+      <StatGroup>
+        {lapsComplete > 0 && (
+          <Stat>
+            <StatLabel>Laps:</StatLabel>
+            <StatNumber>{lapsComplete}</StatNumber>
+          </Stat>
+        )}
         {averageLapTime > 0 && (
-          <Text>{`Average: ${normalizeLapDuration(
-            moment.duration(averageLapTime, "seconds"),
-          )}`}</Text>
+          <Stat>
+            <StatLabel>Average:</StatLabel>
+            <StatNumber>
+              {normalizeLapDuration(moment.duration(averageLapTime, "seconds"))}
+            </StatNumber>
+          </Stat>
         )}
         {lastLapTime > 0 && (
-          <Text>{`Last: ${normalizeLapDuration(
-            moment.duration(lastLapTime, "seconds"),
-          )}`}</Text>
+          <Stat>
+            <StatLabel>Last:</StatLabel>
+            <StatNumber>
+              {normalizeLapDuration(moment.duration(lastLapTime, "seconds"))}
+            </StatNumber>
+          </Stat>
         )}
         {bestLapTime > 0 && (
-          <Text>{`Best: ${normalizeLapDuration(
-            moment.duration(bestLapTime, "seconds"),
-          )}`}</Text>
+          <Stat>
+            <StatLabel>Best:</StatLabel>
+            <StatNumber>
+              {normalizeLapDuration(moment.duration(bestLapTime, "seconds"))}
+            </StatNumber>
+          </Stat>
         )}
-      </VStack>
+      </StatGroup>
     </Box>
   );
 };

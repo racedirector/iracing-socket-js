@@ -1,7 +1,12 @@
 import React, { useMemo } from "react";
-import { ArrowUpIcon, ArrowDownIcon } from "@chakra-ui/icons";
-import LiveWindDirection from "../LiveWindDirection";
-import { Flex } from "@chakra-ui/react";
+import {
+  Stat,
+  StatArrow,
+  StatGroup,
+  StatHelpText,
+  StatLabel,
+  StatNumber,
+} from "@chakra-ui/react";
 
 interface TemperatureDisplayProps {
   name: string;
@@ -23,11 +28,15 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
   }, [temperatureDelta]);
 
   return (
-    <Flex>
-      <p>{`${name}: ${temperature} (${liveTemperature.toFixed(2)})`}</p>
-      {isDeltaPositive ? <ArrowUpIcon /> : <ArrowDownIcon />}
-      <p>{Math.abs(temperatureDelta)}</p>
-    </Flex>
+    <Stat>
+      <StatLabel>{name}</StatLabel>
+      <StatNumber>Start: {temperature}</StatNumber>
+      <StatNumber>Live: {liveTemperature.toFixed(2)} C</StatNumber>
+      <StatHelpText>
+        <StatArrow type={isDeltaPositive ? "increase" : "decrease"} />
+        {Math.abs(temperatureDelta)} Delta
+      </StatHelpText>
+    </Stat>
   );
 };
 
@@ -51,8 +60,7 @@ export const WeatherConditions: React.FC<WeatherConditionsProps> = ({
   liveAmbientTemperature = 0,
 }) => {
   return (
-    <>
-      <h3>Weather Conditons</h3>
+    <StatGroup>
       <TemperatureDisplay
         name="Track"
         temperature={trackTemperature}
@@ -63,14 +71,7 @@ export const WeatherConditions: React.FC<WeatherConditionsProps> = ({
         temperature={ambientTemperature}
         liveTemperature={liveAmbientTemperature}
       />
-
-      {liveWindDirection >= 0 && liveWindVelocity >= 0 && (
-        <LiveWindDirection
-          direction={liveWindDirection}
-          velocity={liveWindVelocity}
-        />
-      )}
-    </>
+    </StatGroup>
   );
 };
 

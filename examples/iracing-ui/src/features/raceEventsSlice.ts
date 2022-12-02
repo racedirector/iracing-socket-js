@@ -2,6 +2,7 @@ import { createEntityAdapter, createSlice, nanoid } from "@reduxjs/toolkit";
 import { Flags, SessionState } from "@racedirector/iracing-socket-js";
 import { flagsChanged, sessionStateChanged } from "src/app/actions";
 import { RootState } from "src/app/store";
+import { sortSessionEvents } from "src/utils";
 
 type RaceEventType =
   | "parade"
@@ -22,6 +23,7 @@ export interface RaceEvent {
 
 const raceEventsAdapter = createEntityAdapter<RaceEvent>({
   selectId: ({ id }) => id,
+  sortComparer: sortSessionEvents,
 });
 
 const raceEventsSlice = createSlice({
@@ -119,25 +121,33 @@ const raceEventsSelectors = raceEventsAdapter.getSelectors<RootState>(
   (state) => state.raceEvents,
 );
 
-export const allRaceEvents = raceEventsSelectors.selectAll;
-export const raceEventsByType = (state: RootState, type: RaceEventType) =>
-  allRaceEvents(state).filter(
+export const selectAllRaceEvents = raceEventsSelectors.selectAll;
+export const selectRaceEventsByType = (state: RootState, type: RaceEventType) =>
+  selectAllRaceEvents(state).filter(
     ({ type: raceEventType }) => raceEventType === type,
   );
 
-export const raceEventsBySessionNumber = (
+export const selectRaceEventsBySessionNumber = (
   state: RootState,
   sessionNumber: number,
 ) =>
-  allRaceEvents(state).filter(
+  selectAllRaceEvents(state).filter(
     ({ sessionNumber: raceEventSessionNumber }) =>
       raceEventSessionNumber === sessionNumber,
   );
 
-export const lastGreenFlagRunLength = () => {};
-export const lastCautionLength = () => {};
-export const totalCautionLength = () => {};
-export const totalGreenFlagLength = () => {};
-export const totalRaceLength = () => {};
+export const selectLastFlagSessionTime = (
+  state: RootState,
+  eventType: RaceEventType,
+) => selectRaceEventsByType(state, eventType).pop();
+
+export const selectLastGreenFlagSessionTime = (state: RootState) =>
+  selectLastFlagSessionTime(state, "green");
+
+const lastGreenFlagRunLength = () => {};
+const lastCautionLength = () => {};
+const totalCautionLength = () => {};
+const totalGreenFlagLength = () => {};
+const totalRaceLength = () => {};
 
 export default raceEventsSlice.reducer;

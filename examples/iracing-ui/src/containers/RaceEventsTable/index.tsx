@@ -3,14 +3,14 @@ import { useSelector } from "react-redux";
 import { find } from "lodash";
 import { replaySearchSessionTime } from "@racedirector/iracing-socket-js";
 import { useAppDispatch } from "src/app/hooks";
-import { allRaceEvents } from "src/features/raceEventsSlice";
+import { selectAllRaceEvents } from "src/features/raceEventsSlice";
 import { RaceEventsTable as RaceEventsTableUI } from "../../components/RaceEventsTable";
 
 export interface RaceEventsTableProps {}
 
 export const RaceEventsTable: React.FC<RaceEventsTableProps> = () => {
   const dispatch = useAppDispatch();
-  const raceEvents = useSelector(allRaceEvents);
+  const raceEvents = useSelector(selectAllRaceEvents);
   const onRaceEventSelectCallback = useCallback(
     (eventId: string) => {
       const selectedEvent = find(raceEvents, ({ id }) => id === eventId);

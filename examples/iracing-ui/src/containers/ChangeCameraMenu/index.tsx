@@ -1,11 +1,10 @@
 import React, { useCallback } from "react";
 import {
-  useIRacingContext,
   useDriverForCarIndex,
   cameraSwitchNumber,
 } from "@racedirector/iracing-socket-js";
 import { CameraSelectionMenu as CamerasUI } from "src/components/CameraSelectionMenu";
-import { useAppDispatch } from "src/app/hooks";
+import { useAppDispatch, useIRacingContext } from "src/app/hooks";
 
 export interface ChangeCameraMenuProps {}
 
@@ -41,7 +40,7 @@ export const ChangeCameraMenu: React.FC<ChangeCameraMenuProps> = () => {
     <CamerasUI
       groups={groups}
       selectedGroupNumber={groupNumber}
-      onCameraSelect={(groupNumber) => onCameraSelectCallback(groupNumber)}
+      onCameraSelect={onCameraSelectCallback}
     />
   );
 };

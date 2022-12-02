@@ -225,7 +225,7 @@ export const selectLiveLastLapRefuelAmount = createSelector(
 export const selectEstimatedAverageFuelStintsRemaining = createSelector(
   [
     selectAverageRefuelAmount,
-    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+    (state: RootState) => state.iRacing.data?.DriverInfo?.DriverCarFuelMaxLtr,
   ],
   (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
 );
@@ -233,7 +233,7 @@ export const selectEstimatedAverageFuelStintsRemaining = createSelector(
 export const selectLiveEstimatedAverageFuelStintsRemaining = createSelector(
   [
     selectLiveAverageRefuelAmount,
-    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+    (state: RootState) => state.iRacing.data?.DriverInfo?.DriverCarFuelMaxLtr,
   ],
   (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
 );
@@ -241,7 +241,7 @@ export const selectLiveEstimatedAverageFuelStintsRemaining = createSelector(
 export const selectEstimatedLastFuelStintsRemaining = createSelector(
   [
     selectLastLapRefuelAmount,
-    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+    (state: RootState) => state.iRacing.data?.DriverInfo?.DriverCarFuelMaxLtr,
   ],
   (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
 );
@@ -249,7 +249,7 @@ export const selectEstimatedLastFuelStintsRemaining = createSelector(
 export const selectLiveEstimatedLastFuelStintsRemaining = createSelector(
   [
     selectLiveLastLapRefuelAmount,
-    (state: RootState) => state.iRacing.data?.DriverInfo.DriverCarFuelMaxLtr,
+    (state: RootState) => state.iRacing.data?.DriverInfo?.DriverCarFuelMaxLtr,
   ],
   (refuelAmount, carMaxFuelAmount) => refuelAmount / carMaxFuelAmount,
 );

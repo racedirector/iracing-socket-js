@@ -55,3 +55,20 @@ export const formatLapTime = (
     seconds < 10 ? `0${seconds}` : seconds
   }.${normalizedMilliseconds}`;
 };
+
+export interface SessionTimeEvent {
+  sessionTime: number;
+}
+
+export const sortSessionEvents = <T extends SessionTimeEvent>(
+  eventA: T,
+  eventB: T,
+) => {
+  if (eventA.sessionTime < eventB.sessionTime) {
+    return -1;
+  } else if (eventA.sessionTime > eventB.sessionTime) {
+    return 1;
+  }
+
+  return 0;
+};

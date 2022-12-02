@@ -4,10 +4,6 @@ import { useAppDispatch } from "src/app/hooks";
 import { useIRacingSocketConnectionContext } from "src/contexts/IRacingSocketConnection";
 
 const REQUEST_PARAMETERS = [
-  "CameraInfo",
-  "CamCarIdx",
-  "CamCameraNumber",
-  "CamGroupNumber",
   "DriverInfo",
   "QualifyResultsInfo",
   "SessionInfo",
@@ -27,6 +23,19 @@ const REQUEST_PARAMETERS = [
 
   "Lap",
   "LapCompleted",
+
+  // Replay/Cameras
+  "CameraInfo",
+  "CamCarIdx",
+  "CamCameraNumber",
+  "CamGroupNumber",
+
+  // Weather
+  "AirTemp",
+  "TrackTemp",
+  "TrackTempCrew",
+  "WindDir",
+  "WindVel",
 
   // Player information
   "PlayerCarClass",

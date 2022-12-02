@@ -1,9 +1,35 @@
 import React, { useMemo } from "react";
-import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Spacer,
+  Stat,
+  StatGroup,
+  StatLabel,
+  StatArrow,
+  StatHelpText,
+  Text,
+  StatNumber,
+} from "@chakra-ui/react";
 import moment from "moment";
 import styles from "./styles";
-import { normalizeLapDuration } from "src/utils";
-import { DeltaLabel } from "../DeltaLabel";
+import { normalizeLapDuration } from "../../utils";
+
+export interface DeltaLabelProps {
+  timeDelta: number;
+}
+
+export const DeltaLabel: React.FC<DeltaLabelProps> = ({ timeDelta }) => {
+  const isGain = Math.sign(timeDelta) === -1;
+
+  return (
+    <StatHelpText>
+      <StatArrow type={isGain ? "increase" : "decrease"} />
+      {Math.abs(timeDelta)}
+    </StatHelpText>
+  );
+};
 
 export interface SessionClassDetailsCardProps {
   color: string;
@@ -82,40 +108,43 @@ export const SessionClassDetailsCard: React.FC<
       <Flex style={styles.contentContainer}>
         <Text>{`Lap ${lapsCompleted} of ${totalLaps}`}</Text>
         <Text>{`${totalLaps - lapsCompleted + 1} to go`}</Text>
-        {normalizedFastestLap && (
-          <>
-            <Heading size="xs">Fastest Lap</Heading>
-            <Text>{normalizedFastestLap.toString()}</Text>
-            {fastestLapDelta && <DeltaLabel timeDelta={fastestLapDelta} />}
-          </>
-        )}
-        {normalizedExpectedPace && (
-          <>
-            <Heading size="xs">Expected</Heading>
-            <Text>{normalizedExpectedPace.toString()}</Text>
-            {expectedLapTimeDelta && (
-              <DeltaLabel timeDelta={expectedLapTimeDelta} />
-            )}
-          </>
-        )}
-        {normalizedLeaderPace && (
-          <>
-            <Heading size="xs">{`Leader Pace${
-              leaderPaceCount ? ` (Last ${leaderPaceCount})` : ""
-            }`}</Heading>
-            <Text>{normalizedLeaderPace.toString()}</Text>
-            {leaderPaceDelta && <DeltaLabel timeDelta={leaderPaceDelta} />}
-          </>
-        )}
-        {normalizedFieldPace && (
-          <>
-            <Heading size="xs">{`Field Pace${
-              fieldPaceCount ? ` (Last ${fieldPaceCount})` : ""
-            }`}</Heading>
-            <Text>{normalizedFieldPace.toString()}</Text>
-            {fieldPaceDelta && <DeltaLabel timeDelta={fieldPaceDelta} />}
-          </>
-        )}
+
+        <StatGroup>
+          {normalizedFastestLap && (
+            <Stat>
+              <StatLabel>Fastest Lap</StatLabel>
+              <StatNumber>{normalizedFastestLap}</StatNumber>
+              {fastestLapDelta && <DeltaLabel timeDelta={fastestLapDelta} />}
+            </Stat>
+          )}
+          {normalizedExpectedPace && (
+            <Stat>
+              <StatLabel>Expected</StatLabel>
+              <StatNumber>{normalizedExpectedPace}</StatNumber>
+              {expectedLapTimeDelta && (
+                <DeltaLabel timeDelta={expectedLapTimeDelta} />
+              )}
+            </Stat>
+          )}
+          {normalizedLeaderPace && (
+            <Stat>
+              <StatLabel>{`Leader Pace${
+                leaderPaceCount ? ` (Last ${leaderPaceCount})` : ""
+              }`}</StatLabel>
+              <StatNumber>{normalizedLeaderPace}</StatNumber>
+              {leaderPaceDelta && <DeltaLabel timeDelta={leaderPaceDelta} />}
+            </Stat>
+          )}
+          {normalizedFieldPace && (
+            <Stat>
+              <StatLabel>{`Field Pace${
+                fieldPaceCount ? ` (Last ${fieldPaceCount})` : ""
+              }`}</StatLabel>
+              <StatNumber>{normalizedFieldPace}</StatNumber>
+              {fieldPaceDelta && <DeltaLabel timeDelta={fieldPaceDelta} />}
+            </Stat>
+          )}
+        </StatGroup>
       </Flex>
     </Box>
   );

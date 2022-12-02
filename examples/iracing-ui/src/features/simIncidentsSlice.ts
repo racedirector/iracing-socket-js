@@ -7,21 +7,11 @@ import {
   selectTrackLengthMeters,
 } from "@racedirector/iracing-socket-js";
 import { AppListenerEffect } from "src/app/middleware";
+import { SessionTimeEvent, sortSessionEvents } from "src/utils";
 
-interface SessionEvent {
+interface SessionEvent extends SessionTimeEvent {
   sessionNumber: number;
-  sessionTime: number;
 }
-
-const sortSessionEvents = <T extends SessionEvent>(eventA: T, eventB: T) => {
-  if (eventA.sessionTime < eventB.sessionTime) {
-    return -1;
-  } else if (eventA.sessionTime > eventB.sessionTime) {
-    return 1;
-  }
-
-  return 0;
-};
 
 export interface SimIncidentEvent extends SessionEvent {
   // The id of the incident
