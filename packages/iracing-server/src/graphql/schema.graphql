@@ -1,0 +1,50 @@
+type Sector {
+  number: Int!
+  startPercentage: Float!
+}
+
+type SectorInfo {
+  sectors: [Sector]!
+}
+
+type Driver {
+  carIndex: Int!
+  teamID: Int!
+  userId: Int!
+  name: String!
+  incidentCount: Int!
+  isSpectator: Boolean!
+  isAI: Boolean!
+  isPaceCar: Boolean!
+}
+
+type Query {
+  activeDrivers: [Driver]!
+  activeDriverForCarIndex(carIndex: Int!): Driver
+  drivers: [Driver]!
+  driversForTeam(teamId: Int!): [Driver]!
+
+  splitTimeInfo: SectorInfo!
+
+  currentLap: Int!
+  currentLapForCarIndex(carIndex: Int!): Int
+}
+
+# TODO: Add some type to represent the YAML file... I think?
+type IRacingData {
+  SplitTimeInfo: SectorInfo!
+}
+
+input IRacingDataSubscriptionInput {
+  requestParameters: [String]
+  requestParametersOnce: [String]
+  readIBT: Boolean
+}
+
+type IRacingDataSubscriptionPayload {
+  data: IRacingData
+}
+
+type Subscription {
+  legacySubscription(input: IRacingDataSubscriptionInput): IRacingDataSubscriptionPayload
+}
