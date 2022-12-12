@@ -49,11 +49,11 @@ const driversSelectors = driversAdapter.getSelectors<RootState>(
 export const { driverAdded, driversAdded, driversUpsert, driversReceived } =
   driversSlice.actions;
 
-export const allDrivers = driversSelectors.selectAll;
-export const driverById = (state: RootState, driverId: number) =>
+export const selectAllDrivers = driversSelectors.selectAll;
+export const selectDriverById = (state: RootState, driverId: number) =>
   driversSelectors.selectById(state, driverId);
 
-export const driversByTeamId = (state: RootState) => {
+export const selectDriversByTeamId = (state: RootState) => {
   const allDrivers = driversSelectors.selectAll(state);
   return groupBy(allDrivers, "TeamID");
 };
@@ -92,52 +92,6 @@ export const checkDriverUpdateEffect: AppListenerEffect = (
   if (!isEmpty(newDrivers)) {
     listenerApi.dispatch(driversUpsert(newDrivers));
   }
-};
-
-export const checkDriverSwapEffect: AppListenerEffect = (
-  _action,
-  listenerApi,
-) => {
-  const currentState = listenerApi.getState();
-  const previousState = listenerApi.getOriginalState();
-
-  const { sessionNumber, sessionTime } = selectSessionEventData(
-    currentState.iRacing,
-  );
-
-  const currentActiveDrivers = selectActiveDriversByCarIndex(
-    currentState.iRacing,
-    driversFilters,
-  );
-
-  const previousActiveDrivers = selectActiveDriversByCarIndex(
-    previousState.iRacing,
-    driversFilters,
-  );
-
-  Object.entries(currentActiveDrivers).forEach(([carIndex, driver]) => {
-    // Get the existing driver, if any
-    const existingDriver = previousActiveDrivers?.[carIndex] || undefined;
-
-    // A driver swap is considered if the existing driver exists and the current driver
-    // UserID does not match, or if the existing driver doesn't exist (new entry?)
-    const isDriverSwap = existingDriver
-      ? driver.UserID !== existingDriver.UserID
-      : true;
-
-    if (isDriverSwap) {
-      listenerApi.dispatch(
-        driverSwap({
-          from: existingDriver?.UserID,
-          to: driver.UserID,
-          teamId: driver.TeamID,
-          sessionNumber,
-          sessionTime,
-          carIndex: driver.CarIdx,
-        }),
-      );
-    }
-  });
 };
 
 export default driversSlice.reducer;
