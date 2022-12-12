@@ -195,3 +195,13 @@ export const carsOnPitRoadDidChangePredicate: IRacingSocketListenerPredicate = (
   const previousCarsOnPitRoad = previousState.data?.CarIdxOnPitRoad;
   return !isEqual(currentCarsOnPitRoad, previousCarsOnPitRoad);
 };
+
+export const carsTrackSurfaceDidChangePredicate: IRacingSocketListenerPredicate =
+  (_action, currentState, previousState) => {
+    const currentTrackSurfaceSource =
+      currentState.data?.CarIdxTrackSurface || [];
+    const previousTrackSurfaceSource =
+      previousState.data?.CarIdxTrackSurface || [];
+
+    return !isEqual(currentTrackSurfaceSource, previousTrackSurfaceSource);
+  };

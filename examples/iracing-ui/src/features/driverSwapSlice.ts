@@ -6,9 +6,21 @@ import {
   selectSessionEventData,
 } from "@racedirector/iracing-socket-js";
 
-export interface DriverSwapState {}
+interface CarIndexDriverState {
+  teamName: string;
+  teamID: string;
+  driverIDs: number[];
+  // Index by driver ID with the total drive time per driver
+  driveTimeIndex: Record<string, number>;
+}
 
-const initialState: DriverSwapState = {};
+export interface DriverSwapState {
+  totalDriveTime: Record<number, CarIndexDriverState>;
+}
+
+const initialState: DriverSwapState = {
+  totalDriveTime: {},
+};
 
 interface DriverSwapPayload {
   from?: number;
@@ -85,5 +97,7 @@ export const checkDriverSwapEffect: AppListenerEffect = (
     }
   });
 };
+
+export const checkDriverStintLength: AppListenerEffect = () => {};
 
 export default driverSwapSlice.reducer;
