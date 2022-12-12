@@ -26,7 +26,6 @@
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.1.1",
     "module-alias": "^2.2.2",
-    "node-irsdk": "2.1.6",
     "tslib": "~2.3.0",
     "winston": "^3.3.3"
   },
