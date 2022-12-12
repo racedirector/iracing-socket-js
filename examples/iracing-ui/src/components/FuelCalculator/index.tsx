@@ -116,8 +116,8 @@ const FuelDisplayInput: React.FC<FuelDisplayInputProps> = ({
 export interface FuelCalculatorProps {
   raceLaps?: number;
   raceLapsRemaining: number;
-  fuelLevel: string;
-  fuelUnit: string;
+  fuelLevel?: string;
+  fuelUnit?: string;
   lastFuelUsage: FuelDisplayProps;
   averageFuelUsage: FuelDisplayProps;
   customFuelUsage?: Omit<FuelDisplayProps, "usage">;
@@ -126,8 +126,8 @@ export interface FuelCalculatorProps {
 }
 
 export const FuelCalculator: React.FC<FuelCalculatorProps> = ({
-  fuelLevel,
-  fuelUnit,
+  fuelLevel = 0,
+  fuelUnit = "L",
   raceLaps = 0,
   raceLapsRemaining,
   lastFuelUsage,

@@ -72,3 +72,8 @@ export const sortSessionEvents = <T extends SessionTimeEvent>(
 
   return 0;
 };
+
+export const crossedTimingLine = (
+  currentLapPercentage: number,
+  previousLapPercentage: number,
+) => previousLapPercentage > 0.9 && currentLapPercentage < 0.1;

@@ -18,6 +18,7 @@ import {
   startAppListening,
 } from "../app/middleware";
 import { selectLapsRemainingForCurrentDriver } from "./sessionPaceSlice";
+import { crossedTimingLine } from "src/utils";
 
 export const flagsResetLap = (flags: Flags) => {
   const randomWaving = flags & Flags.RandomWaving;
@@ -269,13 +270,15 @@ export const lapStartedPredicate: AppListenerPredicate = (
     previousLapDistancePercentage &&
     previousLapDistancePercentage !== currentLapDistancePercentage;
 
-  const crossedTimingLine =
-    currentLapDistancePercentage < 0.1 && previousLapDistancePercentage > 0.9;
+  const hasCrossedTimingLine = crossedTimingLine(
+    currentLapDistancePercentage,
+    previousLapDistancePercentage,
+  );
 
   return (
     isOnTrack &&
     lapDistanceChanged &&
-    crossedTimingLine &&
+    hasCrossedTimingLine &&
     !flagsResetLap(sessionFlags)
   );
 };
