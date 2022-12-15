@@ -1,7 +1,7 @@
 {
-  "extends": "./tsconfig.json",
-  "include": [
-    "src"
-  ],
-  "exclude": ["node_modules", "build", "**/*.spec.ts", "**/*.test.ts"]
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "checkJs": false
+  },
+  "include": ["src", "src/**/*.graphql"]
 }

@@ -1,12 +1,14 @@
 import express from 'express';
-import graphQLMiddleware from './graphql';
+import cors from 'cors';
+import graphQLServerMiddleware from './graphql';
 
 const createServer = (): express.Application => {
   const app = express();
 
+  app.use(cors());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
-  app.use('/graphql', graphQLMiddleware);
+  app.use('/graphql', graphQLServerMiddleware);
 
   app.disable('x-powered-by');
 

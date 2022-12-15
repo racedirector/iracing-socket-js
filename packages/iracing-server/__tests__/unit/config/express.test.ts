@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import { createServer } from '@config/express';
+import { createServer } from '../../../src/config/express';
 
 describe('Server', () => {
   const app = createServer();

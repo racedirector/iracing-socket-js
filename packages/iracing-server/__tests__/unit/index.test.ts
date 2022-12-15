@@ -10,7 +10,7 @@ describe('Index', () => {
     jest.mock('@config/express', () => ({
       createServer: jest.fn().mockReturnValue(express()),
     }));
-    await import('@server/index');
+    await import('../../src/index');
     expect(listen).toBeCalled();
     const server = listen.mock.results[0].value as Server;
     setImmediate(() => {

@@ -1,53 +1,64 @@
 {
-    "name": "typescript-maker",
-    "version": "1.2.4",
-    "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
-    "engines": {
-        "node": ">=14 <15"
+  "name": "@racedirector/iracing-server",
+  "version": "0.0.1",
+  "description": "Express server for live iRacing data from shared memory.",
+  "engines": {
+    "node": ">=14 <15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/racedirector/iracing-server.git",
+    "directory": "packages/iracing-server"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn run -T ts-node -r graphql-import-node/register -r tsconfig-paths/register -r dotenv/config src/index",
+    "dev": "nodemon --config restart.json",
+    "build": "yarn run -T tsc -p tsconfig.build.json",
+    "build:watch": "yarn run -T tsc -w -p tsconfig.build.json",
+    "clean": "rimraf coverage build tmp",
+    "lint": "eslint **/*.ts",
+    "test": "jest",
+    "prepack": "yarn run -T bob prepack"
+  },
+  "dependencies": {
+    "@graphql-mesh/cli": "^0.82.5",
+    "express": "^4.17.1",
+    "graphql": "^16.6.0",
+    "graphql-yoga": "^3.1.1",
+    "mmap-io": "^1.1.7",
+    "module-alias": "^2.2.2",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.19",
+    "supertest": "^6.1.5",
+    "tsutils": "~3.21.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
     },
-    "scripts": {
-        "start": "ts-node -r tsconfig-paths/register -r dotenv/config src/index",
-        "dev": "nodemon --config restart.json",
-        "clean": "rm -rf coverage build tmp",
-        "prebuild": "npm run lint",
-        "build": "tsc -p tsconfig.build.json",
-        "build:watch": "tsc -w -p tsconfig.build.json",
-        "lint": "eslint . --ext .ts,.tsx",
-        "test": "jest"
-    },
-    "author": "Dantis Mai <mtd.maithanhdanh@gmail.com>",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "express": "^4.17.1",
-        "module-alias": "^2.2.2",
-        "tslib": "~2.3.0",
-        "winston": "^3.3.3"
-    },
-    "devDependencies": {
-        "@tsconfig/recommended": "^1.0.1",
-        "@types/express": "^4.17.13",
-        "@types/jest": "^26.0.24",
-        "@types/node": "~14.14.45",
-        "@typescript-eslint/eslint-plugin": "~4.28.2",
-        "@typescript-eslint/parser": "~4.28.2",
-        "dotenv": "^10.0.0",
-        "eslint": "~7.30.0",
-        "eslint-config-prettier": "~8.3.0",
-        "eslint-plugin-jest": "~24.3.6",
-        "jest": "^27.0.6",
-        "jest-html-reporter": "^3.4.1",
-        "nodemon": "^2.0.19",
-        "prettier": "~2.3.2",
-        "rimraf": "^3.0.2",
-        "supertest": "^6.1.5",
-        "ts-jest": "^27.0.3",
-        "ts-node": "^10.2.0",
-        "ts-node-dev": "^1.1.8",
-        "tsconfig-paths": "^3.10.1",
-        "tsutils": "~3.21.0",
-        "typescript": "~4.3.5"
-    },
-    "resolutions": {
-        "got": "11.8.5"
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
     }
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "type": "commonjs"
 }

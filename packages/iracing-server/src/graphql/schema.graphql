@@ -1,0 +1,29 @@
+type Driver {
+  carIndex: Int!
+  carNumber: String
+  carNumberRaw: Int
+  userId: Int!
+  userName: String!
+  teamId: Int
+  teamName: String
+}
+
+type Query {
+  currentDriver: Driver
+}
+
+input LegacySubscriptionInput {
+  fps: Int! # Number between 1-60
+  requestParameters: [String!]!
+  requestParametersOnce: [String!]
+  readIBT: Boolean!
+}
+
+type LegacySubscriptionPayload {
+  # A string representing the YAML data requested
+  data: String!
+}
+
+type Subscription {
+  legacySubscription(input: LegacySubscriptionInput!): LegacySubscriptionPayload
+}

@@ -1,9 +1,16 @@
-import 'graphql-import-node';
-import http from 'http';
+import * as moduleAlias from 'module-alias';
+const sourcePath = process.env.NODE_ENV === 'development' ? 'src' : 'build';
+moduleAlias.addAliases({
+  '@server': sourcePath,
+  '@config': `${sourcePath}/config`,
+  '@domain': `${sourcePath}/domain`,
+});
+
+import { createServer } from '@config/express';
 import { AddressInfo } from 'net';
-import { host, port } from './constants';
-import { createServer } from './config/express';
-import { logger } from './config/logger';
+import http from 'http';
+import { logger } from '@config/logger';
+import { host, port } from '@server/constants';
 
 async function startServer() {
   const app = createServer();
