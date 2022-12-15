@@ -26,8 +26,6 @@ interface DriverSwapPayload {
   carIndex: number;
 }
 
-const driverSwap = createAction<DriverSwapPayload>("drivers/driverSwap");
-
 const driversSlice = createSlice({
   name: "drivers",
   initialState: driversAdapter.getInitialState(),

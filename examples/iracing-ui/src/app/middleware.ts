@@ -8,6 +8,7 @@ import {
 import type { TypedStartListening, TypedAddListener } from "@reduxjs/toolkit";
 import { RootState, AppDispatch } from "./store";
 import {
+  actionCreatorForTrackLocationChange,
   flagsChanged,
   playerIsInGarageChanged,
   playerIsOnTrackChanged,
@@ -24,13 +25,10 @@ import {
   playerIsOnPitRoadDidChangePredicate,
   sessionStateDidChangePredicate,
   selectSessionEventData,
+  carsTrackSurfaceDidChangePredicate,
 } from "@racedirector/iracing-socket-js";
-import { checkIncidentsEffect } from "src/features/simIncidentsSlice";
-import {
-  checkDriverSwapEffect,
-  checkDriverUpdateEffect,
-} from "../features/driversSlice";
-import { stat } from "fs";
+import { checkDriverUpdateEffect } from "../features/driversSlice";
+import { checkDriverSwapEffect } from "src/features/driverSwapSlice";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -246,6 +244,49 @@ startAppListening({
     checkDriverUpdateEffect(action, listener);
     // Check for driver swaps
     checkDriverSwapEffect(action, listener);
-    checkIncidentsEffect(action, listener);
+    // checkIncidentsEffect(action, listener);
+  },
+});
+
+startAppListening({
+  predicate: (action, currentState, previousState) =>
+    carsTrackSurfaceDidChangePredicate(
+      action,
+      currentState.iRacing,
+      previousState.iRacing,
+    ),
+  effect: (_action, listenerApi) => {
+    const currentState = listenerApi.getState();
+    const previousState = listenerApi.getOriginalState();
+
+    const { sessionNumber, sessionTime } = selectSessionEventData(
+      currentState.iRacing,
+    );
+
+    const currentTrackSurfaces = currentState.iRacing.data?.CarIdxTrackSurface;
+    const previousTrackSurfaces =
+      previousState.iRacing.data?.CarIdxTrackSurface;
+
+    for (let carIndex = 0; carIndex < currentTrackSurfaces.length; carIndex++) {
+      const currentTrackSurface = currentTrackSurfaces[carIndex];
+      const previousTrackSurface = previousTrackSurfaces[carIndex];
+
+      const actionCreator = actionCreatorForTrackLocationChange(
+        previousTrackSurface,
+        currentTrackSurface,
+      );
+
+      if (actionCreator) {
+        listenerApi.dispatch(
+          actionCreator({
+            carIndex,
+            sessionNumber,
+            sessionTime,
+            lapPercentage:
+              currentState.iRacing.data?.CarIdxLapDistPct[carIndex],
+          }),
+        );
+      }
+    }
   },
 });

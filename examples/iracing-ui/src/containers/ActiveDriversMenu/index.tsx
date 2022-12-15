@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Button,
   Menu,
@@ -18,6 +18,7 @@ import {
 import { createSelector } from "@reduxjs/toolkit";
 import { useAppSelector } from "src/app/hooks";
 import { RootState } from "src/app/store";
+import { useGetActiveDriversQuery } from "src/app/api";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 
 interface DriverMenuItemProps {
@@ -56,7 +57,22 @@ export const ActiveDriversMenu: React.FC<ActiveDriversMenuProps> = ({
   onDriverSelect = () => {},
   ...props
 }) => {
-  const menuOptions = useAppSelector(selectActiveDriverMenuOptions);
+  // const menuOptions = useAppSelector(selectActiveDriverMenuOptions);
+  const { data: activeDrivers = [], currentData } = useGetActiveDriversQuery();
+
+  useEffect(() => {
+    console.log("Current data did change: ", currentData);
+  }, [currentData]);
+
+  const menuOptions = useMemo(() => {
+    console.log("Active drivers did change", activeDrivers);
+    return activeDrivers.map((driver) => ({
+      carNumber: driver.CarNumber,
+      name: driver.TeamName || driver.UserName,
+      value: driver.CarIdx.toString(),
+    }));
+  }, [activeDrivers]);
+
   return (
     <Menu {...props}>
       <MenuButton
@@ -76,7 +92,7 @@ export const ActiveDriversMenu: React.FC<ActiveDriversMenuProps> = ({
             <MenuItemOption
               key={name}
               value={value}
-            >{`#${carNumber} ${name}`}</MenuItemOption>
+            >{`${value} #${carNumber} ${name}`}</MenuItemOption>
           ))}
         </MenuOptionGroup>
       </MenuList>

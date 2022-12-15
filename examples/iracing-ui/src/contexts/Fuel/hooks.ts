@@ -14,20 +14,20 @@ export const useFuel = () => {
   return context;
 };
 
-export const useAverageRefuelAmount = () => {
-  const lapsRemaining = useLapsRemainingForCurrentDriver();
-  const averageRefuelAmount = useAppSelector((state) =>
-    selectAverageRefuelAmount(state, lapsRemaining),
-  );
+// export const useAverageRefuelAmount = () => {
+//   const lapsRemaining = useLapsRemainingForCurrentDriver();
+//   const averageRefuelAmount = useAppSelector((state) =>
+//     selectAverageRefuelAmount(state, lapsRemaining),
+//   );
 
-  return averageRefuelAmount;
-};
+//   return averageRefuelAmount;
+// };
 
-export const useLastRefuelAmount = () => {
-  const lapsRemaining = useLapsRemainingForCurrentDriver();
-  const lastRefuelAmount = useAppSelector((state) =>
-    selectLastLapRefuelAmount(state, lapsRemaining),
-  );
+// export const useLastRefuelAmount = () => {
+//   const lapsRemaining = useLapsRemainingForCurrentDriver();
+//   const lastRefuelAmount = useAppSelector((state) =>
+//     selectLastLapRefuelAmount(state, lapsRemaining),
+//   );
 
-  return lastRefuelAmount;
-};
+//   return lastRefuelAmount;
+// };

@@ -9,7 +9,10 @@ export interface CamerasProps {}
 export const Cameras: React.FC<CamerasProps> = () => {
   const dispatch = useAppDispatch();
   const {
-    data: { CamCameraNumber: cameraNumber, CamGroupNumber: groupNumber } = {},
+    data: {
+      CamCameraNumber: cameraNumber = -1,
+      CamGroupNumber: groupNumber = -1,
+    } = {},
   } = useIRacingContext();
   const onDriverSelectCallback = useCallback(
     (carIndex) => {

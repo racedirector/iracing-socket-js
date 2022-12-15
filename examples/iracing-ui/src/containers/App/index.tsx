@@ -15,6 +15,7 @@ import { IncidentsTable } from "../../containers/IncidentsTable";
 import { RaceStrategy } from "../../containers/RaceStrategy";
 import FuelCalculator from "../FuelCalculator";
 import { ReplayControls } from "../ReplayControls";
+import ActiveDriversMenu from "../ActiveDriversMenu";
 
 const AppProvider: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
   children,
@@ -55,8 +56,9 @@ const AppUI: React.FC<Record<string, never>> = () => {
   return (
     <div style={{ flex: 1 }}>
       <AppHeader />
+      <ActiveDriversMenu title="Drivers" />
 
-      {isIRacingConnected && (
+      {/**isIRacingConnected && (
         <>
           <Flex>
             <RaceLength />
@@ -71,7 +73,7 @@ const AppUI: React.FC<Record<string, never>> = () => {
             replay={<ReplayControls />}
           />
         </>
-      )}
+      )**/}
     </div>
   );
 };

@@ -8,7 +8,6 @@ import {
   selectLastLapFuelLapsRemaining,
 } from "src/features/fuelSlice";
 import { FuelContextType, getFuelContext } from "./context";
-import { useAverageRefuelAmount, useLastRefuelAmount } from "./hooks";
 
 export interface FuelProviderProps {}
 
@@ -23,8 +22,8 @@ export const FuelProvider: React.FC<PropsWithChildren<FuelProviderProps>> = ({
   const averageFuelLapsRemaining = useAppSelector(
     selectAverageFuelLapsRemaining,
   );
-  const averageRefuelAmount = useAverageRefuelAmount();
-  const lastRefuelAmount = useLastRefuelAmount();
+  const averageRefuelAmount = 10; //useAverageRefuelAmount();
+  const lastRefuelAmount = 10; //useLastRefuelAmount();
 
   const context = useMemo<FuelContextType>(
     () => ({

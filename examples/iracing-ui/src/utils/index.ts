@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import moment from "moment";
+import { TrackLocation } from "@racedirector/iracing-socket-js";
 
 export const metersPerSecondToKilometersPerHour = (mps: number) => mps * 3.6;
 
@@ -72,3 +73,56 @@ export const sortSessionEvents = <T extends SessionTimeEvent>(
 
   return 0;
 };
+
+type TrackLocationTransitionPredicate = (
+  previous: TrackLocation,
+  current: TrackLocation,
+) => boolean;
+
+export const isPitLaneEntry: TrackLocationTransitionPredicate = (
+  previous,
+  current,
+) =>
+  previous === TrackLocation.OnTrack &&
+  current === TrackLocation.ApproachingPits;
+
+export const isPitStallEntry: TrackLocationTransitionPredicate = (
+  previous,
+  current,
+) =>
+  previous === TrackLocation.ApproachingPits &&
+  current === TrackLocation.InPitStall;
+
+export const isPitStallExit: TrackLocationTransitionPredicate = (
+  previous,
+  current,
+) =>
+  previous === TrackLocation.InPitStall &&
+  current === TrackLocation.ApproachingPits;
+
+export const isPitLaneExit: TrackLocationTransitionPredicate = (
+  previous,
+  current,
+) =>
+  previous === TrackLocation.ApproachingPits &&
+  current === TrackLocation.OnTrack;
+
+const isTransitionTo: (to: TrackLocation) => TrackLocationTransitionPredicate =
+  (to) => (previous, current) =>
+    previous !== to && current === to;
+
+export const isOffTrack: TrackLocationTransitionPredicate = isTransitionTo(
+  TrackLocation.OffTrack,
+);
+
+export const isTrackEntry: TrackLocationTransitionPredicate = isTransitionTo(
+  TrackLocation.OnTrack,
+);
+
+export const hasLeftWorld: TrackLocationTransitionPredicate = isTransitionTo(
+  TrackLocation.NotInWorld,
+);
+
+export const isTow: TrackLocationTransitionPredicate = isTransitionTo(
+  TrackLocation.InPitStall,
+);

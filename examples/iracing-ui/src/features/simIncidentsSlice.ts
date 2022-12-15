@@ -140,7 +140,7 @@ export const selectClusteredSimIncidentsForTimeWindowSeconds = (
     state,
     timeWindowLowerBound,
   );
-  const trackLength = selectTrackLengthMeters(state.iRacing);
+  const trackLength = 10; //selectTrackLengthMeters(state.iRacing);
 
   return clusterTrackLocations(incidents, clusterDistanceMeters, trackLength);
 };
@@ -182,63 +182,63 @@ const incidentFilters = {
   includeSpectators: false,
 };
 
-export const checkIncidentsEffect: AppListenerEffect = (
-  _action,
-  listenerApi,
-) => {
-  const currentState = listenerApi.getState();
-  const previousState = listenerApi.getOriginalState();
+// export const checkIncidentsEffect: AppListenerEffect = (
+//   _action,
+//   listenerApi,
+// ) => {
+//   const currentState = listenerApi.getState();
+//   const previousState = listenerApi.getOriginalState();
 
-  const currentActiveDrivers = selectActiveDriversByCarIndex(
-    currentState.iRacing,
-    incidentFilters,
-  );
-  const previousActiveDrivers = selectActiveDriversByCarIndex(
-    previousState.iRacing,
-    incidentFilters,
-  );
+//   const currentActiveDrivers = selectActiveDriversByCarIndex(
+//     currentState.iRacing,
+//     incidentFilters,
+//   );
+//   const previousActiveDrivers = selectActiveDriversByCarIndex(
+//     previousState.iRacing,
+//     incidentFilters,
+//   );
 
-  const {
-    data: {
-      CarIdxSessionFlags = [],
-      CarIdxLapDistPct = [],
-      SessionNum,
-      SessionTime,
-      SessionTimeOfDay,
-    } = {},
-  } = currentState.iRacing;
+//   const {
+//     data: {
+//       CarIdxSessionFlags = [],
+//       CarIdxLapDistPct = [],
+//       // SessionNum,
+//       // SessionTime,
+//       // SessionTimeOfDay,
+//     } = {},
+//   } = currentState.iRacing;
 
-  Object.entries(currentActiveDrivers).forEach(([carIndex, driver]) => {
-    const existingDriver = previousActiveDrivers?.[carIndex] || null;
+//   Object.entries(currentActiveDrivers).forEach(([carIndex, driver]) => {
+//     const existingDriver = previousActiveDrivers?.[carIndex] || null;
 
-    // !!!: Ensuring that the driver exists and matches the current user ID
-    //      ensures that incidents are processed iff we already know what drivers
-    //      are on track.
-    if (
-      existingDriver &&
-      existingDriver.UserID === driver.UserID &&
-      existingDriver.CurDriverIncidentCount !== driver.CurDriverIncidentCount
-    ) {
-      const incidentCount =
-        driver.CurDriverIncidentCount - existingDriver.CurDriverIncidentCount;
+//     // !!!: Ensuring that the driver exists and matches the current user ID
+//     //      ensures that incidents are processed iff we already know what drivers
+//     //      are on track.
+//     if (
+//       existingDriver &&
+//       existingDriver.UserID === driver.UserID &&
+//       existingDriver.CurDriverIncidentCount !== driver.CurDriverIncidentCount
+//     ) {
+//       const incidentCount =
+//         driver.CurDriverIncidentCount - existingDriver.CurDriverIncidentCount;
 
-      if (incidentCount > 0) {
-        listenerApi.dispatch(
-          addIncident({
-            id: nanoid(),
-            carIndex: parseInt(carIndex),
-            value: incidentCount,
-            sessionFlags: CarIdxSessionFlags?.[carIndex] || 0x0,
-            lapPercentage: CarIdxLapDistPct?.[carIndex] || -1,
-            sessionNumber: SessionNum,
-            sessionTime: SessionTime,
-            sessionTimeOfDay: SessionTimeOfDay,
-            driverId: driver.UserID,
-          }),
-        );
-      }
-    }
-  });
-};
+//       if (incidentCount > 0) {
+//         // listenerApi.dispatch(
+//         //   addIncident({
+//         //     id: nanoid(),
+//         //     carIndex: parseInt(carIndex),
+//         //     value: incidentCount,
+//         //     sessionFlags: CarIdxSessionFlags?.[carIndex] || 0x0,
+//         //     lapPercentage: CarIdxLapDistPct?.[carIndex] || -1,
+//         //     // sessionNumber: SessionNum,
+//         //     // sessionTime: SessionTime,
+//         //     // sessionTimeOfDay: SessionTimeOfDay,
+//         //     driverId: driver.UserID,
+//         //   }),
+//         // );
+//       }
+//     }
+//   });
+// };
 
 export default simIncidentsSlice.reducer;

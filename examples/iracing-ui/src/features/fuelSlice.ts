@@ -301,8 +301,8 @@ export const updateFuelUsagePredicate: AppListenerPredicate = (
       data: {
         SessionState: sessionState = SessionState.Invalid,
         SessionFlags: sessionFlags = 0x0,
-        OnPitRoad: isOnPitRoad,
-        FuelLevel: currentFuelLevel,
+        OnPitRoad: isOnPitRoad = false,
+        FuelLevel: currentFuelLevel = 0,
       } = {},
     },
   } = currentState;
@@ -322,7 +322,7 @@ export const updateFuelUsageEffect: AppListenerEffect = (
 ) => {
   const {
     fuel: { lastFuelLevel },
-    iRacing: { data: { FuelLevel: currentFuelLevel } = {} },
+    iRacing: { data: { FuelLevel: currentFuelLevel = 0 } = {} },
   } = listenerApi.getState();
 
   const usage = lastFuelLevel - currentFuelLevel;

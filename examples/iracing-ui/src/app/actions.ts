@@ -3,12 +3,78 @@ import {
   SessionState,
   TrackLocation,
 } from "@racedirector/iracing-socket-js";
-import { createAction } from "@reduxjs/toolkit";
+import {
+  ActionCreatorWithOptionalPayload,
+  createAction,
+} from "@reduxjs/toolkit";
+import {
+  isPitLaneEntry,
+  isPitStallEntry,
+  isPitStallExit,
+  isPitLaneExit,
+  isTrackEntry,
+  isOffTrack,
+  isTow,
+} from "../utils";
+
+const createEventType = (event: string) => `iRacingMiddleware/${event}`;
 
 interface SessionEvent {
   sessionTime: number;
   sessionNumber: number;
 }
+
+interface SessionCarEvent extends SessionEvent {
+  carIndex: number;
+  lapPercentage?: number;
+}
+
+export const pitEntry = createAction<SessionCarEvent>(
+  createEventType("pitEntry"),
+);
+
+export const pitExit = createAction<SessionCarEvent>(
+  createEventType("pitExit"),
+);
+
+export const pitStallEntry = createAction<SessionCarEvent>(
+  createEventType("pitStallEntry"),
+);
+
+export const pitStallExit = createAction<SessionCarEvent>(
+  createEventType("pitStallExit"),
+);
+
+export const trackEntry = createAction<SessionCarEvent>(
+  createEventType("trackEntry"),
+);
+
+export const offTrack = createAction<SessionCarEvent>(
+  createEventType("offTrack"),
+);
+
+export const tow = createAction<SessionCarEvent>(createEventType("tow"));
+
+export const actionCreatorForTrackLocationChange = (
+  previous: TrackLocation,
+  current: TrackLocation,
+): ActionCreatorWithOptionalPayload<SessionCarEvent> | undefined => {
+  if (isPitLaneEntry(previous, current)) {
+    return pitEntry;
+  } else if (isPitStallEntry(previous, current)) {
+    return pitStallEntry;
+  } else if (isPitStallExit(previous, current)) {
+    return pitStallExit;
+  } else if (isPitLaneExit(previous, current)) {
+    return pitExit;
+  } else if (isTrackEntry(previous, current)) {
+    return trackEntry;
+  } else if (isOffTrack(previous, current)) {
+    return offTrack;
+  } else if (isTow(previous, current)) {
+    return tow;
+  }
+};
 
 interface FlagsChangedPayload extends SessionEvent {
   currentFlags: Flags;
@@ -16,7 +82,7 @@ interface FlagsChangedPayload extends SessionEvent {
 }
 
 export const flagsChanged = createAction<FlagsChangedPayload>(
-  "iRacingMiddleware/flagsChanged",
+  createEventType("flagsChanged"),
 );
 
 interface PlayerTrackLocationChangedPayload extends SessionEvent {
@@ -26,7 +92,7 @@ interface PlayerTrackLocationChangedPayload extends SessionEvent {
 
 export const playerTrackLocationChanged =
   createAction<PlayerTrackLocationChangedPayload>(
-    "iRacingMiddleware/playerTrackLocationChanged",
+    createEventType("playerTrackLocationChanged"),
   );
 
 interface PlayerIsOnTrackChangedPayload extends SessionEvent {
@@ -36,7 +102,7 @@ interface PlayerIsOnTrackChangedPayload extends SessionEvent {
 
 export const playerIsOnTrackChanged =
   createAction<PlayerIsOnTrackChangedPayload>(
-    "iRacingMiddleware/playerIsOnTrackChanged",
+    createEventType("playerIsOnTrackChanged"),
   );
 
 interface PlayerIsInGarageChangedPayload {
@@ -46,7 +112,7 @@ interface PlayerIsInGarageChangedPayload {
 
 export const playerIsInGarageChanged =
   createAction<PlayerIsInGarageChangedPayload>(
-    "iRacingMiddleware/playerIsInGarageChanged",
+    createEventType("playerIsInGarageChanged"),
   );
 
 interface PlayerOnPitRoadChangedPayload extends SessionEvent {
@@ -56,7 +122,7 @@ interface PlayerOnPitRoadChangedPayload extends SessionEvent {
 
 export const playerOnPitRoadChanged =
   createAction<PlayerOnPitRoadChangedPayload>(
-    "iRacingMiddleware/playerOnPitRoadChanged",
+    createEventType("playerOnPitRoadChanged"),
   );
 
 interface SessionStateChangedPayload extends SessionEvent {
@@ -65,9 +131,9 @@ interface SessionStateChangedPayload extends SessionEvent {
 }
 
 export const sessionStateChanged = createAction<SessionStateChangedPayload>(
-  "iRacingMiddleware/playerSessionStateChanged",
+  createEventType("playerSessionStateChanged"),
 );
 
 export const playerLapStarted = createAction(
-  "iRacingMiddleware/playerLapStarted",
+  createEventType("playerLapStarted"),
 );

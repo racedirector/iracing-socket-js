@@ -3,7 +3,6 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   PitServiceFlags,
   PitServiceStatus,
-  TrackLocation,
 } from "@racedirector/iracing-socket-js";
 import { RootState } from "src/app/store";
 import {
@@ -12,6 +11,12 @@ import {
   startAppListening,
 } from "src/app/middleware";
 import { playerTrackLocationChanged } from "src/app/actions";
+import {
+  isPitLaneEntry,
+  isPitLaneExit,
+  isPitStallEntry,
+  isPitStallExit,
+} from "src/utils";
 
 const serviceRequestForServiceFlags = (serviceFlags: PitServiceFlags) => ({
   tearoff: !!(serviceFlags & PitServiceFlags.WindshieldTearoff),
@@ -122,25 +127,13 @@ export const pitStopAnalaysisSlice = createSlice({
     builder.addCase(playerTrackLocationChanged, (state, action) => {
       const { previousTrackLocation, currentTrackLocation, sessionTime } =
         action.payload;
-      if (
-        previousTrackLocation === TrackLocation.OnTrack &&
-        currentTrackLocation === TrackLocation.ApproachingPits
-      ) {
+      if (isPitLaneEntry(previousTrackLocation, currentTrackLocation)) {
         state.currentStopTiming.pitLaneEntryTime = sessionTime;
-      } else if (
-        previousTrackLocation === TrackLocation.ApproachingPits &&
-        currentTrackLocation === TrackLocation.InPitStall
-      ) {
+      } else if (isPitStallEntry(previousTrackLocation, currentTrackLocation)) {
         state.currentStopTiming.pitStallEntryTime = sessionTime;
-      } else if (
-        previousTrackLocation === TrackLocation.InPitStall &&
-        currentTrackLocation === TrackLocation.ApproachingPits
-      ) {
+      } else if (isPitStallExit(previousTrackLocation, currentTrackLocation)) {
         state.currentStopTiming.pitStallExitTime = sessionTime;
-      } else if (
-        previousTrackLocation === TrackLocation.ApproachingPits &&
-        currentTrackLocation === TrackLocation.OnTrack
-      ) {
+      } else if (isPitLaneExit(previousTrackLocation, currentTrackLocation)) {
         state.currentStopTiming.pitLaneExitTime = sessionTime;
         const previousPitTiming = { ...state.currentStopTiming };
         state.currentStopTiming = {};

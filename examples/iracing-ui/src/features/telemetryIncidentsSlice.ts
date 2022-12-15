@@ -142,38 +142,38 @@ export const { setConfig, setTelemetryStateForCarIndex } =
 // export const selectTelemetryIncidents = (state: RootState) =>
 //   state.telemetryIncidents;
 
-export const selectTelemetryForDriverIndex = (
-  state: RootState,
-  driverIndex: number,
-): TelemetryIncidentTelemetry => {
-  const iRacingData = state.iRacing;
-  const trackLocation = selectTrackSurfaceForDriverIndex(
-    iRacingData,
-    driverIndex,
-  );
-  const lapDistance = selectLapDistancePercentageForDriverIndex(
-    iRacingData,
-    driverIndex,
-  );
-  const currentGear = selectGearForDriverIndex(iRacingData, driverIndex);
-  const currentFlags = selectFlagsForDriverIndex(iRacingData, driverIndex);
+// export const selectTelemetryForDriverIndex = (
+//   state: RootState,
+//   driverIndex: number,
+// ): TelemetryIncidentTelemetry => {
+//   const iRacingData = state.iRacing;
+//   const trackLocation = selectTrackSurfaceForDriverIndex(
+//     iRacingData,
+//     driverIndex,
+//   );
+//   const lapDistance = selectLapDistancePercentageForDriverIndex(
+//     iRacingData,
+//     driverIndex,
+//   );
+//   const currentGear = selectGearForDriverIndex(iRacingData, driverIndex);
+//   const currentFlags = selectFlagsForDriverIndex(iRacingData, driverIndex);
 
-  const isOnTrack = trackLocation > TrackLocation.OffTrack;
-  const isOnPitRoad =
-    trackLocation === TrackLocation.ApproachingPits ||
-    trackLocation === TrackLocation.InPitStall;
-  return {
-    trackLocation,
-    isOnPitRoad,
-    isOnTrack,
-    carIndex: driverIndex,
-    flags: currentFlags,
-    lapPercentage: lapDistance,
-    isInReverse: currentGear === -1,
-    sessionTick: iRacingData.data?.SessionTick,
-    sessionTime: iRacingData.data?.SessionTime,
-  };
-};
+//   const isOnTrack = trackLocation > TrackLocation.OffTrack;
+//   const isOnPitRoad =
+//     trackLocation === TrackLocation.ApproachingPits ||
+//     trackLocation === TrackLocation.InPitStall;
+//   return {
+//     trackLocation,
+//     isOnPitRoad,
+//     isOnTrack,
+//     carIndex: driverIndex,
+//     flags: currentFlags,
+//     lapPercentage: lapDistance,
+//     isInReverse: currentGear === -1,
+//     sessionTick: iRacingData.data?.SessionTick,
+//     sessionTime: iRacingData.data?.SessionTime,
+//   };
+// };
 
 export const isCarSlow = (
   currentLapDistancePercentage: number,
@@ -335,123 +335,123 @@ const telemetryIncidentsDriversFilters = {
 //   });
 // };
 
-export const carsInReversePredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
-  const currentGearsByCarIndex = currentState.iRacing.data?.CarIdxGear;
-  const previousGearsByCarIndex = previousState.iRacing.data?.CarIdxGear;
+// export const carsInReversePredicate: AppListenerPredicate = (
+//   _action,
+//   currentState,
+//   previousState,
+// ) => {
+//   const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
+//   const currentGearsByCarIndex = currentState.iRacing.data?.CarIdxGear;
+//   const previousGearsByCarIndex = previousState.iRacing.data?.CarIdxGear;
 
-  for (let carIndex = 0; carIndex < currentGearsByCarIndex.length; carIndex++) {
-    const currentGear = currentGearsByCarIndex[carIndex];
-    const previousGear = previousGearsByCarIndex[carIndex];
-    const isOnPitRoad = currentIsOnPitRoad[carIndex];
+//   for (let carIndex = 0; carIndex < currentGearsByCarIndex.length; carIndex++) {
+//     const currentGear = currentGearsByCarIndex[carIndex];
+//     const previousGear = previousGearsByCarIndex[carIndex];
+//     const isOnPitRoad = currentIsOnPitRoad[carIndex];
 
-    if (currentGear === -1 && currentGear !== previousGear && !isOnPitRoad) {
-      return true;
-    }
-  }
+//     if (currentGear === -1 && currentGear !== previousGear && !isOnPitRoad) {
+//       return true;
+//     }
+//   }
 
-  return false;
-};
+//   return false;
+// };
 
-export const carIsStationaryPredicate: AppListenerPredicate = (
-  _action,
-  currentState,
-  previousState,
-) => {
-  const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
-  const currentLapDistancePercentages =
-    currentState.iRacing.data?.CarIdxLapDistPct;
-  const previousLapDistancePercentages =
-    previousState.iRacing.data?.CarIdxLapDistPct;
+// export const carIsStationaryPredicate: AppListenerPredicate = (
+//   _action,
+//   currentState,
+//   previousState,
+// ) => {
+//   const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
+//   const currentLapDistancePercentages =
+//     currentState.iRacing.data?.CarIdxLapDistPct;
+//   const previousLapDistancePercentages =
+//     previousState.iRacing.data?.CarIdxLapDistPct;
 
-  for (
-    let carIndex = 0;
-    carIndex < currentLapDistancePercentages.length;
-    carIndex++
-  ) {
-    const currentPercentage = currentLapDistancePercentages[carIndex];
-    const previousPercentage = previousLapDistancePercentages[carIndex];
-    const isOnPitRoad = currentIsOnPitRoad[carIndex];
+//   for (
+//     let carIndex = 0;
+//     carIndex < currentLapDistancePercentages.length;
+//     carIndex++
+//   ) {
+//     const currentPercentage = currentLapDistancePercentages[carIndex];
+//     const previousPercentage = previousLapDistancePercentages[carIndex];
+//     const isOnPitRoad = currentIsOnPitRoad[carIndex];
 
-    if (
-      Math.round(currentPercentage) === Math.round(previousPercentage) &&
-      !isOnPitRoad
-    ) {
-      return true;
-    }
-  }
+//     if (
+//       Math.round(currentPercentage) === Math.round(previousPercentage) &&
+//       !isOnPitRoad
+//     ) {
+//       return true;
+//     }
+//   }
 
-  return false;
-};
+//   return false;
+// };
 
-export const carIsInReverseEffect: AppListenerEffect = (
-  _action,
-  listenerApi,
-) => {
-  console.log(
-    "Establishing the car indexes of all cars that have transitioned to reverse",
-  );
-  const currentState = listenerApi.getState();
-  const previousState = listenerApi.getOriginalState();
+// export const carIsInReverseEffect: AppListenerEffect = (
+//   _action,
+//   listenerApi,
+// ) => {
+//   console.log(
+//     "Establishing the car indexes of all cars that have transitioned to reverse",
+//   );
+//   const currentState = listenerApi.getState();
+//   const previousState = listenerApi.getOriginalState();
 
-  const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
-  const currentGearsByCarIndex = currentState.iRacing.data?.CarIdxGear;
-  const previousGearsByCarIndex = previousState.iRacing.data?.CarIdxGear;
+//   const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
+//   const currentGearsByCarIndex = currentState.iRacing.data?.CarIdxGear;
+//   const previousGearsByCarIndex = previousState.iRacing.data?.CarIdxGear;
 
-  const carIndexesTransitionedToReverse: number[] = [];
-  for (let carIndex = 0; carIndex < currentGearsByCarIndex.length; carIndex++) {
-    const currentGear = currentGearsByCarIndex[carIndex];
-    const previousGear = previousGearsByCarIndex[carIndex];
-    const isOnPitRoad = currentIsOnPitRoad[carIndex];
+//   const carIndexesTransitionedToReverse: number[] = [];
+//   for (let carIndex = 0; carIndex < currentGearsByCarIndex.length; carIndex++) {
+//     const currentGear = currentGearsByCarIndex[carIndex];
+//     const previousGear = previousGearsByCarIndex[carIndex];
+//     const isOnPitRoad = currentIsOnPitRoad[carIndex];
 
-    if (currentGear === -1 && currentGear !== previousGear && !isOnPitRoad) {
-      carIndexesTransitionedToReverse.push(carIndex);
-    }
-  }
+//     if (currentGear === -1 && currentGear !== previousGear && !isOnPitRoad) {
+//       carIndexesTransitionedToReverse.push(carIndex);
+//     }
+//   }
 
-  if (!isEmpty(carIndexesTransitionedToReverse)) {
-    console.log(
-      "These cars are in reverse on track or something:",
-      carIndexesTransitionedToReverse,
-    );
-  }
-};
+//   if (!isEmpty(carIndexesTransitionedToReverse)) {
+//     console.log(
+//       "These cars are in reverse on track or something:",
+//       carIndexesTransitionedToReverse,
+//     );
+//   }
+// };
 
-export const carIsStationaryEffect: AppListenerEffect = (
-  _action,
-  listenerApi,
-) => {
-  const currentState = listenerApi.getState();
-  const previousState = listenerApi.getOriginalState();
+// export const carIsStationaryEffect: AppListenerEffect = (
+//   _action,
+//   listenerApi,
+// ) => {
+//   const currentState = listenerApi.getState();
+//   const previousState = listenerApi.getOriginalState();
 
-  const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
-  const currentLapDistancePercentages =
-    currentState.iRacing.data?.CarIdxLapDistPct;
-  const previousLapDistancePercentages =
-    previousState.iRacing.data?.CarIdxLapDistPct;
+//   const currentIsOnPitRoad = currentState.iRacing.data?.CarIdxOnPitRoad;
+//   const currentLapDistancePercentages =
+//     currentState.iRacing.data?.CarIdxLapDistPct;
+//   const previousLapDistancePercentages =
+//     previousState.iRacing.data?.CarIdxLapDistPct;
 
-  const stationaryCarIndexes: number[] = [];
-  for (
-    let carIndex = 0;
-    carIndex < currentLapDistancePercentages.length;
-    carIndex++
-  ) {
-    const currentPercentage = currentLapDistancePercentages[carIndex];
-    const previousPercentage = previousLapDistancePercentages[carIndex];
-    const isOnPitRoad = currentIsOnPitRoad[carIndex];
+//   const stationaryCarIndexes: number[] = [];
+//   for (
+//     let carIndex = 0;
+//     carIndex < currentLapDistancePercentages.length;
+//     carIndex++
+//   ) {
+//     const currentPercentage = currentLapDistancePercentages[carIndex];
+//     const previousPercentage = previousLapDistancePercentages[carIndex];
+//     const isOnPitRoad = currentIsOnPitRoad[carIndex];
 
-    if (
-      Math.round(currentPercentage) === Math.round(previousPercentage) &&
-      !isOnPitRoad
-    ) {
-      stationaryCarIndexes.push(carIndex);
-    }
-  }
-};
+//     if (
+//       Math.round(currentPercentage) === Math.round(previousPercentage) &&
+//       !isOnPitRoad
+//     ) {
+//       stationaryCarIndexes.push(carIndex);
+//     }
+//   }
+// };
 
 // startAppListening({
 //   predicate: sessionTickDidChangePredicate,
