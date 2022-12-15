@@ -14,6 +14,6 @@
       "@config/*": ["src/config/*"]
     }
   },
-  "include": ["src/**/*", "src/**/*.graphql", "__tests__/**/*"],
+  "include": ["src/**/*", "__tests__/**/*"],
   "exclude": ["node_modules", "build"]
 }

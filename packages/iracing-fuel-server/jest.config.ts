@@ -1,11 +1,11 @@
-import path from 'path';
+import path from "path";
 const rootDirectory = path.resolve(__dirname);
 
 export default {
   clearMocks: true,
   collectCoverage: true,
-  coverageDirectory: 'coverage',
-  coverageProvider: 'v8',
+  coverageDirectory: "coverage",
+  coverageProvider: "v8",
   coverageThreshold: {
     global: {
       branches: 70,
@@ -15,24 +15,24 @@ export default {
     },
   },
   globals: {
-    'ts-jest': {
-      tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+    "ts-jest": {
+      tsconfig: path.resolve(__dirname, "tsconfig.json"),
     },
   },
-  moduleDirectories: ['node_modules'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  moduleDirectories: ["node_modules"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   moduleNameMapper: {
-    '@server(.*)$': `${rootDirectory}/src$1`,
-    '@config(.*)$': `${rootDirectory}/src/config$1`,
-    '@tests(.*)$': `${rootDirectory}/__tests__$1`,
+    "@server(.*)$": `${rootDirectory}/src$1`,
+    "@config(.*)$": `${rootDirectory}/src/config$1`,
+    "@tests(.*)$": `${rootDirectory}/__tests__$1`,
   },
   reporters: [
-    'default',
+    "default",
     [
-      path.resolve(__dirname, 'node_modules', 'jest-html-reporter'),
+      path.resolve(__dirname, "node_modules", "jest-html-reporter"),
       {
-        pageTitle: 'Demo test Report',
-        outputPath: 'test-report.html',
+        pageTitle: "Demo test Report",
+        outputPath: "test-report.html",
       },
     ],
   ],
@@ -40,13 +40,13 @@ export default {
   roots: [rootDirectory],
   setupFilesAfterEnv: [`${rootDirectory}/__tests__/setup.ts`],
   testPathIgnorePatterns: [
-    '/node_modules/',
-    '<rootDir>/build',
+    "/node_modules/",
+    "<rootDir>/build",
     `${rootDirectory}/__tests__/fixtures`,
     `${rootDirectory}/__tests__/setup.ts`,
   ],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    "^.+\\.ts$": "ts-jest",
   },
-  testRegex: ['((/__tests__/.*)|(\\.|/)(test|spec))\\.tsx?$'],
+  testRegex: ["((/__tests__/.*)|(\\.|/)(test|spec))\\.tsx?$"],
 };

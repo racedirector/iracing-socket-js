@@ -18,8 +18,9 @@ const resolvers: Resolvers = {
   Subscription: {
     legacySubscription: {
       resolve: () => ({ data: JSON.stringify({ someData: 123 }) }),
-      subscribe: async function* (_, { input: { fps, requestParameters } }) {
-        logger.info(`lol like i should be doing something real but i'm not ${fps}`);
+      subscribe: async function* (_, { input: { fps, requestParameters, requestParametersOnce, readIBT } }) {
+        logger.info(`TODO: Creating a socket for kapps...`);
+
         await new Promise((resolve) => setTimeout(resolve, 1000));
         yield {
           data: JSON.stringify({

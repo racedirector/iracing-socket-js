@@ -1,4 +1,4 @@
-import winston from 'winston';
+import winston from "winston";
 
 const LoggerWrapper = (): winston.Logger => {
   return winston.createLogger({

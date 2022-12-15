@@ -1,10 +1,10 @@
-import { createYoga, createSchema } from 'graphql-yoga';
-import schema from '../graphql/schema';
-import resolvers from '../graphql/resolvers';
+import { createYoga, createSchema } from "graphql-yoga";
+import resolvers from "../graphql/resolvers";
+import * as typeDefs from "../graphql/schema.graphql";
 
 export default createYoga({
   schema: createSchema({
-    typeDefs: schema,
+    typeDefs,
     resolvers,
   }),
   graphiql: true,

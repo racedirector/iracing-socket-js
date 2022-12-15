@@ -31,6 +31,12 @@
       ],
       "@racedirector/iracing-server": [
         "packages/iracing-server/src/index.ts"
+      ],
+      "@racedirector/iracing-fuel-server": [
+        "packages/iracing-fuel-server/src/index.ts"
+      ],
+      "@racedirector/iracing-mesh": [
+        "packages/iracing-mesh/src/index.ts"
       ]
     }
   },

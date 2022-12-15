@@ -1,0 +1,39 @@
+type Query {
+  averageFuelUsage(input: FuelUsageInputType!): Float!
+  cars: [String!]!
+  fuelUsage(input: FuelUsageInputType!): [Float!]!
+  isAverageUsageReliable(input: FuelUsageInputType!): Boolean!
+  lastFuelUsage(input: FuelUsageInputType!): Float
+  tracksForCar(carName: String!): [String!]!
+  currentDriver: Driver
+}
+
+input FuelUsageInputType {
+  carName: String!
+  track: String!
+}
+
+type Subscription {
+  legacySubscription(input: LegacySubscriptionInput!): LegacySubscriptionPayload
+}
+
+type Driver {
+  carIndex: Int!
+  carNumber: String
+  carNumberRaw: Int
+  userId: Int!
+  userName: String!
+  teamId: Int
+  teamName: String
+}
+
+input LegacySubscriptionInput {
+  fps: Int!
+  requestParameters: [String!]!
+  requestParametersOnce: [String!]
+  readIBT: Boolean!
+}
+
+type LegacySubscriptionPayload {
+  data: String!
+}

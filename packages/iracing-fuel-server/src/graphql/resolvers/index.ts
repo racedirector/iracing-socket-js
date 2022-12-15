@@ -5,7 +5,7 @@ import {
   isAverageUsageReliableResolver,
   lastFuelUsageResolver,
   tracksForCarResolver,
-} from './fuelData';
+} from "./fuelData";
 
 const root = {
   Query: {

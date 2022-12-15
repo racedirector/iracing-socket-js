@@ -1,0 +1,9 @@
+sources:
+  - name: Telemetry
+    handler:
+      graphql:
+        endpoint: http://0.0.0.0:5001/graphql
+  - name: Fuel Data
+    handler:
+      graphql:
+        endpoint: http://0.0.0.0:5002/graphql

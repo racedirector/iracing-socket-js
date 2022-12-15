@@ -12,28 +12,22 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "yarn run -T ts-node -r graphql-import-node/register -r tsconfig-paths/register -r dotenv/config src/index",
+    "start": "ts-node -r tsconfig-paths/register src/index",
     "dev": "nodemon --config restart.json",
-    "build": "yarn run -T tsc -p tsconfig.build.json",
-    "build:watch": "yarn run -T tsc -w -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
+    "build:watch": "tsc -w -p tsconfig.build.json",
     "clean": "rimraf coverage build tmp",
     "lint": "eslint **/*.ts",
     "test": "jest",
-    "prepack": "yarn run -T bob prepack"
+    "prepack": "bob prepack"
   },
   "dependencies": {
-    "@graphql-mesh/cli": "^0.82.5",
+    "@racedirector/iracing-socket-js": "^2.0.0",
     "express": "^4.17.1",
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.1.1",
     "module-alias": "^2.2.2",
     "winston": "^3.3.3"
-  },
-  "devDependencies": {
-    "dotenv": "^10.0.0",
-    "nodemon": "^2.0.19",
-    "supertest": "^6.1.5",
-    "tsutils": "~3.21.0"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
