@@ -4,16 +4,6 @@
     "module": "commonjs",
     "allowJs": true,
     "importHelpers": true,
-    "alwaysStrict": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "paths": {
-      "@server/*": ["src/*"],
-      "@tests/*": ["__tests__/*"],
-      "@config/*": ["src/config/*"]
-    }
-  },
-  "include": ["src/**/*", "__tests__/**/*"],
-  "exclude": ["node_modules", "build"]
+    "alwaysStrict": true
+  }
 }

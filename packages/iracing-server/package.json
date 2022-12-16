@@ -27,7 +27,9 @@
     "graphql": "^16.6.0",
     "graphql-yoga": "^3.1.1",
     "module-alias": "^2.2.2",
-    "winston": "^3.3.3"
+    "websocket-polyfill": "^0.0.3",
+    "winston": "^3.3.3",
+    "ws": "^8.11.0"
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",

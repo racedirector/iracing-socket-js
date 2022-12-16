@@ -13,7 +13,8 @@ type Query {
 }
 
 input LegacySubscriptionInput {
-  fps: Int! # Number between 1-60
+  # Number between 1-60
+  fps: Int!
   requestParameters: [String!]!
   requestParametersOnce: [String!]
   readIBT: Boolean!

@@ -4,7 +4,7 @@
   "workspaces": {
     "packages": [
       "examples/iracing-ui",
-      "packages"
+      "packages/*"
     ]
   },
   "publishConfig": {
@@ -12,19 +12,17 @@
   },
   "scripts": {
     "codegen": "graphql-codegen --config codegen.ts",
-    "clean": "rimraf node_modules packages/{*,consumers/*}/node_modules",
-    "prebuild": "rimraf packages/*/dist packages/consumers/*/dist",
     "build": "tsc --project tsconfig.build.json && bob build",
     "build:watch": "npx tsc-watch --project tsconfig.build.json --onSuccess \"bob build\"",
     "test": "jest --no-watchman",
     "lint": "eslint --ext .ts .",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx}\"",
     "prettier:check": "prettier --ignore-path .gitignore --check \"**/*.{ts,tsx}\"",
-    "release": "yarn build && changeset publish",
-    "release:canary": "node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha",
     "types:check": "tsc --noEmit",
-    "start:fuel-server": "PORT=5001 yarn workspace @racedirector/iracing-fuel-server start",
-    "start:telemetry-server": "PORT=5002 yarn workspace @racedirector/iracing-server start"
+    "start:fuel-server": "yarn workspace @racedirector/iracing-fuel-server start",
+    "start:telemetry-server": "yarn workspace @racedirector/iracing-server start",
+    "start:mesh": "yarn workspace @racedirector/iracing-mesh start",
+    "start": "concurrently --kill-others \"yarn start:fuel-server\" \"yarn start:telemetry-server\" \"yarn start:mesh\""
   },
   "dependencies": {
     "concurrently": "^7.6.0",

@@ -7,3 +7,4 @@ export const IRacingFuelDataFilePath =
   `${os.homedir()}/Documents/iRacing/fueldata.ini`;
 export const host = process.env.HOST;
 export const port = process.env.PORT;
+export const enableGraphiQL = process.env.NODE_ENV === "development";
