@@ -12,7 +12,10 @@
   },
   "scripts": {
     "codegen": "graphql-codegen --config codegen.ts",
-    "build": "tsc --project tsconfig.build.json && bob build",
+    "build": "tsc --project tsconfig.build.json",
+    "build:fuel-server": "yarn workspace @racedirector/iracing-fuel-server build",
+    "build:telemetry-server": "yarn workspace @racedirector/iracing-fuel-server build",
+    "build:mesh": "yarn workspace @racedirector/iracing-mesh build",
     "build:watch": "npx tsc-watch --project tsconfig.build.json --onSuccess \"bob build\"",
     "test": "jest --no-watchman",
     "lint": "eslint --ext .ts .",
