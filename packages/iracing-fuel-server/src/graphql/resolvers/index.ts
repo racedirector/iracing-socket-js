@@ -6,8 +6,9 @@ import {
   lastFuelUsageResolver,
   tracksForCarResolver,
 } from "./fuelData";
+import { Resolvers } from "./types";
 
-const root = {
+const resolvers: Resolvers = {
   Query: {
     averageFuelUsage: averageFuelUsageResolver,
     cars: carsResolver,
@@ -18,4 +19,4 @@ const root = {
   },
 };
 
-export default root;
+export default resolvers;
