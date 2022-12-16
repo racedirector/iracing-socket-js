@@ -47,38 +47,40 @@ export type Subscription = {
   legacySubscription?: Maybe<LegacySubscriptionPayload>;
 };
 
+
 export type SubscriptionLegacySubscriptionArgs = {
   input: LegacySubscriptionInput;
 };
 
+
+
 export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
 export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
@@ -102,14 +104,10 @@ export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TCo
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
-  obj: T,
-  context: TContext,
-  info: GraphQLResolveInfo,
-) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -118,7 +116,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -145,10 +143,7 @@ export type ResolversParentTypes = {
   Subscription: {};
 };
 
-export type DriverResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Driver'] = ResolversParentTypes['Driver'],
-> = {
+export type DriverResolvers<ContextType = any, ParentType extends ResolversParentTypes['Driver'] = ResolversParentTypes['Driver']> = {
   carIndex?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   carNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   carNumberRaw?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -159,32 +154,17 @@ export type DriverResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type LegacySubscriptionPayloadResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['LegacySubscriptionPayload'] = ResolversParentTypes['LegacySubscriptionPayload'],
-> = {
+export type LegacySubscriptionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['LegacySubscriptionPayload'] = ResolversParentTypes['LegacySubscriptionPayload']> = {
   data?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
-> = {
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   currentDriver?: Resolver<Maybe<ResolversTypes['Driver']>, ParentType, ContextType>;
 };
 
-export type SubscriptionResolvers<
-  ContextType = any,
-  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription'],
-> = {
-  legacySubscription?: SubscriptionResolver<
-    Maybe<ResolversTypes['LegacySubscriptionPayload']>,
-    'legacySubscription',
-    ParentType,
-    ContextType,
-    RequireFields<SubscriptionLegacySubscriptionArgs, 'input'>
-  >;
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
+  legacySubscription?: SubscriptionResolver<Maybe<ResolversTypes['LegacySubscriptionPayload']>, "legacySubscription", ParentType, ContextType, RequireFields<SubscriptionLegacySubscriptionArgs, 'input'>>;
 };
 
 export type Resolvers<ContextType = any> = {
@@ -193,3 +173,4 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
 };
+

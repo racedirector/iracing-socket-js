@@ -1,17 +1,33 @@
 schema {
   query: Query
+  subscription: Subscription
 }
 
-input FuelUsageInputType {
-  carName: String!
-  track: String!
+type Driver {
+  carIndex: Int!
+  carNumber: String
+  carNumberRaw: Int
+  userId: Int!
+  userName: String!
+  teamId: Int
+  teamName: String
 }
 
 type Query {
-  averageFuelUsage(input: FuelUsageInputType!): Float!
-  cars: [String!]!
-  fuelUsage(input: FuelUsageInputType!): [Float!]!
-  isAverageUsageReliable(input: FuelUsageInputType!): Boolean!
-  lastFuelUsage(input: FuelUsageInputType!): Float
-  tracksForCar(carName: String!): [String!]!
+  currentDriver: Driver
+}
+
+input LegacySubscriptionInput {
+  fps: Int!
+  requestParameters: [String!]!
+  requestParametersOnce: [String!]
+  readIBT: Boolean!
+}
+
+type LegacySubscriptionPayload {
+  data: String!
+}
+
+type Subscription {
+  legacySubscription(input: LegacySubscriptionInput!): LegacySubscriptionPayload
 }

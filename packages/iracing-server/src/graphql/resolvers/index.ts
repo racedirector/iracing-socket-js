@@ -1,3 +1,4 @@
+import 'websocket-polyfill';
 import { Resolvers } from './types';
 import { logger } from '../../config/logger';
 import { iRacingSocket, iRacingSocketEvents } from '@racedirector/iracing-socket-js';
@@ -19,7 +20,7 @@ const resolvers: Resolvers = {
   Subscription: {
     legacySubscription: {
       resolve: (payload) => {
-        console.log('Resolving payload', payload);
+        logger.info(`Resolving payload: ${payload}`);
         return payload;
       },
       subscribe: (_, { input: { fps, requestParameters, requestParametersOnce, readIBT } }) => {
@@ -33,10 +34,11 @@ const resolvers: Resolvers = {
           readIBT,
         });
 
-        return new Promise(() => {
+        return new Promise((resolve) => {
           socket.on(iRacingSocketEvents.Update, () => {
             const newData = { ...socket.data };
             console.log('Got new data!', newData);
+
             return newData;
           });
         });

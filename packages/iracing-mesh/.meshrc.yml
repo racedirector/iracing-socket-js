@@ -1,0 +1,15 @@
+sources:
+  - name: Telemetry
+    handler:
+      graphql:
+        endpoint: http://0.0.0.0:5001/graphql
+
+  - name: Fuel
+    handler:
+      graphql:
+        endpoint: http://0.0.0.0:5002/graphql
+
+serve:
+  port: 5000
+  playground: True
+  playgroundTitle: iRacing GraphQL

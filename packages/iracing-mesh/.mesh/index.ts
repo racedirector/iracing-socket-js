@@ -239,7 +239,7 @@ import { MeshContext as BaseMeshContext, MeshInstance } from '@graphql-mesh/runt
 import { InContextSdkMethod } from '@graphql-mesh/types';
 
 
-    export namespace TelemetryTypes {
+    export namespace FuelTypes {
       export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -294,31 +294,31 @@ export type QuerytracksForCarArgs = {
 };
 
     }
-    export type QueryTelemetrySdk = {
+    export type QueryFuelSdk = {
   /** null **/
-  averageFuelUsage: InContextSdkMethod<TelemetryTypes.Query['averageFuelUsage'], TelemetryTypes.QueryaverageFuelUsageArgs, MeshContext>,
+  averageFuelUsage: InContextSdkMethod<FuelTypes.Query['averageFuelUsage'], FuelTypes.QueryaverageFuelUsageArgs, MeshContext>,
   /** null **/
-  cars: InContextSdkMethod<TelemetryTypes.Query['cars'], {}, MeshContext>,
+  cars: InContextSdkMethod<FuelTypes.Query['cars'], {}, MeshContext>,
   /** null **/
-  fuelUsage: InContextSdkMethod<TelemetryTypes.Query['fuelUsage'], TelemetryTypes.QueryfuelUsageArgs, MeshContext>,
+  fuelUsage: InContextSdkMethod<FuelTypes.Query['fuelUsage'], FuelTypes.QueryfuelUsageArgs, MeshContext>,
   /** null **/
-  isAverageUsageReliable: InContextSdkMethod<TelemetryTypes.Query['isAverageUsageReliable'], TelemetryTypes.QueryisAverageUsageReliableArgs, MeshContext>,
+  isAverageUsageReliable: InContextSdkMethod<FuelTypes.Query['isAverageUsageReliable'], FuelTypes.QueryisAverageUsageReliableArgs, MeshContext>,
   /** null **/
-  lastFuelUsage: InContextSdkMethod<TelemetryTypes.Query['lastFuelUsage'], TelemetryTypes.QuerylastFuelUsageArgs, MeshContext>,
+  lastFuelUsage: InContextSdkMethod<FuelTypes.Query['lastFuelUsage'], FuelTypes.QuerylastFuelUsageArgs, MeshContext>,
   /** null **/
-  tracksForCar: InContextSdkMethod<TelemetryTypes.Query['tracksForCar'], TelemetryTypes.QuerytracksForCarArgs, MeshContext>
+  tracksForCar: InContextSdkMethod<FuelTypes.Query['tracksForCar'], FuelTypes.QuerytracksForCarArgs, MeshContext>
 };
 
-export type MutationTelemetrySdk = {
-
-};
-
-export type SubscriptionTelemetrySdk = {
+export type MutationFuelSdk = {
 
 };
 
+export type SubscriptionFuelSdk = {
 
-    export namespace FuelDataTypes {
+};
+
+
+    export namespace TelemetryTypes {
       export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -368,38 +368,52 @@ export type SubscriptionlegacySubscriptionArgs = {
 };
 
     }
-    export type QueryFuelDataSdk = {
+    export type QueryTelemetrySdk = {
   /** null **/
-  currentDriver: InContextSdkMethod<FuelDataTypes.Query['currentDriver'], {}, MeshContext>
+  currentDriver: InContextSdkMethod<TelemetryTypes.Query['currentDriver'], {}, MeshContext>
 };
 
-export type MutationFuelDataSdk = {
+export type MutationTelemetrySdk = {
 
 };
 
-export type SubscriptionFuelDataSdk = {
+export type SubscriptionTelemetrySdk = {
   /** null **/
-  legacySubscription: InContextSdkMethod<FuelDataTypes.Subscription['legacySubscription'], FuelDataTypes.SubscriptionlegacySubscriptionArgs, MeshContext>
+  legacySubscription: InContextSdkMethod<TelemetryTypes.Subscription['legacySubscription'], TelemetryTypes.SubscriptionlegacySubscriptionArgs, MeshContext>
 };
+
+export type FuelContext = {
+      ["Fuel"]: { Query: QueryFuelSdk, Mutation: MutationFuelSdk, Subscription: SubscriptionFuelSdk },
+    };
 
 export type TelemetryContext = {
       ["Telemetry"]: { Query: QueryTelemetrySdk, Mutation: MutationTelemetrySdk, Subscription: SubscriptionTelemetrySdk },
     };
 
-export type FuelDataContext = {
-      ["Fuel Data"]: { Query: QueryFuelDataSdk, Mutation: MutationFuelDataSdk, Subscription: SubscriptionFuelDataSdk },
-    };
-
-export type MeshContext = TelemetryContext & FuelDataContext & BaseMeshContext;
+export type MeshContext = FuelContext & TelemetryContext & BaseMeshContext;
 
 
 import { getMesh } from '@graphql-mesh/runtime';
 import { MeshStore, FsStoreStorageAdapter } from '@graphql-mesh/store';
 import { path as pathModule } from '@graphql-mesh/cross-helpers';
 import { fileURLToPath } from '@graphql-mesh/utils';
+import ExternalModule_0 from '@graphql-mesh/cache-inmemory-lru';
+import ExternalModule_1 from '@graphql-mesh/graphql';
+import ExternalModule_2 from '@graphql-mesh/merger-stitching';
+import ExternalModule_3 from './sources/Fuel/introspectionSchema';
+import ExternalModule_4 from './sources/Telemetry/introspectionSchema';
 
 const importedModules: Record<string, any> = {
-
+  // @ts-ignore
+  ["@graphql-mesh/cache-inmemory-lru"]: ExternalModule_0,
+  // @ts-ignore
+  ["@graphql-mesh/graphql"]: ExternalModule_1,
+  // @ts-ignore
+  ["@graphql-mesh/merger-stitching"]: ExternalModule_2,
+  // @ts-ignore
+  [".mesh/sources/Fuel/introspectionSchema"]: ExternalModule_3,
+  // @ts-ignore
+  [".mesh/sources/Telemetry/introspectionSchema"]: ExternalModule_4
 };
 
 const baseDir = pathModule.join(__dirname, '..');
@@ -421,17 +435,97 @@ const rootStore = new MeshStore('.mesh', new FsStoreStorageAdapter({
   validate: false
 });
 
+import { GetMeshOptions } from '@graphql-mesh/runtime';
+import { YamlConfig } from '@graphql-mesh/types';
+import { parse } from 'graphql';
+import { PubSub } from '@graphql-mesh/utils';
+import MeshCache from '@graphql-mesh/cache-inmemory-lru';
+import { DefaultLogger } from '@graphql-mesh/utils';
+import GraphqlHandler from '@graphql-mesh/graphql'
+import StitchingMerger from '@graphql-mesh/merger-stitching';
+import { resolveAdditionalResolvers } from '@graphql-mesh/utils';
+import { parseWithCache } from '@graphql-mesh/utils';
+export const rawConfig: YamlConfig.Config = {"sources":[{"name":"Telemetry","handler":{"graphql":{"endpoint":"http://0.0.0.0:5001/graphql"}}},{"name":"Fuel","handler":{"graphql":{"endpoint":"http://0.0.0.0:5002/graphql"}}}],"serve":{"port":5000,"playground":true,"playgroundTitle":"iRacing GraphQL"}} as any
+export async function getMeshOptions(): Promise<GetMeshOptions> {
+const pubsub = new PubSub();
+const cache = new (MeshCache as any)({
+      ...(rawConfig.cache || {}),
+      importFn,
+      store: rootStore.child('cache'),
+      pubsub,
+    } as any)
+const sourcesStore = rootStore.child('sources');
+const logger = new DefaultLogger('🕸️');
+const sources = [];
+const transforms = [];
+const telemetryTransforms = [];
+const fuelTransforms = [];
+const additionalTypeDefs = [] as any[];
+const telemetryHandler = new GraphqlHandler({
+              name: rawConfig.sources[0].name,
+              config: rawConfig.sources[0].handler["graphql"],
+              baseDir,
+              cache,
+              pubsub,
+              store: sourcesStore.child(rawConfig.sources[0].name),
+              logger: logger.child(rawConfig.sources[0].name),
+              importFn
+            });
+const fuelHandler = new GraphqlHandler({
+              name: rawConfig.sources[1].name,
+              config: rawConfig.sources[1].handler["graphql"],
+              baseDir,
+              cache,
+              pubsub,
+              store: sourcesStore.child(rawConfig.sources[1].name),
+              logger: logger.child(rawConfig.sources[1].name),
+              importFn
+            });
+sources.push({
+          name: 'Telemetry',
+          handler: telemetryHandler,
+          transforms: telemetryTransforms
+        })
+sources.push({
+          name: 'Fuel',
+          handler: fuelHandler,
+          transforms: fuelTransforms
+        })
+const merger = new(StitchingMerger as any)({
+        cache,
+        pubsub,
+        logger: logger.child('StitchingMerger'),
+        store: rootStore.child('stitchingMerger')
+      })
+const additionalResolversRawConfig = [];
+const additionalResolvers = await resolveAdditionalResolvers(
+      baseDir,
+      additionalResolversRawConfig,
+      importFn,
+      pubsub
+  )
+const liveQueryInvalidations = rawConfig.liveQueryInvalidations;
+const additionalEnvelopPlugins = [];
+const documents = documentsInSDL.map((documentSdl: string, i: number) => ({
+              rawSDL: documentSdl,
+              document: parseWithCache(documentSdl),
+              location: `document_${i}.graphql`,
+            }))
 
-                import { findAndParseConfig } from '@graphql-mesh/cli';
-                function getMeshOptions() {
-                  console.warn('WARNING: These artifacts are built for development mode. Please run "mesh build" to build production artifacts');
-                  return findAndParseConfig({
-                    dir: baseDir,
-                    artifactsDir: ".mesh",
-                    configName: "mesh",
-                  });
-                }
-              
+  return {
+    sources,
+    transforms,
+    additionalTypeDefs,
+    additionalResolvers,
+    cache,
+    pubsub,
+    merger,
+    logger,
+    liveQueryInvalidations,
+    additionalEnvelopPlugins,
+    documents,
+  };
+}
 
 export const documentsInSDL = /*#__PURE__*/ [];
 
