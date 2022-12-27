@@ -5307,8 +5307,6 @@ __metadata:
       optional: true
     react:
       optional: true
-  bin:
-    iracing-socket: dist/cli.js
   languageName: unknown
   linkType: soft
 
