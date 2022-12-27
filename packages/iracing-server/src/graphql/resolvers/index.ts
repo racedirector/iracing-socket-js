@@ -1,7 +1,5 @@
 import 'websocket-polyfill';
 import { Resolvers } from './types';
-import { logger } from '../../config/logger';
-import { iRacingSocket, iRacingSocketEvents } from '@racedirector/iracing-socket-js';
 
 const resolvers: Resolvers = {
   Query: {
@@ -18,32 +16,22 @@ const resolvers: Resolvers = {
     },
   },
   Subscription: {
-    legacySubscription: {
-      resolve: (payload) => {
-        logger.info(`Resolving payload: ${payload}`);
-        return payload;
-      },
-      subscribe: (_, { input: { fps, requestParameters, requestParametersOnce, readIBT } }) => {
-        logger.info(`TODO: Creating a socket for kapps...`);
-
-        const socket = new iRacingSocket({
-          server: 'localhost:8182',
-          fps,
-          requestParameters,
-          requestParametersOnce,
-          readIBT,
-        });
-
-        return new Promise((resolve) => {
-          socket.on(iRacingSocketEvents.Update, () => {
-            const newData = { ...socket.data };
-            console.log('Got new data!', newData);
-
-            return newData;
-          });
-        });
-      },
-    },
+    // legacySubscription: {
+    //   resolve: (payload) => {
+    //     logger.info(`Resolving payload: ${payload}`);
+    //     return payload;
+    //   },
+    // subscribe: async (_, _args) => {
+    //   logger.debug(`TODO: Creating a socket for kapps... ${args}`);
+    //   return new Promise((resolve) =>
+    //     resolve(
+    //       new Promise((resolve) => {
+    //         resolve({ data: '' });
+    //       }),
+    //     ),
+    //   );
+    // },
+    // },
   },
 };
 

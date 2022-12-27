@@ -1,3 +1,5 @@
+# It would be real cool if we could figure out how to import client implementations
+# or something smart so there were plugins for different aspects.
 sources:
   - name: Telemetry
     handler:

@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "module": "commonjs",
-    "allowJs": true,
-    "importHelpers": true,
-    "alwaysStrict": true
-  }
-}
