@@ -13,7 +13,7 @@
   "scripts": {
     "clean": "rimraf node_modules packages/{*,consumers/*}/node_modules",
     "codegen": "graphql-codegen --config codegen.ts",
-    "prebuild": "rimraf packages/*/dist packages/consumers/*/dist",
+    "prebuild": "rimraf packages/*/dist",
     "build": "tsc --project tsconfig.build.json && bob build",
     "build:watch": "npx tsc-watch --project tsconfig.build.json --onSuccess \"bob build\"",
     "test": "jest --no-watchman",
@@ -35,7 +35,7 @@
     "@types/yargs": "^17",
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
-    "bob-the-bundler": "1.7.3",
+    "bob-the-bundler": "4.1.1",
     "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.4",

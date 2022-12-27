@@ -176,8 +176,6 @@ describe("iRacing Socket", () => {
       expect(openSpy).toBeCalledTimes(1);
       openSpy.mockClear();
 
-      socket.cancelRetry();
-
       await wait(1000);
 
       expect(openSpy).not.toBeCalled();

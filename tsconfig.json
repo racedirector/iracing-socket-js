@@ -37,4 +37,8 @@
   "include": [
     "packages"
   ],
+  // "references": [
+  //   { "path": "packages/iracing-socket-js/"},
+  //   { "path": "packages/iracing-fuel-server/"}
+  // ]
 }
