@@ -14,7 +14,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@racedirector/iracing-socket-js": ["../../packages/iracing-socket-js/src/index.ts"]
+    }
   },
   "include": ["src"]
 }
