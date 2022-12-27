@@ -26,29 +26,11 @@
     ],
     "jsx": "react-jsx",
     "paths": {
-      "@racedirector/iracing-driver-swap-emitter": [
-        "packages/consumers/driver-swap-emitter/src/index.ts"
-      ],
-      "@racedirector/iracing-flags-emitter": [
-        "packages/consumers/flags-emitter/src/index.ts"
-      ],
-      "@racedirector/iracing-laps-emitter": [
-        "packages/consumers/laps-emitter/src/index.ts"
-      ],
-      "@racedirector/iracing-pit-timing-emitter": [
-        "packages/consumers/pit-timing-emitter/src/index.ts"
-      ],
-      "@racedirector/iracing-sim-incident-emitter": [
-        "packages/consumers/sim-incident-emitter/src/index.ts"
-      ],
-      "@racedirector/iracing-socket-cli": [
-        "packages/iracing-socket-cli/src/index.ts"
-      ],
       "@racedirector/iracing-socket-js": [
         "packages/iracing-socket-js/src/index.ts"
       ],
-      "@racedirector/iracing-utilities": [
-        "packages/iracing-utilities/src/index.ts"
+      "@racedirector/iracing-fuel-server": [
+        "packages/iracing-fuel-server/src/index.ts"
       ]
     }
   },

@@ -3,9 +3,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "examples/iracing-ui",
-      "packages/iracing-*",
-      "packages/consumers/*"
+      "packages/*",
+      "examples/*"
     ]
   },
   "publishConfig": {
@@ -13,6 +12,7 @@
   },
   "scripts": {
     "clean": "rimraf node_modules packages/{*,consumers/*}/node_modules",
+    "codegen": "graphql-codegen --config codegen.ts",
     "prebuild": "rimraf packages/*/dist packages/consumers/*/dist",
     "build": "tsc --project tsconfig.build.json && bob build",
     "build:watch": "npx tsc-watch --project tsconfig.build.json --onSuccess \"bob build\"",
@@ -26,6 +26,9 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.22.0",
+    "@graphql-codegen/cli": "^2.16.2",
+    "@graphql-codegen/typescript": "^2.8.6",
+    "@graphql-codegen/typescript-resolvers": "^2.7.11",
     "@types/jest": "^27",
     "@types/lodash": "^4",
     "@types/node": "^17",
@@ -42,13 +45,18 @@
     "eslint-plugin-react-app": "^6.2.2",
     "eslint-plugin-react-hooks": "^4.4.0",
     "get-yarn-workspaces": "1.0.2",
+    "graphql": "^16.6.0",
+    "graphql-import-node": "^0.0.5",
     "husky": "7.0.4",
     "jest": "27.5.1",
     "lint-staged": "12.3.7",
     "lodash": "^4.17.21",
+    "nodemon": "^2.0.20",
     "prettier": "2.6.2",
     "rimraf": "3.0.2",
     "ts-jest": "27.1.4",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^1.1.8",
     "tsc-watch": "5.0.3",
     "tslib": "2.3.1",
     "typescript": "4.6.3"
@@ -57,12 +65,12 @@
     "packages/**/src/**/*.{ts,tsx}": [
       "eslint --fix"
     ],
-    "**/*.json": [
+    "**/*.{js,jsx,json,cjs,mjs,ts,tsx,graphql,gql,yml,yaml,md}": [
       "prettier --write"
     ],
     "yarn.lock": [
       "npx yarn-deduplicate"
     ]
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.3.1"
 }
