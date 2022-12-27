@@ -26,11 +26,8 @@ import {
   selectSessionEventData,
 } from "@racedirector/iracing-socket-js";
 import { checkIncidentsEffect } from "src/features/simIncidentsSlice";
-import {
-  checkDriverSwapEffect,
-  checkDriverUpdateEffect,
-} from "../features/driversSlice";
-import { stat } from "fs";
+import { checkDriverUpdateEffect } from "../features/driversSlice";
+import { checkDriverSwapEffect } from "src/features/driverSwapSlice";
 
 export const listenerMiddleware = createListenerMiddleware();
 
