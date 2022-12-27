@@ -22,25 +22,17 @@
     "lib": [
       "es6",
       "ESNext",
+      "es2015",
       "DOM"
     ],
     "jsx": "react-jsx",
     "paths": {
-      "@racedirector/iracing-socket-js": [
-        "packages/iracing-socket-js/src/index.ts"
-      ],
-      "@racedirector/iracing-server": [
-        "packages/iracing-server/src/index.ts"
-      ],
-      "@racedirector/iracing-fuel-server": [
-        "packages/iracing-fuel-server/src/index.ts"
-      ],
-      "@racedirector/iracing-mesh": [
-        "packages/iracing-mesh/src/index.ts"
-      ]
+      "@racedirector/iracing-socket-js": ["packages/iracing-socket-js/src/index.ts"],
+      "@racedirector/iracing-server": ["packages/iracing-server/src/index.ts"],
+      "@racedirector/iracing-fuel-server": ["packages/iracing-fuel-server/src/index.ts"],
+      "@racedirector/iracing-mesh": ["packages/iracing-mesh/src/index.ts"]
     }
   },
-  "include": [
-    "packages"
-  ],
+  "include": ["packages"],
+  "exclude": ["**/tests/test-files", "**/tests/test-documents", "**/dist", "**/temp"]
 }
