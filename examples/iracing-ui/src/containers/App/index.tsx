@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, useEffect } from "react";
 import { Provider } from "react-redux";
 import { ChakraProvider, Flex, Heading, Spacer } from "@chakra-ui/react";
 import { IRacingSocketConnectionProvider } from "../../contexts/IRacingSocketConnection";
@@ -15,6 +15,7 @@ import { IncidentsTable } from "../../containers/IncidentsTable";
 import { RaceStrategy } from "../../containers/RaceStrategy";
 import FuelCalculator from "../FuelCalculator";
 import { ReplayControls } from "../ReplayControls";
+import { useGetFuelDataQuery } from "../../app/fuelClientApi";
 
 const AppProvider: React.FC<PropsWithChildren<Record<string, unknown>>> = ({
   children,
@@ -52,11 +53,16 @@ const ComingSoon = () => <Heading>Coming soon</Heading>;
 
 const AppUI: React.FC<Record<string, never>> = () => {
   const { isIRacingConnected } = useIRacingConnectionState();
+  const fuelData = useGetFuelDataQuery();
+
+  useEffect(() => {
+    console.log(fuelData);
+  }, [fuelData]);
   return (
     <div style={{ flex: 1 }}>
       <AppHeader />
 
-      {isIRacingConnected && (
+      {/* {isIRacingConnected && (
         <>
           <Flex>
             <RaceLength />
@@ -71,7 +77,7 @@ const AppUI: React.FC<Record<string, never>> = () => {
             replay={<ReplayControls />}
           />
         </>
-      )}
+      )} */}
     </div>
   );
 };

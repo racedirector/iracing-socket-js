@@ -5,9 +5,9 @@ import sessionPaceReducer from "../features/sessionPaceSlice";
 import paceAnalysisReducer from "../features/paceAnalysisSlice";
 import pitStopAnalysisReducer from "../features/pitStopAnalysisSlice";
 import simIncidentsReducer from "../features/simIncidentsSlice";
-import telemetryIncidentsReducer from "../features/telemetryIncidentsSlice";
 import driversReducer from "../features/driversSlice";
 import raceEventsReducer from "../features/raceEventsSlice";
+import { fuelClientApi } from "./fuelClientApi";
 import {
   createIRacingSocketMiddleware,
   reducer as iRacingReducer,
@@ -21,8 +21,8 @@ const rootReducer = combineReducers({
   pitStopAnalysis: pitStopAnalysisReducer,
   raceEvents: raceEventsReducer,
   simIncidents: simIncidentsReducer,
-  // telemetryIncidents: telemetryIncidentsReducer,
   iRacing: iRacingReducer,
+  [fuelClientApi.reducerPath]: fuelClientApi.reducer,
 });
 
 export const store = configureStore({
@@ -30,7 +30,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .prepend(listenerMiddleware.middleware)
-      .concat(createIRacingSocketMiddleware()),
+      .concat([fuelClientApi.middleware, createIRacingSocketMiddleware()]),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
