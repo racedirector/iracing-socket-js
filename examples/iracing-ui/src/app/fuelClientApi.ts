@@ -1,11 +1,14 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import {
   iRacingClientConnectionEvents,
+  iRacingData,
   iRacingSocket,
   iRacingSocketConnectionEvents,
   iRacingSocketEvents,
 } from "@racedirector/iracing-socket-js";
 import { pick } from "lodash";
+
+const MAX_FUEL_COUNT = 7;
 
 const fuelSocket = new iRacingSocket({
   server: "192.168.4.52:8182",
@@ -52,6 +55,7 @@ interface FuelClientState {
   lapStarted: boolean;
   lapChanged: boolean;
   lastFuelLevel: number;
+  sectorPercentages: number[];
 }
 
 const customBaseQuery = (
@@ -68,17 +72,17 @@ export const fuelClientApi = createApi({
   endpoints: (build) => ({
     getFuelData: build.query<FuelClientState, void>({
       queryFn() {
-        console.log("Getting fuel data...");
-
         return {
           data: {
             pastUsage: [],
+            sectorPercentages: [],
             lapStarted: false,
             lapChanged: false,
             lastFuelLevel: 0,
           },
         };
       },
+      // TODO: Find a way to track state
       async onCacheEntryAdded(
         arg,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved },
@@ -86,32 +90,58 @@ export const fuelClientApi = createApi({
         // Wait for data load
         await cacheDataLoaded;
 
+        const resetLap = () =>
+          updateCachedData((draft) => ({
+            ...draft,
+            lapStarted: false,
+          }));
+
         let previousLapDistance = -1;
         // Add a new listener for the socket
         fuelSocket.on(iRacingSocketEvents.Update, (keys) => {
-          const changedData = pick(fuelSocket.data, keys);
+          const changedData: iRacingData = pick(fuelSocket.data, keys);
+
+          if (keys.includes("DriverInfo")) {
+            console.log("updating driver info");
+            console.log(changedData["DriverInfo"]);
+          }
+
+          if (keys.includes("SplitTimeInfo")) {
+            console.log("Updating split info");
+            updateCachedData((draft) => ({
+              ...draft,
+              sectorPercentages: changedData.SplitTimeInfo.Sectors.map(
+                ({ SectorStartPct }) => SectorStartPct,
+              ),
+            }));
+          }
 
           if (keys.includes("LapDistPct")) {
             const nextLapDistance = changedData["LapDistPct"];
             if (previousLapDistance >= 0) {
+              // If the lap started...
               if (previousLapDistance > 0.9 && nextLapDistance < 0.1) {
-                updateCachedData((draft) => ({
-                  ...draft,
-                  lapChanged: draft.lapStarted,
-                  lastFuelLevel: !draft.lapStarted
-                    ? fuelSocket.data.FuelLevel
-                    : draft.lastFuelLevel,
-                  lapStarted: true,
-                }));
+                updateCachedData((draft) => {
+                  const usage = draft.lastFuelLevel - fuelSocket.data.FuelLevel;
+                  draft.pastUsage.push(usage);
+                  while (draft.pastUsage.length > MAX_FUEL_COUNT)
+                    draft.pastUsage.shift();
+
+                  return {
+                    ...draft,
+                    pastUsage: [...draft.pastUsage, usage],
+                    lapChanged: draft.lapStarted,
+                    lastFuelLevel: !draft.lapStarted
+                      ? fuelSocket.data.FuelLevel
+                      : draft.lastFuelLevel,
+                    lapStarted: true,
+                  };
+                });
               }
             }
 
             previousLapDistance = nextLapDistance;
           }
-          // updateCachedData((draft) => ({
-          //   ...draft,
-          //   ...changedData,
-          // }));
         });
 
         // If the socket isn't already opened, open it
